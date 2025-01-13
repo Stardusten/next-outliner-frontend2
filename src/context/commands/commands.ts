@@ -327,18 +327,15 @@ const CommandsContext = createContext(() => {
     const diId = lastFocusedDiId.value;
     if (!tree || !diId) return false;
 
+    const view = tree.getEditorView(diId);
     const di = tree.getDi(diId);
-    if (!di || !DI_FILTERS.isBlockDi(di)) return false;
-    const block = di.block;
+    if (!view || !di || !DI_FILTERS.isBlockDi(di)) return false;
 
     let isEmpty = false;
-    if (block.content[0] === BLOCK_CONTENT_TYPES.TEXT) {
-      const schema = getPmSchema({ getBlockRef: blocksManager.getBlockRef });
-      const doc = Node.fromJSON(schema, block.content[1]);
-      isEmpty = doc.content.size === 0;
-    }
-    if (block.content[0] === BLOCK_CONTENT_TYPES.CODE) {
-      isEmpty = block.content[1].length === 0;
+    if (view instanceof PmEditorView) {
+      isEmpty = view.state.doc.content.size === 0;
+    } else if (view instanceof CmEditorView) {
+      isEmpty = view.state.doc.length === 0;
     }
     if (!isEmpty) return false;
 

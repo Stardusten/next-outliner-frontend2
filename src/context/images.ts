@@ -82,7 +82,7 @@ const ImagesContext = createContext(() => {
           console.debug("图片获取成功", imagePath);
           images[imagePath] = {
             status: "synced",
-            url: `http://${serverUrl.value}${signedUrl}`,
+            url: `${serverUrl.value}${signedUrl}`,
           };
         })
         .catch((err) => {

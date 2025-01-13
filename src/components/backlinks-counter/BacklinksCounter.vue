@@ -9,7 +9,12 @@
       </div>
     </DropdownMenuTrigger>
     <DropdownMenuContent class="w-[300px] max-h-[300px] overflow-y-auto">
-      <DropdownMenuItem v-for="block in backlinkBlocks" :key="block.id" class="w-full block">
+      <DropdownMenuItem
+        v-for="block in backlinkBlocks"
+        :key="block.id"
+        class="w-full block"
+        @click="handleClickItem(block.id)"
+      >
         <div class="pointer-events-none select-none">
           <BlockContent
             class="flex-grow !max-w-[unset]"
@@ -21,9 +26,6 @@
           <BlockPath class="*:text-xs mt-1" :block-id="block.id" />
         </div>
       </DropdownMenuItem>
-      <Button variant="outline" size="sm" class="w-full mt-2">
-        {{ $t("kbView.backlinks.openBacklinksPanel") }}</Button
-      >
     </DropdownMenuContent>
   </DropdownMenu>
 </template>
@@ -42,12 +44,15 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
+import type { BlockId } from "@/common/type-and-schemas/block/block-id";
+import BlockTreeContext from "@/context/blockTree";
 
 const props = defineProps<{
   blockId: string;
 }>();
 
 const { blocksManager } = BlocksContext.useContext()!;
+const { getBlockTree } = BlockTreeContext.useContext()!;
 const { getBacklinksConsideringAliases, getAllAliases } = BacklinksContext.useContext()!;
 
 const backlinks = computed(() => getBacklinksConsideringAliases(props.blockId));
@@ -57,4 +62,10 @@ const backlinkBlocks = computed(() => {
     .map((id) => blocksManager.getBlock(id))
     .filter((block): block is Block => block !== null);
 });
+
+const handleClickItem = (blockId: BlockId) => {
+  const tree = getBlockTree("main");
+  if (!tree) return;
+  tree.focusBlock(blockId, { scrollIntoView: true, expandIfFold: true, highlight: true });
+};
 </script>

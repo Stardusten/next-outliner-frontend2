@@ -1,147 +1,103 @@
-<!-- <template>
+<template>
   <Dialog v-model:open="timeMachineOpen">
-    <DialogContent>
+    <DialogContent class="p-4 pt-5" @open-auto-focus.prevent>
       <DialogHeader>
         <DialogTitle class="flex items-center">
           <History class="size-5 mr-2" />
           时光机
         </DialogTitle>
+        <DialogDescription> 备份和恢复你的笔记 </DialogDescription>
       </DialogHeader>
-      <div class="flex flex-col items-center">
-        <div class="w-full pt-2 pb-4">
-          <div v-if="savePoints.length === 0" class="text-center italic text-muted-foreground py-8">
-            没有找到任何存档，也许你想先创建一个？
-          </div>
+      <div class="w-full space-y-4">
+        <div class="rounded-md border p-2">
           <div
-            v-else
-            v-for="(savePoint, index) in savePoints"
-            :key="index"
-            class="w-full flex items-center justify-between g"
+            v-for="backup in backups"
+            :key="backup.name"
+            class="flex justify-between items-center"
           >
-            <div>{{ savePoint.label }}</div>
-            <div>{{ savePoint.createdAt }}</div>
             <div>
-              <DropdownMenu>
-                <DropdownMenuTrigger>
-                  <Tooltip>
-                    <TooltipTrigger>
-                      <Button variant="ghost" size="icon">
-                        <MoreHorizontal class="size-4" />
-                      </Button>
-                    </TooltipTrigger>
-                    <TooltipContent> 更多 </TooltipContent>
-                  </Tooltip>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent>
-                  <template v-for="(button, index) in moreButtons" :key="index">
-                    <DropdownMenuItem @click="button.onClick">
-                      <Tooltip>
-                        <TooltipTrigger as-child>
-                          <div class="flex items-center">
-                            <component
-                              :is="button.icon"
-                              class="size-5 stroke-[1.8] mr-3"
-                            ></component>
-                            {{ button.label }}
-                          </div>
-                        </TooltipTrigger>
-                        <TooltipContent>
-                          {{ button.label }}
-                        </TooltipContent>
-                      </Tooltip>
-                    </DropdownMenuItem>
-                  </template>
-                </DropdownMenuContent>
-              </DropdownMenu>
+              <span>{{ backup.name }}</span>
+              <span class="text-muted-foreground ml-2 text-sm"
+                >{{ (backup.size / 1024 / 1024).toFixed(2) }} MB</span
+              >
+            </div>
+            <div>
+              <Tooltip>
+                <TooltipTrigger as-child>
+                  <Button variant="ghost" class="size-7 p-0">
+                    <Eye class="size-4" />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>预览此备份</p>
+                </TooltipContent>
+              </Tooltip>
 
-              <template v-for="(button, index) in buttons" :key="index">
-                <Tooltip>
-                  <TooltipTrigger as-child>
-                    <Button variant="ghost" size="icon" @click="button.onClick">
-                      <component :is="button.icon" class="size-4" />
-                    </Button>
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    {{ button.label }}
-                  </TooltipContent>
-                </Tooltip>
-              </template>
+              <Tooltip>
+                <TooltipTrigger as-child>
+                  <Button variant="ghost" class="size-7 p-0 !text-blue-500">
+                    <Undo class="size-4" />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>回退到此备份</p>
+                </TooltipContent>
+              </Tooltip>
+
+              <Tooltip>
+                <TooltipTrigger as-child>
+                  <Button variant="ghost" class="size-7 p-0 !text-red-500">
+                    <Trash class="size-4" />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>删除此备份</p>
+                </TooltipContent>
+              </Tooltip>
             </div>
           </div>
         </div>
 
-        <Button variant="outline" size="sm" class="w-[150px]">
+        <Button variant="outline" size="sm" class="w-full" autofocus>
           <Plus class="size-4 mr-2" />
-          创建新存档
+          创建新备份
         </Button>
       </div>
     </DialogContent>
   </Dialog>
 </template>
 
-<script setup lang="tsx">
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
-import { History, Plus, MoreHorizontal, RotateCcw, Trash, Eye, ChartPie } from "lucide-vue-next";
-import { ref } from "vue";
-import { Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip";
-import {
-  DropdownMenu,
-  DropdownMenuTrigger,
-  DropdownMenuContent,
-  DropdownMenuItem,
-} from "@/components/ui/dropdown-menu";
+<script setup lang="ts">
 import TimeMachineContext from "@/context/timeMachine";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "../ui/dialog";
+import { Button } from "../ui/button";
+import { Plus, History, Delete, Trash, Eye, Undo } from "lucide-vue-next";
+import { ref } from "vue";
+import { Tooltip, TooltipTrigger, TooltipContent } from "../ui/tooltip";
 
 const { timeMachineOpen } = TimeMachineContext.useContext()!;
 
-const buttons = [
-  {
-    icon: RotateCcw,
-    label: "恢复到此存档",
-    onClick: () => {},
-  },
-  {
-    icon: () => <Trash class="size-4 stroke-red-500" />,
-    label: "删除此存档",
-    onClick: () => {},
-  },
-];
+type Backup = {
+  name: string;
+  size: number;
+};
 
-const moreButtons = [
+const backups = ref<Backup[]>([
   {
-    icon: ChartPie,
-    label: "存档统计数据",
-    onClick: () => {},
+    name: "备份 1",
+    size: 1.3 * 1024 * 1024,
   },
   {
-    icon: Eye,
-    label: "浏览存档",
-    onClick: () => {},
-  },
-];
-
-const savePoints = ref<SavePoint[]>([
-  {
-    schema: "v2",
-    blockInfos: {},
-    blockDataDocs: [],
-    label: "存档 1",
-    createdAt: new Date("2024-10-22 10:00:00"),
+    name: "备份 2",
+    size: 1.5 * 1024 * 1024,
   },
   {
-    schema: "v2",
-    blockInfos: {},
-    blockDataDocs: [],
-    label: "存档 2",
-    createdAt: new Date("2024-10-12 10:00:00"),
+    name: "备份 3",
+    size: 1.6 * 1024 * 1024,
+  },
+  {
+    name: "备份 4",
+    size: 1.82 * 1024 * 1024,
   },
 ]);
-</script> -->
+</script>

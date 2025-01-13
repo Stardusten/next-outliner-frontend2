@@ -52,7 +52,7 @@
   <!-- 融合命令 -->
   <FusionCommand />
   <!-- 时光机 -->
-  <!-- <TimeMachine /> -->
+  <TimeMachine />
   <RefSuggestions />
   <!-- 附件管理器 -->
   <AttachmentsManager />
@@ -76,6 +76,7 @@
 </template>
 
 <script setup lang="ts">
+import TimeMachine from "@/components/time-machine/TimeMachine.vue";
 import BlockMover from "@/block-mover/BlockMover.vue";
 import BlockTree from "@/components/BlockTree.vue";
 import Exporter from "@/components/exporter/Exporter.vue";
