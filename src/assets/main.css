@@ -5,14 +5,20 @@
 @layer base {
   :root {
     overflow: hidden;
+    font-family: var(--ui-font);
 
-    --text-font: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
-      "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", Arial, sans-serif;
+    --ui-default-font: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+    "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", Arial,
+    sans-serif;
+
+    --text-default-font: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+      "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", Arial,
+      sans-serif;
     --text-font-size: 1em;
 
-    --code-font: ui-monospace, Menlo, Monaco, "Cascadia Mono", "Segoe UI Mono", "Roboto Mono",
-      "Oxygen Mono", "Ubuntu Mono", "Source Code Pro", "Fira Mono", "Droid Sans Mono", "Consolas",
-      "Courier New", monospace;
+    --code-default-font: ui-monospace, Menlo, Monaco, "Cascadia Mono",
+      "Segoe UI Mono", "Roboto Mono", "Oxygen Mono", "Ubuntu Mono", "Source Code Pro", "Fira Mono",
+      "Droid Sans Mono", "Consolas", "Courier New", monospace;
     --code-font-size: 0.9em;
     --code-color: unset;
     --code-background: unset;
@@ -169,4 +175,8 @@ a {
 ::-webkit-scrollbar-thumb {
   border-radius: 6px;
   background-color: hsl(var(--muted));
+}
+
+::-webkit-scrollbar-corner {
+  background-color: hsl(var(--background));
 }

@@ -2,12 +2,11 @@
   <div class="flex items-center gap-2">
     <Select v-model="item.value.value">
       <SelectTrigger>
-        <SelectValue
-          class="text-muted-foreground"
-          :placeholder="$t('kbView.fontSelector.notSpecified')"
-        />
+        <span class="text-muted-foreground" :style="{ fontFamily: currFontName }">
+          {{ currFontName }}
+        </span>
       </SelectTrigger>
-      <SelectContent>
+      <SelectContent class="max-h-[var(--radix-select-content-available-height)]">
         <SelectGroup>
           <SelectItem
             v-for="(font, index) in FONT_NAMES"
@@ -25,7 +24,67 @@
         </SelectGroup>
       </SelectContent>
     </Select>
+
+    <Tooltip>
+      <TooltipTrigger>
+        <Button variant="ghost" size="icon" @click="openAddFontDialog">
+          <Plus class="size-4" />
+        </Button>
+      </TooltipTrigger>
+      <TooltipContent>
+        {{ $t("kbView.fontSelector.addCustomFont") }}
+      </TooltipContent>
+    </Tooltip>
+
     <ResetButton :item="item" />
+
+    <Dialog :open="showAddFontDialog" @update:open="showAddFontDialog = $event">
+      <DialogContent class="sm:max-w-[425px]">
+        <DialogHeader>
+          <DialogTitle>{{ $t("kbView.fontSelector.addCustomFontTitle") }}</DialogTitle>
+          <DialogDescription>
+            {{ $t("kbView.fontSelector.addCustomFontDesc") }}
+          </DialogDescription>
+        </DialogHeader>
+        <div>
+          <div class="mt-2">
+            <div
+              v-if="isCustomFontAvailable"
+              class="flex items-center gap-2 text-green-500 text-sm mb-3"
+            >
+              <CircleCheck class="size-4" />
+              <span>{{ $t("kbView.fontSelector.fontInstalled") }}</span>
+            </div>
+            <div v-else class="flex items-center gap-2 text-yellow-500 text-sm mb-3">
+              <AlertTriangle class="size-4" />
+              <span>{{ $t("kbView.fontSelector.fontNotInstalled") }}</span>
+            </div>
+
+            <div
+              v-if="customFontName"
+              class="text-base mb-4"
+              :style="{ fontFamily: customFontName }"
+            >
+              AbCdEfGh 中文字体 あいうえお ÀàÈèÙù
+            </div>
+          </div>
+
+          <Input
+            v-model="customFontName"
+            :placeholder="$t('kbView.fontSelector.fontNamePlaceholder')"
+            @input="checkCustomFont"
+          />
+        </div>
+        <DialogFooter>
+          <Button variant="outline" @click="showAddFontDialog = false">
+            {{ $t("kbView.fontSelector.cancel") }}
+          </Button>
+          <Button @click="addCustomFont" :disabled="!customFontName">
+            {{ $t("kbView.fontSelector.confirm") }}
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
   </div>
 </template>
 
@@ -41,11 +100,35 @@ import {
   SelectGroup,
 } from "../ui/select";
 import { checkFontAvailability } from "@/utils/font";
+import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
+import { Button } from "../ui/button";
+import { Plus } from "lucide-vue-next";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "../ui/dialog";
+import { Input } from "../ui/input";
+import { AlertTriangle, CircleCheck } from "lucide-vue-next";
+import { computed, ref } from "vue";
+import { useI18n } from "vue-i18n";
 
-defineProps<{
+const props = defineProps<{
   item: SettingItem<string, "fontSelector">;
   fontList?: string[];
 }>();
+const { t } = useI18n();
+
+const currFontName = computed(() => {
+  const value = props.item.value.value;
+  if (!value || value.trim().length === 0) {
+    return t("kbView.fontSelector.notSpecified");
+  }
+  return value;
+});
 
 const FONT_NAMES = [
   // 系统常见字体
@@ -158,4 +241,31 @@ const FONT_NAMES = [
 ];
 
 const fontAvailability = checkFontAvailability(FONT_NAMES);
+
+const showAddFontDialog = ref(false);
+const customFontName = ref("");
+const isCustomFontAvailable = ref(false);
+
+const openAddFontDialog = () => {
+  showAddFontDialog.value = true;
+  customFontName.value = "";
+  isCustomFontAvailable.value = false;
+};
+
+const checkCustomFont = () => {
+  if (customFontName.value) {
+    const [isAvailable] = checkFontAvailability([customFontName.value]);
+    isCustomFontAvailable.value = isAvailable;
+  }
+};
+
+const addCustomFont = () => {
+  if (customFontName.value) {
+    if (!FONT_NAMES.includes(customFontName.value)) {
+      FONT_NAMES.push(customFontName.value);
+    }
+    props.item.value.value = customFontName.value;
+    showAddFontDialog.value = false;
+  }
+};
 </script>

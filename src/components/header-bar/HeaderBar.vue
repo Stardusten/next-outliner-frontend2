@@ -112,6 +112,10 @@ import FocusModeContext from "@/context/focusMode";
 import FusionCommandContext from "@/context/fusionCommand";
 import MainTreeContext from "@/context/mainTree";
 // import MenubarContext from "@/context/menubar";
+import HistoryContext from "@/context/history";
+import { KbInfoContext } from "@/context/kbinfo";
+import KeymapContext from "@/context/keymap";
+import ServerInfoContext from "@/context/serverInfo";
 import SettingsPanelContext from "@/context/settingsPanel";
 import SidebarContext from "@/context/sidebar";
 import ThemeContext from "@/context/theme";
@@ -121,7 +125,6 @@ import {
   ArrowRight,
   Bell,
   CalendarDays,
-  DatabaseBackup,
   Dot,
   Download,
   Focus,
@@ -132,7 +135,6 @@ import {
   History,
   Keyboard,
   LogOut,
-  Menu,
   Moon,
   MoreVertical,
   PanelRight,
@@ -145,14 +147,9 @@ import { useI18n } from "vue-i18n";
 import type { HeaderBarItemType } from ".";
 import BlockPath from "../BlockPath.vue";
 import DailynoteNavigator from "../dailynote-navigator/DailynoteNavigator.vue";
-import HeaderBarItem from "./HeaderBarItem.vue";
-import ServerInfoContext from "@/context/serverInfo";
-import HistoryContext from "@/context/history";
-import LeftButtons from "./LeftButtons.vue";
-import KeymapContext from "@/context/keymap";
-import { KbInfoContext } from "@/context/kbinfo";
-import { backupKb } from "@/common/api-call/kb";
 import { useToast } from "../ui/toast";
+import HeaderBarItem from "./HeaderBarItem.vue";
+import LeftButtons from "./LeftButtons.vue";
 
 const { sidePaneOpen, sidePaneDir, sidePaneWidth, enableSidePaneAnimation } =
   SidebarContext.useContext()!;
@@ -277,14 +274,14 @@ const moreOptions: HeaderBarItemType[] = [
       openImporter.value = true;
     },
   },
-  {
-    icon: Focus,
-    label: () =>
-      focusModeEnabled.value
-        ? t("kbView.headerBar.exitFocusMode")
-        : t("kbView.headerBar.enterFocusMode"),
-    onClick: () => (focusModeEnabled.value = !focusModeEnabled.value),
-  },
+  // {
+  //   icon: Focus,
+  //   label: () =>
+  //     focusModeEnabled.value
+  //       ? t("kbView.headerBar.exitFocusMode")
+  //       : t("kbView.headerBar.enterFocusMode"),
+  //   onClick: () => (focusModeEnabled.value = !focusModeEnabled.value),
+  // },
   {
     icon: FolderClosed,
     label: () => t("kbView.headerBar.attachmentsManager"),
@@ -309,20 +306,6 @@ const moreOptions: HeaderBarItemType[] = [
     icon: HelpCircle,
     label: () => t("kbView.headerBar.help"),
     onClick: () => {},
-  },
-  {
-    icon: DatabaseBackup,
-    label: () => t("kbView.backup.createBackup"),
-    onClick: async () => {
-      const location = currKbInfo.value?.location;
-      if (!location) return;
-      const res = await backupKb({ location });
-      toast({
-        title: res.success
-          ? t("kbView.backup.createBackupSuccess")
-          : t("kbView.backup.createBackupFailed"),
-      });
-    },
   },
   {
     icon: LogOut,

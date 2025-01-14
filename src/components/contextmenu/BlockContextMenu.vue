@@ -232,7 +232,7 @@ const moveBlock: CommandExec = (test, blockId, event) => {
   if (!test && blockId && event) {
     const pos = { x: event.clientX, y: event.clientY };
     setTimeout(() => {
-      openBlockMover(pos);
+      openBlockMover(pos, blockId);
     }, 200); // 等待 contextmenu 的动画结束
   }
   return !!blockId;
@@ -242,7 +242,7 @@ const moveBlockLeaveRef: CommandExec = (test, blockId, event) => {
   if (!test && blockId && event) {
     const pos = { x: event.clientX, y: event.clientY };
     setTimeout(() => {
-      openBlockMover(pos, { leaveRef: true });
+      openBlockMover(pos, blockId, { leaveRef: true });
     }, 200); // 等待 contextmenu 的动画结束
   }
   return !!blockId;

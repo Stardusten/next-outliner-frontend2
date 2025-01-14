@@ -37,6 +37,7 @@ const $wrapper = ref<HTMLElement | null>(null);
 const languageCompartment = new Compartment();
 const themeCompartment = new Compartment();
 const keymapCompartment = new Compartment();
+const readonlyCompartment = new Compartment();
 const themeContext = ThemeContext.useContext();
 
 const registeredThemes = {
@@ -101,6 +102,15 @@ const configureTheme = (themeName: string | undefined) => {
 // props.theme 改变时更新主题
 watch(() => props.theme, configureTheme);
 
+const configureReadonly = (readonly: boolean) => {
+  if (!editorView) return;
+  editorView.dispatch({
+    effects: readonlyCompartment.reconfigure([EditorState.readOnly.of(readonly)]),
+  });
+};
+// props.readonly 改变时更新只读
+watch(() => props.readonly, configureReadonly);
+
 const configureKeymap = (keymapObj: { [key: string]: KeyBinding } | undefined) => {
   if (!editorView) return;
   const keymapArr = Object.values(keymapObj ?? {});
@@ -114,31 +124,23 @@ watch(() => props.keymap, configureKeymap);
 const mkExtensions = () => {
   const customExtension = props.extensionsBuilder?.() ?? [];
 
-  if (props.readonly)
-    return [
-      languageCompartment.of([]),
-      themeCompartment.of([]),
-      EditorState.readOnly.of(true),
-      ...customExtension,
-    ];
-  else
-    return [
-      minimalSetup,
-      languageCompartment.of([]),
-      themeCompartment.of([]),
-      keymapCompartment.of([]),
-      EditorState.readOnly.of(false),
-      mkContentChangePlugin(
-        (newSrc, oldSrc) => {
-          if (props.onSrcChanged) props.onSrcChanged(newSrc, oldSrc);
-          else {
-            src.value = newSrc;
-          }
-        },
-        () => true,
-      ),
-      ...customExtension,
-    ];
+  return [
+    minimalSetup,
+    languageCompartment.of([]),
+    themeCompartment.of([]),
+    keymapCompartment.of([]),
+    readonlyCompartment.of([]),
+    mkContentChangePlugin(
+      (newSrc, oldSrc) => {
+        if (props.onSrcChanged) props.onSrcChanged(newSrc, oldSrc);
+        else {
+          src.value = newSrc;
+        }
+      },
+      () => true,
+    ),
+    ...customExtension,
+  ];
 };
 
 onMounted(() => {
@@ -152,6 +154,7 @@ onMounted(() => {
   configureLanguage(props.lang ?? "");
   configureTheme(props.theme);
   configureKeymap(props.keymap ?? {});
+  configureReadonly(props.readonly ?? false);
 });
 
 // 延迟销毁 editorView，以确保动画完成

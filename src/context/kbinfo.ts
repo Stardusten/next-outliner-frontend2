@@ -18,6 +18,7 @@ export const KbInfoContext = createContext(() => {
     if (location == null) return null;
     return kbs.value[location] ?? null;
   });
+  const location = computed(() => params.value?.location);
 
   const refreshKbList = async (
     url: string,
@@ -54,5 +55,6 @@ export const KbInfoContext = createContext(() => {
     kbs,
     refreshKbList,
     currKbInfo,
+    location,
   };
 });

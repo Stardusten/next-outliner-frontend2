@@ -1,7 +1,7 @@
 import { createContext } from "@/utils/createContext";
 import useLocalStorage2 from "@/utils/useLocalStorage";
 import useWritableComputedRef from "@/utils/useWritableComputedRef";
-import { computed } from "vue";
+import { computed, watch } from "vue";
 import ServerInfoContext from "./serverInfo";
 import SettingsContext from "./settings";
 
@@ -36,6 +36,18 @@ const BasicSettingsContext = createContext(() => {
     },
   });
 
+  // 监听 textFontFamily 的变化，更新全局样式
+  watch(
+    textFontFamily,
+    (newVal) => {
+      document.documentElement.style.setProperty(
+        "--text-font",
+        newVal ? `${newVal}, var(--text-default-font)` : "var(--text-default-font)",
+      );
+    },
+    { immediate: true },
+  );
+
   const uiFontFamilyId = "basic.uiFontFamily";
   const uiFontFamilyKey = computed(() => `${kbPrefix.value}${uiFontFamilyId}`);
   const uiFontFamilyDefaultValue = "";
@@ -55,6 +67,18 @@ const BasicSettingsContext = createContext(() => {
       type: "fontSelector",
     },
   });
+
+  // 监听 uiFontFamily 的变化，更新全局样式
+  watch(
+    uiFontFamily,
+    (newVal) => {
+      document.documentElement.style.setProperty(
+        "--ui-font",
+        newVal ? `${newVal}, var(--ui-default-font)` : "var(--ui-default-font)",
+      );
+    },
+    { immediate: true },
+  );
 
   const monospaceFontFamilyId = "basic.monospaceFontFamily";
   const monospaceFontFamilyKey = computed(() => `${kbPrefix.value}${monospaceFontFamilyId}`);
@@ -78,6 +102,18 @@ const BasicSettingsContext = createContext(() => {
       type: "fontSelector",
     },
   });
+
+  // 监听 monospaceFontFamily 的变化，更新全局样式
+  watch(
+    monospaceFontFamily,
+    (newVal) => {
+      document.documentElement.style.setProperty(
+        "--code-font",
+        newVal ? `${newVal}, var(--code-default-font)` : "var(--code-default-font)",
+      );
+    },
+    { immediate: true },
+  );
 
   const enableFloatingEditorId = "basic.enableFloatingEditor";
   const enableFloatingEditorKey = computed(() => `${kbPrefix.value}${enableFloatingEditorId}`);

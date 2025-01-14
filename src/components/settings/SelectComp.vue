@@ -4,7 +4,7 @@
       <SelectTrigger>
         <SelectValue></SelectValue>
       </SelectTrigger>
-      <SelectContent>
+      <SelectContent class="max-h-[var(--radix-select-content-available-height)]">
         <SelectItem
           v-for="option in item.componentType.options"
           :key="option.value"

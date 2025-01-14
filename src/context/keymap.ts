@@ -21,6 +21,7 @@ import {
   indentLess,
   insertTab,
   insertNewlineAndIndent,
+  indentMore,
 } from "@codemirror/commands";
 import { watch, ref, onMounted, onUnmounted } from "vue";
 import SettingsContext from "./settings";
@@ -739,7 +740,13 @@ const KeymapContext = createContext(() => {
     },
     Tab: {
       key: "Tab",
-      run: insertTab,
+      run: ({ state, dispatch }) => {
+        if (state.selection.ranges.some((r) => !r.empty)) return indentMore({ state, dispatch });
+        dispatch(
+          state.update(state.replaceSelection("  "), { scrollIntoView: true, userEvent: "input" }),
+        );
+        return true;
+      },
       stopPropagation: true,
     },
     "Shift-Tab": {

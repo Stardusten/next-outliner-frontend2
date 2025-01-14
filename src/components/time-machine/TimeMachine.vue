@@ -4,12 +4,15 @@
       <DialogHeader>
         <DialogTitle class="flex items-center">
           <History class="size-5 mr-2" />
-          时光机
+          {{ $t("kbView.timeMachine.title") }}
         </DialogTitle>
-        <DialogDescription> 备份和恢复你的笔记 </DialogDescription>
+        <DialogDescription>{{ $t("kbView.timeMachine.description") }}</DialogDescription>
       </DialogHeader>
-      <div class="w-full space-y-4">
-        <div class="rounded-md border p-2">
+      <div class="w-full space-y-4 text-sm">
+        <div class="rounded-md border px-2 py-1">
+          <div v-if="backups.length === 0" class="py-1">
+            <p class="text-center text-muted-foreground">{{ $t("kbView.timeMachine.noBackup") }}</p>
+          </div>
           <div
             v-for="backup in backups"
             :key="backup.name"
@@ -17,9 +20,11 @@
           >
             <div>
               <span>{{ backup.name }}</span>
-              <span class="text-muted-foreground ml-2 text-sm"
-                >{{ (backup.size / 1024 / 1024).toFixed(2) }} MB</span
-              >
+              <span class="text-muted-foreground ml-2">
+                {{
+                  $t("kbView.timeMachine.size", { size: (backup.size / 1024 / 1024).toFixed(2) })
+                }}
+              </span>
             </div>
             <div>
               <Tooltip>
@@ -29,7 +34,7 @@
                   </Button>
                 </TooltipTrigger>
                 <TooltipContent>
-                  <p>预览此备份</p>
+                  <p>{{ $t("kbView.timeMachine.preview") }}</p>
                 </TooltipContent>
               </Tooltip>
 
@@ -40,7 +45,7 @@
                   </Button>
                 </TooltipTrigger>
                 <TooltipContent>
-                  <p>回退到此备份</p>
+                  <p>{{ $t("kbView.timeMachine.restore") }}</p>
                 </TooltipContent>
               </Tooltip>
 
@@ -51,17 +56,30 @@
                   </Button>
                 </TooltipTrigger>
                 <TooltipContent>
-                  <p>删除此备份</p>
+                  <p>{{ $t("kbView.timeMachine.delete") }}</p>
                 </TooltipContent>
               </Tooltip>
             </div>
           </div>
         </div>
 
-        <Button variant="outline" size="sm" class="w-full" autofocus>
-          <Plus class="size-4 mr-2" />
-          创建新备份
-        </Button>
+        <div class="w-full flex items-center gap-2">
+          <Tooltip>
+            <TooltipTrigger as-child>
+              <Button variant="outline" size="sm" @click="refreshBackups">
+                <RefreshCcw class="size-4" />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>{{ $t("kbView.timeMachine.refresh") }}</p>
+            </TooltipContent>
+          </Tooltip>
+
+          <Button variant="outline" size="sm" class="flex-grow" @click="createBackup" autofocus>
+            <Plus class="size-4 mr-2" />
+            {{ $t("kbView.timeMachine.createBackup") }}
+          </Button>
+        </div>
       </div>
     </DialogContent>
   </Dialog>
@@ -71,33 +89,9 @@
 import TimeMachineContext from "@/context/timeMachine";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "../ui/dialog";
 import { Button } from "../ui/button";
-import { Plus, History, Delete, Trash, Eye, Undo } from "lucide-vue-next";
+import { Plus, History, Delete, Trash, Eye, Undo, RefreshCcw } from "lucide-vue-next";
 import { ref } from "vue";
 import { Tooltip, TooltipTrigger, TooltipContent } from "../ui/tooltip";
 
-const { timeMachineOpen } = TimeMachineContext.useContext()!;
-
-type Backup = {
-  name: string;
-  size: number;
-};
-
-const backups = ref<Backup[]>([
-  {
-    name: "备份 1",
-    size: 1.3 * 1024 * 1024,
-  },
-  {
-    name: "备份 2",
-    size: 1.5 * 1024 * 1024,
-  },
-  {
-    name: "备份 3",
-    size: 1.6 * 1024 * 1024,
-  },
-  {
-    name: "备份 4",
-    size: 1.82 * 1024 * 1024,
-  },
-]);
+const { timeMachineOpen, refreshBackups, backups, createBackup } = TimeMachineContext.useContext()!;
 </script>

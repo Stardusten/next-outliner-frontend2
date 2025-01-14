@@ -35,6 +35,7 @@ const BlockMoverContext = createContext(() => {
   const contentClass = "block-mover-content";
   let leaveRef = false;
   let leaveMirror = false;
+  let movedBlockId: BlockId | null = null;
 
   const updateSuggestions = useDebounceFn(() => {
     if (!query.value || query.value.trim().length == 0) {
@@ -60,31 +61,26 @@ const BlockMoverContext = createContext(() => {
   };
 
   const cb = (blockId: BlockId | null) => {
-    if (blockId == null) return;
+    if (blockId == null || movedBlockId == null) return;
     const tree = lastFocusedBlockTree.value;
-    const diId = lastFocusedDiId.value;
-    const di = diId ? tree?.getDi(diId) : null;
-    if (!tree || !diId || !di || !DI_FILTERS.isBlockDi(di)) return;
-    const movedBlockId = di.block.id;
-
+    if (!tree) return;
     const taskQueue = useTaskQueue();
     const targetPos: BlockPos = {
       parentId: blockId,
       childIndex: "last-space",
     };
     taskQueue.addTask(async () => {
-      if (blockEditor == null) return;
       if (leaveRef) {
         blockEditor.insertNormalBlock({
           pos: {
-            baseBlockId: movedBlockId,
+            baseBlockId: movedBlockId!,
             offset: 0,
           },
-          content: blockRefToTextContent(movedBlockId),
+          content: blockRefToTextContent(movedBlockId!),
         });
       }
       // leave mirror TODO
-      blockEditor.moveBlock({ blockId: movedBlockId, pos: targetPos });
+      blockEditor.moveBlock({ blockId: movedBlockId!, pos: targetPos });
       toast({
         title: t("kbView.blockMover.moveSuccess", { count: 1 }),
         action: h(
@@ -93,7 +89,7 @@ const BlockMoverContext = createContext(() => {
             altText: t("kbView.blockMover.focusMovedBlock"),
             onClick: (e: MouseEvent) => {
               e.stopPropagation();
-              tree.focusBlock(movedBlockId, { highlight: true, expandIfFold: true });
+              tree.focusBlock(movedBlockId!, { highlight: true, expandIfFold: true });
             },
           },
           {
@@ -107,6 +103,7 @@ const BlockMoverContext = createContext(() => {
 
   const openBlockMover = (
     _showPos: { x: number; y: number },
+    _movedBlockId: BlockId | null,
     options: {
       initQuery?: string;
       leaveRef?: boolean;
@@ -116,6 +113,7 @@ const BlockMoverContext = createContext(() => {
     query.value = options.initQuery ?? "";
     leaveRef = options.leaveRef ?? false;
     leaveMirror = options.leaveMirror ?? false;
+    movedBlockId = _movedBlockId;
     // updateSuggestions
     focusItemIndex.value = 0;
     showPos.value = _showPos;

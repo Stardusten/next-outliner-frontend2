@@ -35,7 +35,9 @@
                                                                     <CommandsContext.Provider>
                                                                       <KeymapContext.Provider>
                                                                         <BlockContextMenuContext.Provider>
-                                                                          <KbViewContent />
+                                                                          <AttachmentViewerContext.Provider>
+                                                                            <KbViewContent />
+                                                                          </AttachmentViewerContext.Provider>
                                                                         </BlockContextMenuContext.Provider>
                                                                       </KeymapContext.Provider>
                                                                     </CommandsContext.Provider>
@@ -112,4 +114,5 @@ import MenubarContext from "@/context/menubar";
 import kbViewRegistry from "@/context/kbViewRegistry";
 import BlockContextMenuContext from "@/context/blockContextMenu";
 import CommandsContext from "@/context/commands/commands";
+import AttachmentViewerContext from "@/context/attachmentViewer";
 </script>

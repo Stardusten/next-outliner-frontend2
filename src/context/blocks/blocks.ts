@@ -37,6 +37,7 @@ export const BlocksContext = createContext(() => {
     syncLayer,
     synced: blocksManager.synced,
   };
+  globalThis.getBlocksContext = () => ctx;
   return ctx;
 });
 
