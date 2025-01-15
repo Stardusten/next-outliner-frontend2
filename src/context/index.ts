@@ -241,11 +241,29 @@ const IndexContext = createContext(() => {
     return idAndScores.map((item: any) => item.id);
   };
 
+  const searchWithScore = (
+    query: string,
+    limit: number = 200,
+  ): { id: BlockId; score: number }[] => {
+    _updateIndex();
+
+    const results = fulltextIndex.search(query, { limit, enrich: true })?.[0]?.result;
+    if (!results) return [];
+    const queryTokens = hybridTokenize(query, false, 1, false);
+    const idAndScores = results.map((result: any) => {
+      const score = calcMatchScore(queryTokens, result.doc.text);
+      return { id: result.id, score };
+    });
+    idAndScores.sort((a: any, b: any) => b.score - a.score);
+    return idAndScores;
+  };
+
   const ctx = {
     fulltextIndex,
     blockRefsIndex,
     tagIndex,
     search,
+    searchWithScore,
     getMirrors,
     getVirtuals,
     getOccurs,

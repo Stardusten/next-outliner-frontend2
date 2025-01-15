@@ -10,7 +10,7 @@
         </DialogDescription>
       </DialogHeader>
       <div class="flex flex-col gap-4 py-2">
-        <div class="flex flex-col space-y-2">
+        <div class="flex flex-col space-y-3">
           <Label>{{ $t("kbView.exporter.exportFormat") }}</Label>
           <Select v-model="selectedFormat">
             <SelectTrigger>
@@ -26,10 +26,12 @@
             </SelectContent>
           </Select>
         </div>
-        <div class="flex flex-col space-y-2" v-if="selectedFormat !== 'pdf'">
+        <div class="flex flex-col space-y-3" v-if="selectedFormat !== 'pdf'">
           <Label>{{ $t("kbView.exporter.preview") }}</Label>
-          <div class="text-sm max-h-[30vh] max-w-full overflow-y-auto overflow-x-hidden text-wrap">
-            <pre class="text-wrap">{{ previewContent }}</pre>
+          <div class="border rounded-md">
+            <div class="text-sm max-h-[30vh] p-2 mr-1 max-w-full overflow-y-auto overflow-x-hidden">
+              <pre class="text-wrap">{{ previewContent }}</pre>
+            </div>
           </div>
         </div>
       </div>

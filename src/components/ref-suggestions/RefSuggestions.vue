@@ -7,12 +7,25 @@
       @keydown="handleKeydown"
     >
       <div class="relative px-1">
-        <Search class="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
+        <div
+          class="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground flex items-center"
+        >
+          <template v-if="isFileRef">
+            <File class="size-4" />
+          </template>
+          <template v-else-if="isFileEmbed">
+            <span class="text-sm">![]</span>
+          </template>
+          <template v-else>
+            <Search class="size-4" />
+          </template>
+        </div>
         <Input
           @input="onInput"
           @compositionend="onCompositionEnd"
+          :placeholder="$t('kbView.refSuggestions.placeholder')"
           v-model="query"
-          class="h-[32px] pl-8 rounded-sm focus-visible:outline-none focus-visible:ring-transparent"
+          class="h-[32px] pl-8 rounded-sm focus-visible:outline-none focus-visible:ring-transparent placeholder:text-muted-foreground/50"
         />
       </div>
       <!-- XXX scroll area 的高度是 250px，因为 max-h 是 300px，减去 input 的高度和中间的 padding 就是 250px，并不优雅 -->
@@ -57,7 +70,9 @@
             @click="handleSelectItem(item)"
           >
             <FileIcon class="size-4 mr-2 flex-shrink-0" />
-            <span class="truncate">{{ item.file.name }}</span>
+            <span class="truncate">
+              <HighlightedText :text="item.file.name" :highlight-terms="queryTerms" />
+            </span>
           </div>
         </template>
 
@@ -76,7 +91,7 @@ import { generateKeydownHandlerSimple } from "@/context/keymap";
 import RefSuggestionsContext, { type SuggestionItem } from "@/context/refSuggestions";
 import { calcPopoverPos } from "@/utils/popover";
 import { hybridTokenize } from "@/utils/tokenize";
-import { Plus, Search, FileIcon } from "lucide-vue-next";
+import { Plus, Search, FileIcon, File } from "lucide-vue-next";
 import { computed, nextTick, watch } from "vue";
 import BlockContent from "../block-contents/BlockContent.vue";
 import { Input } from "../ui/input";
@@ -89,11 +104,13 @@ import { getPmSchema } from "../prosemirror/pmSchema";
 import LastFocusContext from "@/context/lastFocus";
 import { EditorView } from "prosemirror-view";
 import type { Block } from "@/context/blocks/view-layer/blocksManager";
+import HighlightedText from "@/components/highlighted-text/HighlightedText.vue";
 
 const {
   showPos,
   open,
   query,
+  queryTerms,
   focusItemIndex,
   suggestions,
   suppressMouseOver,
@@ -109,11 +126,6 @@ const taskQueue = useTaskQueue();
 const putNewBlockAtBlock = computed(() => {
   const id = putNewBlockAt.value === "" ? "root" : putNewBlockAt.value;
   return blocksManager.getBlock(id);
-});
-
-const queryTerms = computed(() => {
-  if (query.value.length == 0) return [];
-  return hybridTokenize(query.value, false, 1, false) ?? [];
 });
 
 watch(showPos, async () => {
@@ -256,6 +268,9 @@ const handleKeydown = generateKeydownHandlerSimple({
     stopPropagation: true,
   },
 });
+
+const isFileRef = computed(() => query.value.startsWith("/"));
+const isFileEmbed = computed(() => /^[!！]/.test(query.value));
 </script>
 
 <style lang="scss">
@@ -263,5 +278,9 @@ const handleKeydown = generateKeydownHandlerSimple({
 // 这里使用了 :has 选择器，保证不干扰其他 popover 的样式
 [data-radix-popper-content-wrapper]:has(> .ref-suggestions-content) {
   transform: translate(var(--popover-x), var(--popover-y)) !important;
+}
+
+.ref-suggestions-content .highlight-keep {
+  background-color: var(--highlight-text-bg);
 }
 </style>

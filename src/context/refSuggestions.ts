@@ -14,6 +14,7 @@ import LastFocusContext from "./lastFocus";
 import { EditorView as PmEditorView } from "prosemirror-view";
 import { plainTextToTextContent } from "@/utils/pm";
 import { isImage, isAudio, isVideo } from "@/utils/fileType";
+import { hybridTokenize } from "@/utils/tokenize";
 
 export type SuggestionItem =
   | { type: "block"; block: Block }
@@ -27,7 +28,7 @@ const isPreviewableFile = (filename: string) => {
 
 const RefSuggestionsContext = createContext(() => {
   const { blocksManager, blockEditor } = BlocksContext.useContext()!;
-  const { search } = IndexContext.useContext()!;
+  const { searchWithScore } = IndexContext.useContext()!;
   const { files } = AttachmentsManagerContext.useContext()!;
   const { putNewBlockAt } = BacklinksContext.useContext()!;
   const { lastFocusedBlockTree, lastFocusedDiId } = LastFocusContext.useContext()!;
@@ -52,6 +53,15 @@ const RefSuggestionsContext = createContext(() => {
   const allowCreateNew = ref(false); // 是否允许创建新块
   const allowFileEmbed = ref(false); // 是否允许文件嵌入
 
+  const queryTerms = computed(() => {
+    if (query.value.length === 0) return [];
+
+    // 如果是文件引用或文件嵌入,去掉前缀字符
+    const searchText = /^[!！/]/.test(query.value) ? query.value.slice(1) : query.value;
+
+    return hybridTokenize(searchText, false, 1, false) ?? [];
+  });
+
   const updateSuggestions = useDebounceFn(() => {
     const newSuggestions: SuggestionItem[] = [];
 
@@ -65,7 +75,11 @@ const RefSuggestionsContext = createContext(() => {
         const searchFiles = (files: Dirents, parentPath = ""): void => {
           Object.entries(files).forEach(([name, file]) => {
             const fullPath = parentPath ? `${parentPath}/${name}` : name;
-            if (fullPath.toLowerCase().includes(searchQuery.toLowerCase())) {
+            // 使用小写进行比较,但保留原始大小写用于显示
+            const searchTerms = searchQuery.toLowerCase().split(/\s+/).filter(Boolean);
+            const nameMatches = searchTerms.every((term) => name.toLowerCase().includes(term));
+
+            if (nameMatches) {
               if (isFileEmbed) {
                 if (!file.isDirectory && isPreviewableFile(name)) {
                   newSuggestions.push({
@@ -89,13 +103,27 @@ const RefSuggestionsContext = createContext(() => {
         };
         searchFiles(files.value);
       } else {
-        const result = search(query.value);
+        const result = searchWithScore(query.value);
         result
           .slice(0, 100)
-          .map((id) => blocksManager.getBlock(id as string))
-          .filter((block) => block != null && block.content[0] === BLOCK_CONTENT_TYPES.TEXT)
-          .forEach((block) => {
-            newSuggestions.push({ type: "block", block: block! });
+          .map(({ id, score }) => {
+            const block = blocksManager.getBlock(id as string);
+            return { block, score };
+          })
+          .filter((arg): arg is { block: Block; score: number } => {
+            const { block, score } = arg;
+            if (!block) return false;
+            if (block.content[0] !== BLOCK_CONTENT_TYPES.TEXT) return false;
+            if (block.boosting <= 0) return false;
+            return true;
+          })
+          .sort((a, b) => {
+            const aScore = a.score * a.block!.boosting;
+            const bScore = b.score * b.block!.boosting;
+            return bScore - aScore;
+          })
+          .forEach(({ block }) => {
+            newSuggestions.push({ type: "block", block });
           });
 
         if (allowCreateNew.value && query.value.trim().length > 0) {
@@ -200,6 +228,7 @@ const RefSuggestionsContext = createContext(() => {
     showPos,
     open,
     query,
+    queryTerms,
     focusItemIndex,
     suggestions,
     suppressMouseOver,

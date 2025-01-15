@@ -540,6 +540,23 @@ export const createBlocksManager = (syncLayer: SyncLayer) => {
     return result.join("");
   };
 
+  const getBoosting = (block: MinimalBlock) => {
+    if (block.type !== "normalBlock") return -1.0;
+    if (block.content[0] === BLOCK_CONTENT_TYPES.TEXT) {
+      const schema = getPmSchema({ getBlockRef });
+      const node = Node.fromJSON(schema, block.content[1]);
+      if (node.content.size == 1) {
+        const onlyNode = node.content.firstChild;
+        if (onlyNode && onlyNode.type.name === "blockRef_v2") {
+          console.log("blockRef_v2, boosting = -1.0");
+          return -1.0; // 如果只有一个 blockRef_v2，则 boosting 为 -1.0，表示我们不希望其出现在搜索结果中
+        }
+      }
+    }
+
+    return 1.0; // 默认 boosting 为 1.0
+  };
+
   const getOlinks = (docContent: any, type: "blockRef" | "tag" | "both" = "both") => {
     const schemaCtx = { getBlockRef: getBlockRef };
     const pmSchema = getPmSchema(schemaCtx);
@@ -855,6 +872,7 @@ export const createBlocksManager = (syncLayer: SyncLayer) => {
     getBlockRef,
     getCtext,
     getMtext,
+    getBoosting,
     getOlinks,
     mainRootBlockId,
     lastFocusedBlockTree,

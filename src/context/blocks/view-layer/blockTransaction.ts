@@ -38,6 +38,7 @@ type BlockTransactionBuilderContext = {
   getBlockRef: (blockId: BlockId) => ShallowRef<Block | null>;
   getCtext: (content: BlockContent, includeTags?: boolean) => string;
   getMtext: (metadata: any) => string;
+  getBoosting: (block: MinimalBlock) => number;
   getOlinks: (docContent: any) => string[];
 };
 
@@ -53,6 +54,7 @@ function useBlockTransaction(context: BlockTransactionBuilderContext) {
     getBlockRef,
     getCtext,
     getMtext,
+    getBoosting,
     getOlinks,
   } = context;
   const eventBus = useEventBus();
@@ -234,7 +236,7 @@ function useBlockTransaction(context: BlockTransactionBuilderContext) {
           blockParams.content[0] === BLOCK_CONTENT_TYPES.TEXT
             ? getOlinks(blockParams.content[1])
             : [],
-        boosting: 0,
+        boosting: getBoosting(blockParams),
         acturalSrc: blockParams.id,
         docId: 0, // TODO decide which docId to use
       } as const;

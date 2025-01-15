@@ -7,6 +7,7 @@ import type { Block } from "./blocks/view-layer/blocksManager";
 import { ref, toRaw } from "vue";
 import type { BlockId } from "@/common/type-and-schemas/block/block-id";
 import prettify from "html-prettify";
+import { getBasename } from "@/common/helper-functions/path";
 
 const ExporterContext = createContext(() => {
   const { blocksManager } = BlocksContext.useContext()!;
@@ -81,8 +82,106 @@ const ExporterContext = createContext(() => {
     return prettify(rootEl.outerHTML);
   };
 
-  const exportSubtreeToMarkdown = (rootBlockId: string) => {
-    return "";
+  const exportSubtreeToMarkdown = (
+    rootBlockId: string,
+    options: {
+      nonFoldOnly?: boolean;
+    } = {},
+  ) => {
+    options.nonFoldOnly ??= false;
+
+    const schema = getPmSchema({ getBlockRef: blocksManager.getBlockRef });
+
+    const nodeToMarkdown = (node: any): string => {
+      if (node.type.name === "text") {
+        let text = node.text;
+
+        if (node.marks) {
+          for (const mark of node.marks) {
+            switch (mark.type.name) {
+              case "bold":
+                text = `**${text}**`;
+                break;
+              case "italic":
+                text = `*${text}*`;
+                break;
+              case "code":
+                text = `\`${text}\``;
+                break;
+              case "strikethrough":
+                text = `~~${text}~~`;
+                break;
+              case "link":
+                text = `[${text}](${mark.attrs.href})`;
+                break;
+              case "highlight":
+                text = `==${text}==`;
+                break;
+            }
+          }
+        }
+        return text;
+      }
+
+      switch (node.type.name) {
+        case "mathInline":
+          return `$${node.attrs.src}$`;
+        case "hardBreak":
+          return "\n";
+        case "blockRef_v2":
+          const refBlock = blocksManager.getBlock(node.attrs.toBlockId);
+          if (!refBlock) return "";
+          return node.attrs.tag ? `#${refBlock.ctext}` : `[[${refBlock.ctext}]]`;
+        case "pathRef":
+          return `[${getBasename(node.attrs.path)}](${node.attrs.path})`;
+        default:
+          return "";
+      }
+    };
+
+    let result = "";
+    blocksManager.forDescendants({
+      onEachBlock: (b, level) => {
+        const indent = "  ".repeat(level);
+
+        if (b.content[0] === BLOCK_CONTENT_TYPES.TEXT) {
+          const doc = Node.fromJSON(schema, b.content[1]);
+          let text = "";
+          doc.descendants((node) => {
+            text += nodeToMarkdown(node);
+          });
+          result += `${indent}- ${text}\n`;
+        } else if (b.content[0] === BLOCK_CONTENT_TYPES.CODE) {
+          const [_, code, lang] = b.content;
+          result += `${indent}- \`\`\`${lang}\n`;
+          const codeLines = code.split("\n");
+          for (const line of codeLines) {
+            result += `${indent}  ${line}\n`;
+          }
+          result += `${indent}  \`\`\`\n`;
+        } else if (b.content[0] === BLOCK_CONTENT_TYPES.MATH) {
+          const [_, formula] = b.content;
+          result += `${indent}- $$${formula}$$\n`;
+        } else if (b.content[0] === BLOCK_CONTENT_TYPES.IMAGE) {
+          const [_, path, align, caption] = b.content;
+          const captionText = caption ? ` "${caption}"` : "";
+          result += `${indent}- ![${captionText}](${path})\n`;
+        } else if (b.content[0] === BLOCK_CONTENT_TYPES.VIDEO) {
+          const [_, src] = b.content;
+          result += `${indent}- [Video](${src})\n`;
+        } else if (b.content[0] === BLOCK_CONTENT_TYPES.AUDIO) {
+          const [_, src] = b.content;
+          result += `${indent}- [Audio](${src})\n`;
+        } else {
+          result += `${indent}- ${b.ctext}\n`;
+        }
+      },
+      rootBlockId,
+      rootBlockLevel: 0,
+      nonFoldOnly: options.nonFoldOnly,
+      includeSelf: true,
+    });
+    return result;
   };
 
   const exportSubtreeToPdf = (rootBlockId: string) => {

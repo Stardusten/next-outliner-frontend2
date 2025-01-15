@@ -111,6 +111,7 @@ export const messages = {
         noSuggestions: "没有结果",
         createNewUnder1: "在",
         createNewUnder2: "下创建新块",
+        placeholder: "试试输入 / 或 !",
       },
       pomodoro: {
         startWorking: "开工吧！",
@@ -656,6 +657,7 @@ export const messages = {
         noSuggestions: "No results",
         createNewUnder1: "Create new block under",
         createNewUnder2: "",
+        placeholder: "Try typing / or !",
       },
       pomodoro: {
         startWorking: "Let's get started!",
@@ -1205,6 +1207,7 @@ export const messages = {
         noSuggestions: "沒有結果",
         createNewUnder1: "在",
         createNewUnder2: "下建立新區塊",
+        placeholder: "試試輸入 / 或 !",
       },
       pomodoro: {
         startWorking: "開工吧！",
@@ -1749,6 +1752,7 @@ export const messages = {
         noSuggestions: "沒有結果",
         createNewUnder1: "在",
         createNewUnder2: "下建立新區塊",
+        placeholder: "試試輸入 / 或 !",
       },
       pomodoro: {
         startWorking: "開工吧！",
@@ -2294,6 +2298,7 @@ export const messages = {
         noSuggestions: "No results",
         createNewUnder1: "Créer un nouveau bloc sous",
         createNewUnder2: "",
+        placeholder: "Essayez de taper / ou !",
       },
       pomodoro: {
         startWorking: "Commençons !",
@@ -2845,7 +2850,8 @@ export const messages = {
       refSuggestions: {
         noSuggestions: "結果がありません",
         createNewUnder1: "新しいブロックを作成",
-        createNewUnder2: "",
+        createNewUnder2: "の下に",
+        placeholder: "/ または ! を入力してみてください",
       },
       pomodoro: {
         startWorking: "さあ、始めましょう！",

@@ -3,7 +3,9 @@
     <div v-if="!isDirectory" class="w-8 flex-shrink-0" />
     <Label :for="name" class="flex-1 flex items-center cursor-pointer min-w-0">
       <component :is="isDirectory ? Folder : File" class="size-4 mr-2 flex-shrink-0" />
-      <span class="text-sm truncate flex-1" v-html="highlightedName"></span>
+      <span class="text-sm truncate flex-1">
+        <HighlightedText :text="name" :highlight-terms="highlightTerms" />
+      </span>
     </Label>
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -65,31 +67,22 @@
 </template>
 
 <script setup lang="ts">
+import HighlightedText from "@/components/highlighted-text/HighlightedText.vue";
 import { Button } from "@/components/ui/button";
-import { Label } from "@/components/ui/label";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import {
-  File,
-  Folder,
-  MoreHorizontal,
-  Pencil,
-  Copy,
-  Info,
-  Trash,
-  Download,
-  Eye,
-} from "lucide-vue-next";
-import RenameDialog from "./RenameDialog.vue";
-import DeleteDialog from "./DeleteDialog.vue";
-import InfoDialog from "./InfoDialog.vue";
-import { ref, computed } from "vue";
+import { Label } from "@/components/ui/label";
 import AttachmentsManagerContext from "@/context/attachmentsManager";
 import AttachmentViewerContext from "@/context/attachmentViewer";
+import { Download, Eye, File, Folder, Info, MoreHorizontal, Pencil, Trash } from "lucide-vue-next";
+import { ref } from "vue";
+import DeleteDialog from "./DeleteDialog.vue";
+import InfoDialog from "./InfoDialog.vue";
+import RenameDialog from "./RenameDialog.vue";
 
 const props = defineProps<{
   name: string;
@@ -114,19 +107,4 @@ const { handlePreview } = AttachmentViewerContext.useContext()!;
 const openRenameDialog = ref(false);
 const openDeleteDialog = ref(false);
 const openInfoDialog = ref(false);
-
-const highlightedName = computed(() => {
-  if (!props.highlightTerms?.length) return props.name;
-
-  let result = props.name;
-  const sortedTerms = [...props.highlightTerms].sort((a, b) => b.length - a.length);
-
-  for (const term of sortedTerms) {
-    const regex = new RegExp(term.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "gi");
-    result = result.replace(regex, (match) => `<span class="highlight-keep">${match}</span>`);
-    console.log(result);
-  }
-
-  return result;
-});
 </script>
