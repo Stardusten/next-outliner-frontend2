@@ -16,6 +16,7 @@
         :mtime="mtime"
         :ctime="ctime"
         :size="size"
+        :highlight-terms="highlightTerms"
       />
     </div>
     <CollapsibleContent class="ml-6">
@@ -28,6 +29,7 @@
           :mtime="subDirent.mtime"
           :ctime="subDirent.ctime"
           :size="subDirent.size"
+          :highlight-terms="highlightTerms"
         />
       </template>
       <div v-if="filteredCount" class="text-xs ml-10 text-muted-foreground py-1">
@@ -55,5 +57,6 @@ defineProps<{
   subDirents: Dirents[string][];
   filteredCount?: number;
   onToggle: () => void;
+  highlightTerms?: string[];
 }>();
 </script>

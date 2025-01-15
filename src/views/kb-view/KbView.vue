@@ -17,10 +17,10 @@
                                 <ExporterContext.Provider>
                                   <CreateNewTreeDialogContext.Provider>
                                     <IndexContext.Provider>
-                                      <AttachmentsManagerContext.Provider>
-                                        <ImagesContext.Provider>
-                                          <SidebarContext.Provider>
-                                            <RefSuggestionsContext.Provider>
+                                      <AttachmentViewerContext.Provider>
+                                        <AttachmentsManagerContext.Provider>
+                                          <ImagesContext.Provider>
+                                            <SidebarContext.Provider>
                                               <BlockMoverContext.Provider>
                                                 <HistoryContext.Provider>
                                                   <BlockSelectDragContext.Provider>
@@ -28,23 +28,21 @@
                                                       <FavoriteContext.Provider>
                                                         <FieldsManagerContext.Provider>
                                                           <BacklinksContext.Provider>
-                                                            <FloatingEditorContext.Provider>
+                                                            <RefSuggestionsContext.Provider>
                                                               <FieldValueInspectorContext.Provider>
                                                                 <DailyNoteContext.Provider>
                                                                   <FusionCommandContext.Provider>
                                                                     <CommandsContext.Provider>
                                                                       <KeymapContext.Provider>
                                                                         <BlockContextMenuContext.Provider>
-                                                                          <AttachmentViewerContext.Provider>
-                                                                            <KbViewContent />
-                                                                          </AttachmentViewerContext.Provider>
+                                                                          <KbViewContent />
                                                                         </BlockContextMenuContext.Provider>
                                                                       </KeymapContext.Provider>
                                                                     </CommandsContext.Provider>
                                                                   </FusionCommandContext.Provider>
                                                                 </DailyNoteContext.Provider>
                                                               </FieldValueInspectorContext.Provider>
-                                                            </FloatingEditorContext.Provider>
+                                                            </RefSuggestionsContext.Provider>
                                                           </BacklinksContext.Provider>
                                                         </FieldsManagerContext.Provider>
                                                       </FavoriteContext.Provider>
@@ -52,10 +50,10 @@
                                                   </BlockSelectDragContext.Provider>
                                                 </HistoryContext.Provider>
                                               </BlockMoverContext.Provider>
-                                            </RefSuggestionsContext.Provider>
-                                          </SidebarContext.Provider>
-                                        </ImagesContext.Provider>
-                                      </AttachmentsManagerContext.Provider>
+                                            </SidebarContext.Provider>
+                                          </ImagesContext.Provider>
+                                        </AttachmentsManagerContext.Provider>
+                                      </AttachmentViewerContext.Provider>
                                     </IndexContext.Provider>
                                   </CreateNewTreeDialogContext.Provider>
                                 </ExporterContext.Provider>
@@ -104,7 +102,6 @@ import FieldsManagerContext from "@/context/fieldsManager";
 import BacklinksContext from "@/context/backlinks";
 import PasteDialogContext from "@/context/pasteDialog";
 import CreateNewTreeDialogContext from "@/context/createNewTreeDialog";
-import FloatingEditorContext from "@/context/floatingEditor";
 import ExporterContext from "@/context/exporter";
 import FieldValueInspectorContext from "@/context/fieldValueInspector";
 import DailyNoteContext from "@/context/dailynote";

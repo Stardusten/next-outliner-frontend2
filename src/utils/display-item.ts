@@ -107,11 +107,20 @@ export const generateDisplayItems = (ctx: DisplayGeneratorContext) => {
       });
     }
 
+    const rootDisplayLevel = enlargeRootBlock ? -1 : rootBlockLevel;
+
     blocksManager.forDescendantsWithMissingBlock({
       rootBlockId,
       rootBlockLevel: enlargeRootBlock ? -1 : rootBlockLevel,
       nonFoldOnly: true,
       includeSelf: enlargeRootBlock ? false : true,
+      // 如果根块是折叠的，则仍然显示其所有孩子
+      ignore: rootBlock.fold
+        ? (block: Block, level: number) => {
+            if (level === rootDisplayLevel) return "keep-self-and-descendants";
+            return undefined;
+          }
+        : undefined,
       onEachBlock: (block, level) => {
         resultCollector.push({
           type: "basic-block",

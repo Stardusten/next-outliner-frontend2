@@ -28,6 +28,18 @@
     :block-tree="blockTree"
     :item-id="itemId"
   ></ImageContent>
+  <AudioContent
+    v-else-if="block.content[0] === BLOCK_CONTENT_TYPES.AUDIO"
+    :block="block"
+    :block-tree="blockTree"
+    :item-id="itemId"
+  ></AudioContent>
+  <VideoContent
+    v-else-if="block.content[0] === BLOCK_CONTENT_TYPES.VIDEO"
+    :block="block"
+    :block-tree="blockTree"
+    :item-id="itemId"
+  ></VideoContent>
 </template>
 
 <script setup lang="ts">
@@ -36,6 +48,8 @@ import type { BlockId } from "@/common/type-and-schemas/block/block-id";
 import type { BlockTree } from "@/context/blockTree";
 import CodeContent from "../block-contents/CodeContent.vue";
 import ImageContent from "../block-contents/ImageContent.vue";
+import AudioContent from "../block-contents/AudioContent.vue";
+import VideoContent from "../block-contents/VideoContent.vue";
 import MathContent from "@/components/block-contents/MathContent.vue";
 import TextContent from "@/components/block-contents/TextContent.vue";
 import type { Block } from "@/context/blocks/view-layer/blocksManager";

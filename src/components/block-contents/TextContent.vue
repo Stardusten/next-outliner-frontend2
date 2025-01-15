@@ -41,6 +41,7 @@ import { getPmSchema } from "../prosemirror/pmSchema";
 import FloatingMathInputContext from "@/context/floatingMathInput";
 import HistoryContext from "@/context/history";
 import { turnToInlineCode } from "../prosemirror/input-rules/turnToInlineBlock";
+import AttachmentViewerContext from "@/context/attachmentViewer";
 
 const props = defineProps<{
   blockTree?: BlockTree;
@@ -54,6 +55,7 @@ const props = defineProps<{
 const { blocksManager, blockEditor } = BlocksContext.useContext()!;
 const fmic = FloatingMathInputContext.useContext();
 const historyContext = HistoryContext.useContext();
+const { handlePreview } = AttachmentViewerContext.useContext()!;
 const taskQueue = useTaskQueue();
 const docJson = shallowRef<any | null>(null);
 const pmWrapper = ref<InstanceType<typeof ProseMirror> | null>(null);
@@ -67,6 +69,7 @@ const schema = computed(() =>
     pushHistoryItem: historyContext ? historyContext.pushHistoryItem : undefined,
     getMainTree: props.blockTree ? () => props.blockTree! : undefined,
     getBlockRef: blocksManager.getBlockRef,
+    handlePreview,
   }),
 );
 

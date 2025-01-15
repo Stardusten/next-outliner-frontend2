@@ -15,15 +15,27 @@ import { toast } from "@/components/ui/toast/use-toast";
 import { useI18n } from "vue-i18n";
 import dayjs from "dayjs";
 import ServerInfoContext from "./serverInfo";
-import { isText } from "@/utils/fileType";
+import { isText, isStaticImage, isAnimateImage, isAudio, isVideo } from "@/utils/fileType";
 import { getSeperator } from "@/common/helper-functions/path";
+import { type ViewingState, type AttachmentInfo, createViewingState } from "./attachmentViewer";
+import AttachmentViewerContext from "./attachmentViewer";
 
 const AttachmentsManagerContext = createContext(() => {
   const { dbBasePath, attachmentsBasePath, attachmentsFolderName } = PathsContext.useContext()!;
-  const { t } = useI18n();
-  const open = ref(false);
   const { serverUrl } = ServerInfoContext.useContext()!;
-  // /dbBasePath/attachments 下的所有文件
+  const {
+    handlePreview,
+    viewingAttachment,
+    previewTextFile,
+    previewStaticImageFile,
+    previewAnimateImageFile,
+    previewAudioFile,
+    previewVideoFile,
+    getPreviewInfo,
+  } = AttachmentViewerContext.useContext()!;
+  const { t } = useI18n();
+
+  const open = ref(false);
   const files = ref<Dirents>({});
   const fetchFilesStatus = ref<"idle" | "fetching" | "success" | "failed">("idle");
   const uploadStatus = ref<"idle" | "uploading" | "success" | "failed">("idle");
@@ -58,6 +70,21 @@ const AttachmentsManagerContext = createContext(() => {
   });
   // 展开的目录
   const expandedDirs = ref<Set<string>>(new Set());
+  // 搜索查询
+  const searchQuery = ref("");
+  // 防抖的搜索查询
+  const debouncedSearchQuery = ref("");
+  // 当前过滤结果
+  const filterResult = ref<FilterResult>({
+    files: [],
+    filteredCount: 0,
+    dirFilteredCounts: new Map(),
+  });
+  const showPreview = ref(false);
+  const previewingFile = ref<ViewingState | null>(null);
+  const previewStatus = ref<"idle" | "loading" | "error" | "viewing">("idle");
+  const previewError = ref("");
+
   // 当前路径下的所有文件
   const currentFiles = computed(() => {
     let ctx = files.value;
@@ -99,12 +126,6 @@ const AttachmentsManagerContext = createContext(() => {
       : expandedDirs.value.add(dirName);
   };
 
-  // 搜索查询
-  const searchQuery = ref("");
-
-  // 防抖的搜索查询
-  const debouncedSearchQuery = ref("");
-
   // 更新防抖搜索查询
   const updateDebouncedSearchQuery = useDebounceFn((value: string) => {
     debouncedSearchQuery.value = value;
@@ -113,13 +134,6 @@ const AttachmentsManagerContext = createContext(() => {
   // 监听搜索查询变化
   watch(searchQuery, (value) => {
     updateDebouncedSearchQuery(value);
-  });
-
-  // 当前过滤结果
-  const filterResult = ref<FilterResult>({
-    files: [],
-    filteredCount: 0,
-    dirFilteredCounts: new Map(),
   });
 
   watch(
@@ -410,7 +424,24 @@ const AttachmentsManagerContext = createContext(() => {
     }
   };
 
-  const isTextFile = isText;
+  // 预览文件
+  const previewFile = async (path: string) => {
+    if (!path) return;
+
+    previewStatus.value = "loading";
+    previewError.value = "";
+
+    try {
+      const info = await getPreviewInfo(path, serverUrl.value);
+      previewingFile.value = createViewingState(info);
+      previewStatus.value = "viewing";
+    } catch (error) {
+      console.error("Error previewing file", error);
+      previewStatus.value = "error";
+      previewError.value = error instanceof Error ? error.message : "Unknown error";
+      previewingFile.value = null;
+    }
+  };
 
   return {
     open,
@@ -437,7 +468,18 @@ const AttachmentsManagerContext = createContext(() => {
     handleRename,
     handleDelete,
     handleDownload,
-    isTextFile,
+    isText,
+    isStaticImage,
+    isAnimateImage,
+    isAudio,
+    isVideo,
+    showPreview,
+    previewingFile,
+    previewStatus,
+    previewError,
+    previewFile,
+    handlePreview,
+    viewingAttachment,
   };
 });
 

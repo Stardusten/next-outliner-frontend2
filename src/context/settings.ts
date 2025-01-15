@@ -20,7 +20,6 @@ export type SettingComponentType =
 
 export type SettingGroupItem = {
   key: string;
-  label: Record<string, string>;
 };
 
 export type SettingItem<
@@ -29,9 +28,7 @@ export type SettingItem<
 > = {
   id: string;
   groupKey: string;
-  label: Record<string, string>;
   defaultValue: T;
-  desc?: Record<string, string>;
   value: WritableComputedRef<T>;
   componentType: SettingComponentType & { type: C };
 };

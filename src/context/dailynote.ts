@@ -61,7 +61,6 @@ const DailyNoteContext = createContext(() => {
 
   registerSettingGroup({
     key: "dailynote",
-    label: { zh: "每日笔记" },
   });
 
   const defaultDateFormatId = "dailynote.defaultDateFormat";
@@ -72,8 +71,6 @@ const DailyNoteContext = createContext(() => {
     id: defaultDateFormatId,
     groupKey: "dailynote",
     defaultValue: defaultDateFormatDefaultValue,
-    label: { zh: "默认日期格式" },
-    desc: { zh: "创建新的每日笔记时，默认使用的日期格式" },
     value: useWritableComputedRef(defaultDateFormat),
     componentType: { type: "textInput" },
   });
@@ -91,8 +88,6 @@ const DailyNoteContext = createContext(() => {
     id: parentBlockOfNewDailyNoteId,
     groupKey: "dailynote",
     defaultValue: parentBlockOfNewDailyNoteDefaultValue,
-    label: { zh: "每日笔记的存放位置" },
-    desc: { zh: "创建的新每日笔记将会放到这个块下（作为子块）" },
     value: useWritableComputedRef(parentBlockOfNewDailyNote),
     componentType: { type: "blockIdInput" },
   });

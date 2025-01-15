@@ -1,6 +1,6 @@
 <template>
   <Dialog :open="open" @update:open="(open) => !open && closeExporter()">
-    <DialogContent class="max-w-[80vw] w-[500px] flex flex-col gap-4">
+    <DialogContent class="max-w-[80vw] w-[800px] flex flex-col gap-4">
       <DialogHeader>
         <DialogTitle>
           {{ $t("kbView.exporter.title") }}
@@ -28,7 +28,7 @@
         </div>
         <div class="flex flex-col space-y-2" v-if="selectedFormat !== 'pdf'">
           <Label>{{ $t("kbView.exporter.preview") }}</Label>
-          <div class="max-h-[30vh] max-w-full overflow-y-auto overflow-x-hidden text-wrap">
+          <div class="text-sm max-h-[30vh] max-w-full overflow-y-auto overflow-x-hidden text-wrap">
             <pre class="text-wrap">{{ previewContent }}</pre>
           </div>
         </div>
@@ -42,7 +42,7 @@
           {{ $t("kbView.exporter.copyToClipboard") }}
         </Button>
         <Button variant="outline" @click="exportToFile">
-          <File class="size-4 mr-2" />
+          <Download class="size-4 mr-2" />
           {{ $t("kbView.exporter.exportToFile") }}
         </Button>
       </DialogFooter>
@@ -54,7 +54,7 @@
 import ExporterContext from "@/context/exporter";
 import { copyAsHtml, copyAsPlainText } from "@/utils/clipboard";
 import dayjs from "dayjs";
-import { Clipboard, File } from "lucide-vue-next";
+import { Clipboard, Download, File } from "lucide-vue-next";
 import { computed, ref } from "vue";
 import { Button } from "../ui/button";
 import {

@@ -20,7 +20,7 @@ import { computed } from "vue";
 import RefSuggestionsContext from "@/context/refSuggestions";
 
 const { blocksManager } = BlocksContext.useContext()!;
-const { openRefSuggestions } = RefSuggestionsContext.useContext()!;
+const { openRefSuggestions, close } = RefSuggestionsContext.useContext()!;
 
 const props = defineProps<{
   item: SettingItem<string, "blockIdInput">;
@@ -32,17 +32,15 @@ const block = computed(() => {
 });
 
 const handleClickAdd = (e: MouseEvent) => {
-  openRefSuggestions(
-    {
-      x: e.clientX,
-      y: e.clientY,
-    },
-    (blockId, close) => {
-      if (blockId) {
-        props.item.value.value = blockId;
-      }
+  openRefSuggestions({
+    showPos: { x: e.clientX, y: e.clientY },
+    onSelectBlock: (blockId) => {
+      props.item.value.value = blockId;
       close();
     },
-  );
+    onSelectNothing: close,
+    allowCreateNew: false,
+    allowFileRef: false,
+  });
 };
 </script>

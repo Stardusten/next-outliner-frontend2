@@ -9,14 +9,14 @@
 </template>
 
 <script setup lang="ts">
-import type { ViewingTextAttachment } from "@/context/attachmentViewer";
+import type { ViewingTextState } from "@/context/attachmentViewer";
 import CodeMirror from "../codemirror/CodeMirror.vue";
 
 const props = defineProps<{
   allowEdit: boolean;
 }>();
 
-const viewingAttachment = defineModel<ViewingTextAttachment>("viewingAttachment");
+const viewingAttachment = defineModel<ViewingTextState>("viewingAttachment");
 </script>
 
 <style lang="scss">

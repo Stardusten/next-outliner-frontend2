@@ -1,98 +1,99 @@
 <template>
   <div
-    class="header-bar fixed top-0 left-0 flex flex-row justify-between items-center w-[calc(100vw-16px)] px-[8px] py-[10px] z-10 bg-background"
+    class="header-bar fixed top-0 left-0 flex flex-row justify-between items-center w-[calc(100vw-16px)] z-10 bg-background bg-clip-content"
     :style="{ paddingRight, transition }"
   >
-    <div class="left-part">
-      <!-- 左边的按钮 -->
-      <div class="left-buttons">
-        <LeftButtons />
+    <div class="flex flex-row w-full justify-between items-center py-[10px] pl-[8px]">
+      <div class="left-part">
+        <!-- 左边的按钮 -->
+        <div class="left-buttons">
+          <LeftButtons />
+        </div>
       </div>
-    </div>
 
-    <BlockPath :block-id="mainRootBlockId" @click-path-segment="handleClickPathSegment" />
+      <BlockPath :block-id="mainRootBlockId" @click-path-segment="handleClickPathSegment" />
 
-    <div class="right-part flex flex-row items-center">
-      <!-- 同步状态 -->
-      <Tooltip>
-        <TooltipTrigger>
-          <Dot class="size-8" :class="synced ? 'stroke-green-500' : 'stroke-red-500'" />
-        </TooltipTrigger>
-        <TooltipContent>
-          {{ t(`kbView.syncStatus.${synced ? "synced" : "disconnected"}`) }}
-        </TooltipContent>
-      </Tooltip>
-
-      <!-- 右边的按钮 -->
-      <div class="right-buttons">
-        <Tooltip v-for="(button, index) in rightButtons" :key="index">
-          <TooltipTrigger asChild>
-            <Button
-              variant="ghost"
-              size="icon"
-              :class="button.active?.value ? 'bg-muted' : 'w-fit min-w-8'"
-              @focus="preventFocus"
-              @click="button.onClick"
-            >
-              <HeaderBarItem :item="button" iconOnly />
-            </Button>
+      <div class="right-part flex flex-row items-center">
+        <!-- 同步状态 -->
+        <Tooltip>
+          <TooltipTrigger>
+            <Dot class="size-8" :class="synced ? 'stroke-green-500' : 'stroke-red-500'" />
           </TooltipTrigger>
           <TooltipContent>
-            <component :is="button.label" />
+            {{ t(`kbView.syncStatus.${synced ? "synced" : "disconnected"}`) }}
           </TooltipContent>
         </Tooltip>
-      </div>
 
-      <!-- 更多选项 -->
-      <DropdownMenu>
-        <DropdownMenuTrigger>
-          <Tooltip>
+        <!-- 右边的按钮 -->
+        <div class="right-buttons">
+          <Tooltip v-for="(button, index) in rightButtons" :key="index">
             <TooltipTrigger asChild>
-              <Button variant="ghost" size="icon" @focus="preventFocus">
-                <MoreVertical class="size-5 stroke-[1.8]" />
+              <Button
+                variant="ghost"
+                size="icon"
+                :class="button.active?.value ? 'bg-muted' : 'w-fit min-w-8'"
+                @focus="preventFocus"
+                @click="button.onClick"
+              >
+                <HeaderBarItem :item="button" iconOnly />
               </Button>
             </TooltipTrigger>
             <TooltipContent>
-              {{ t("kbView.headerBar.moreOptions") }}
+              <component :is="button.label" />
             </TooltipContent>
           </Tooltip>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent class="mr-2">
-          <DropdownMenuItem v-for="(item, index) in moreOptions" :key="index" @click="item.onClick">
-            <HeaderBarItem :item="item" iconClass="!size-4" />
-          </DropdownMenuItem>
+        </div>
 
-          <DropdownMenuSub>
-            <DropdownMenuSubTrigger>
-              <Globe class="size-4 mr-3" />
-              {{ $t("languages.label") }}
-            </DropdownMenuSubTrigger>
-            <DropdownMenuPortal>
-              <DropdownMenuSubContent>
-                <DropdownMenuCheckboxItem
-                  v-for="locale in $i18n.availableLocales"
-                  :key="locale"
-                  :checked="$i18n.locale === locale"
-                  @click="$i18n.locale = locale"
-                >
-                  {{ $t(`languages.${locale}`) }}
-                </DropdownMenuCheckboxItem>
-              </DropdownMenuSubContent>
-            </DropdownMenuPortal>
-          </DropdownMenuSub>
-        </DropdownMenuContent>
-      </DropdownMenu>
+        <!-- 更多选项 -->
+        <DropdownMenu>
+          <DropdownMenuTrigger>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button variant="ghost" size="icon" @focus="preventFocus">
+                  <MoreVertical class="size-5 stroke-[1.8]" />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>
+                {{ t("kbView.headerBar.moreOptions") }}
+              </TooltipContent>
+            </Tooltip>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent class="mr-2">
+            <DropdownMenuItem
+              v-for="(item, index) in moreOptions"
+              :key="index"
+              @click="item.onClick"
+            >
+              <HeaderBarItem :item="item" iconClass="!size-4" />
+            </DropdownMenuItem>
+
+            <DropdownMenuSub>
+              <DropdownMenuSubTrigger>
+                <Globe class="size-4 mr-3" />
+                {{ $t("languages.label") }}
+              </DropdownMenuSubTrigger>
+              <DropdownMenuPortal>
+                <DropdownMenuSubContent>
+                  <DropdownMenuCheckboxItem
+                    v-for="locale in $i18n.availableLocales"
+                    :key="locale"
+                    :checked="$i18n.locale === locale"
+                    @click="$i18n.locale = locale"
+                  >
+                    {{ $t(`languages.${locale}`) }}
+                  </DropdownMenuCheckboxItem>
+                </DropdownMenuSubContent>
+              </DropdownMenuPortal>
+            </DropdownMenuSub>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </div>
     </div>
-
-    <Teleport to="body">
-      <Importer v-model:open="openImporter" />
-    </Teleport>
   </div>
 </template>
 
 <script setup lang="tsx">
 import type { BlockId } from "@/common/type-and-schemas/block/block-id";
-import Importer from "@/components/Importer.vue";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -127,7 +128,6 @@ import {
   CalendarDays,
   Dot,
   Download,
-  Focus,
   FolderClosed,
   FolderInput,
   Globe,

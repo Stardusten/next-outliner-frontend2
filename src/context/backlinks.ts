@@ -25,10 +25,6 @@ const BacklinksContext = createContext(() => {
 
   registerSettingGroup({
     key: "backlinks",
-    label: {
-      en: "Backlinks",
-      zh: "块引用 & 反向链接",
-    },
   });
 
   const showBacklinksCounterId = "backlinks.showCounter";
@@ -41,12 +37,6 @@ const BacklinksContext = createContext(() => {
   registerSettingItem({
     id: showBacklinksCounterId,
     groupKey: "backlinks",
-    label: {
-      zh: "块右侧显示反向链接个数",
-    },
-    desc: {
-      zh: "如果开启，则如果一个块有反向链接，则会在块右侧以悬浮胶囊的形式显示反向链接个数。点击即可打开一个悬浮窗口，用于浏览这个块的所有反向链接。",
-    },
     defaultValue: showBacklinksCounterDefaultValue,
     value: useWritableComputedRef(showBacklinksCounter),
     componentType: {
@@ -61,12 +51,6 @@ const BacklinksContext = createContext(() => {
   registerSettingItem({
     id: putNewBlockAtId,
     groupKey: "backlinks",
-    label: {
-      zh: "新块插入位置",
-    },
-    desc: {
-      zh: "在引用补全菜单中，选择创建新块时新块插入的位置。如果不指定，默认会插入根块末尾。",
-    },
     defaultValue: putNewBlockAtDefaultValue,
     value: useWritableComputedRef(putNewBlockAt),
     componentType: { type: "blockIdInput" },

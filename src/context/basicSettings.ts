@@ -11,9 +11,6 @@ const BasicSettingsContext = createContext(() => {
 
   registerSettingGroup({
     key: "basic",
-    label: {
-      zh: "基本设置",
-    },
   });
 
   const textFontFamilyId = "basic.textFontFamily";
@@ -23,12 +20,6 @@ const BasicSettingsContext = createContext(() => {
   registerSettingItem({
     id: textFontFamilyId,
     groupKey: "basic",
-    label: {
-      zh: "正文字体",
-    },
-    desc: {
-      zh: "指定笔记正文的字体。",
-    },
     defaultValue: textFontFamilyDefaultValue,
     value: useWritableComputedRef(textFontFamily),
     componentType: {
@@ -55,12 +46,6 @@ const BasicSettingsContext = createContext(() => {
   registerSettingItem({
     id: uiFontFamilyId,
     groupKey: "basic",
-    label: {
-      zh: "界面字体",
-    },
-    desc: {
-      zh: "指定软件界面字体。在不指定其他字体的情况下，该字体将成为软件的基础字体。",
-    },
     defaultValue: uiFontFamilyDefaultValue,
     value: useWritableComputedRef(uiFontFamily),
     componentType: {
@@ -90,12 +75,6 @@ const BasicSettingsContext = createContext(() => {
   registerSettingItem({
     id: monospaceFontFamilyId,
     groupKey: "basic",
-    label: {
-      zh: "代码块字体",
-    },
-    desc: {
-      zh: "指定行内代码、代码块等需要等宽字体的场景使用的字体。",
-    },
     defaultValue: monospaceFontFamilyDefaultValue,
     value: useWritableComputedRef(monospaceFontFamily),
     componentType: {
@@ -115,34 +94,10 @@ const BasicSettingsContext = createContext(() => {
     { immediate: true },
   );
 
-  const enableFloatingEditorId = "basic.enableFloatingEditor";
-  const enableFloatingEditorKey = computed(() => `${kbPrefix.value}${enableFloatingEditorId}`);
-  const enableFloatingEditorDefaultValue = false;
-  const enableFloatingEditor = useLocalStorage2(
-    enableFloatingEditorKey,
-    enableFloatingEditorDefaultValue,
-  );
-  registerSettingItem({
-    id: enableFloatingEditorId,
-    groupKey: "basic",
-    label: {
-      zh: "启用浮动编辑器",
-    },
-    desc: {
-      zh: "启用后，在块引用块上按 Ctrl / Command 键时，会弹出浮动编辑器。",
-    },
-    defaultValue: enableFloatingEditorDefaultValue,
-    value: useWritableComputedRef(enableFloatingEditor),
-    componentType: {
-      type: "switch",
-    },
-  });
-
   const ctx = {
     textFontFamily,
     uiFontFamily,
     monospaceFontFamily,
-    enableFloatingEditor,
   };
   return ctx;
 });

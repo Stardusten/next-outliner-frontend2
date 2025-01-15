@@ -2,6 +2,7 @@ import type { BlockId } from "@/common/type-and-schemas/block/block-id";
 import type BlocksContext from "@/context/blocks/blocks";
 import type { BlockTree } from "@/context/blockTree";
 import type BlockTreeContext from "@/context/blockTree";
+import type CommandsContext from "@/context/commands/commands";
 import type HistoryContext from "@/context/history";
 import type ImagesContext from "@/context/images";
 import type KeymapContext from "@/context/keymap";
@@ -32,4 +33,5 @@ export type PmPluginCtx = {
   refSuggestionsContext: ReturnType<typeof RefSuggestionsContext.useContext>;
   keymapContext: ReturnType<typeof KeymapContext.useContext>;
   pasteDialogContext: ReturnType<typeof PasteDialogContext.useContext>;
+  commandsContext: ReturnType<typeof CommandsContext.useContext>;
 };

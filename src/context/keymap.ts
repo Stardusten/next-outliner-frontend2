@@ -275,6 +275,16 @@ const KeymapContext = createContext(() => {
       preventDefault: true,
       stopPropagation: true,
     },
+    "Mod-Shift-ArrowUp": {
+      run: commands.foldAll,
+      preventDefault: true,
+      stopPropagation: true,
+    },
+    "Mod-Shift-ArrowDown": {
+      run: commands.expandAll,
+      preventDefault: true,
+      stopPropagation: true,
+    },
     "Alt-ArrowUp": {
       run: () => {
         if (commands.swapUpSelected()) return true;

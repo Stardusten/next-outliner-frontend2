@@ -332,6 +332,14 @@ export const messages = {
           createdTime: "创建时间",
           closeBtn: "关闭",
         },
+        selectFileToPreview: "选择文件以预览",
+        fileNotPreviewable: "暂不支持预览此类型的文件",
+        tooltip: {
+          showPreview: "显示预览面板",
+          hidePreview: "隐藏预览面板",
+          filter: "筛选文件",
+          sort: "排序文件",
+        },
       },
       imageContent: {
         fetchingImage: "图片加载中...",
@@ -402,6 +410,8 @@ export const messages = {
           swapDown: "下移",
           expand: "展开",
           collapse: "折叠",
+          collapseAll: "折叠所有",
+          expandAll: "展开所有",
           indent: "增加缩进",
           outdent: "减少缩进",
           insertInlineMath: "插入行内数学公式",
@@ -438,6 +448,50 @@ export const messages = {
         allowEdit: "允许编辑",
         save: "保存",
         loading: "正在加载...",
+        audioNotSupported: "音频格式不受支持",
+        videoNotSupported: "视频格式不受支持",
+      },
+      settingGroups: {
+        basic: "基本设置",
+        timeMachine: "时光机",
+        dailynote: "每日笔记",
+        backlinks: "块引用 & 反向链接",
+      },
+      settingItems: {
+        basic: {
+          textFontFamily: {
+            label: "正文字体",
+            desc: "指定笔记正文的字体。",
+          },
+          uiFontFamily: {
+            label: "界面字体",
+            desc: "指定软件界面字体。在不指定其他字体的情况下，该字体将成为软件的基础字体。",
+          },
+          monospaceFontFamily: {
+            label: "代码块字体",
+            desc: "指定行内代码、代码块等需要等宽字体的场景使用的字体。",
+          },
+        },
+        dailynote: {
+          defaultDateFormat: {
+            label: "默认日期格式",
+            desc: "创建新的每日笔记时，默认使用的日期格式。",
+          },
+          parentBlockOfNewDailyNote: {
+            label: "每日笔记的存放位置",
+            desc: "创建的新每日笔记将会放到这个块下（作为子块）",
+          },
+        },
+        backlinks: {
+          showCounter: {
+            label: "块右侧显示反向链接个数",
+            desc: "如果开启，则如果一个块有反向链接，则会在块右侧以悬浮胶囊的形式显示反向链接个数。点击即可打开一个悬浮窗口，用于浏览这个块的所有反向链接。",
+          },
+          putNewBlockAt: {
+            label: "新块插入位置",
+            desc: "在引用补全菜单中，选择创建新块时新块插入的位置。如果不指定，默认会插入根块末尾。",
+          },
+        },
       },
     },
     adminDashboard: {
@@ -825,6 +879,14 @@ export const messages = {
           createdTime: "Created Time",
           closeBtn: "Close",
         },
+        selectFileToPreview: "Select File to Preview",
+        fileNotPreviewable: "Preview is not supported for this file type",
+        tooltip: {
+          showPreview: "Show preview panel",
+          hidePreview: "Hide preview panel",
+          filter: "Filter files",
+          sort: "Sort files",
+        },
       },
       imageContent: {
         fetchingImage: "Loading image...",
@@ -895,6 +957,8 @@ export const messages = {
           swapDown: "Move Down",
           expand: "Expand",
           collapse: "Collapse",
+          collapseAll: "Fold All",
+          expandAll: "Expand All",
           indent: "Increase Indent",
           outdent: "Decrease Indent",
           insertInlineMath: "Insert Inline Math",
@@ -931,6 +995,50 @@ export const messages = {
         allowEdit: "Allow Edit",
         save: "Save",
         loading: "Loading...",
+        audioNotSupported: "Audio format not supported",
+        videoNotSupported: "Video format not supported",
+      },
+      settingGroups: {
+        basic: "Basic Settings",
+        timeMachine: "Time Machine",
+        dailynote: "Daily Notes",
+        backlinks: "Block References",
+      },
+      settingItems: {
+        basic: {
+          textFontFamily: {
+            label: "Text Font",
+            desc: "Specify the font for note content.",
+          },
+          uiFontFamily: {
+            label: "UI Font",
+            desc: "Specify the interface font. When no other fonts are specified, this font will become the base font for the software.",
+          },
+          monospaceFontFamily: {
+            label: "Code Block Font",
+            desc: "Specify the font used for inline code, code blocks and other monospace scenarios.",
+          },
+        },
+        dailynote: {
+          defaultDateFormat: {
+            label: "Default Date Format",
+            desc: "The default date format used when creating new daily notes.",
+          },
+          parentBlockOfNewDailyNote: {
+            label: "Daily Notes Location",
+            desc: "New daily notes will be placed under this block (as child blocks)",
+          },
+        },
+        backlinks: {
+          showCounter: {
+            label: "Show Backlink Count on Block",
+            desc: "If enabled, when a block has backlinks, the number of backlinks will be shown as a floating pill on the right side of the block. Click to open a floating window to browse all backlinks to this block.",
+          },
+          putNewBlockAt: {
+            label: "New Block Insert Position",
+            desc: "Where to insert new blocks when creating them from the reference completion menu. If not specified, new blocks will be inserted at the end of the root block.",
+          },
+        },
       },
     },
     adminDashboard: {
@@ -1318,6 +1426,14 @@ export const messages = {
           createdTime: "创建时间",
           closeBtn: "关闭",
         },
+        selectFileToPreview: "选择文件以预览",
+        fileNotPreviewable: "暂不支持预览此类型的文件",
+        tooltip: {
+          showPreview: "显示预览面板",
+          hidePreview: "隐藏预览面板",
+          filter: "筛选文件",
+          sort: "排序文件",
+        },
       },
       imageContent: {
         fetchingImage: "圖片載入中...",
@@ -1388,6 +1504,8 @@ export const messages = {
           swapDown: "下移",
           expand: "展開",
           collapse: "摺疊",
+          collapseAll: "摺疊所有",
+          expandAll: "展開所有",
           indent: "增加縮排",
           outdent: "減少縮排",
           insertInlineMath: "插入行內數學公式",
@@ -1424,6 +1542,50 @@ export const messages = {
         allowEdit: "允許編輯",
         save: "保存",
         loading: "正在加載...",
+        audioNotSupported: "音頻格式不受支持",
+        videoNotSupported: "視頻格式不受支持",
+      },
+      settingGroups: {
+        basic: "基本設定",
+        timeMachine: "時光機",
+        dailynote: "每日筆記",
+        backlinks: "區塊引用 & 反向連結",
+      },
+      settingItems: {
+        basic: {
+          textFontFamily: {
+            label: "正文字體",
+            desc: "指定筆記正文的字體。",
+          },
+          uiFontFamily: {
+            label: "界面字體",
+            desc: "指定軟件界面字體。在不指定其他字體的情況下，該字體將成為軟件的基礎字體。",
+          },
+          monospaceFontFamily: {
+            label: "程式碼區塊字體",
+            desc: "指定行內程式碼、程式碼區塊等需要等寬字體的場景使用的字體。",
+          },
+        },
+        dailynote: {
+          defaultDateFormat: {
+            label: "預設日期格式",
+            desc: "創建新的每日筆記時，預設使用的日期格式。",
+          },
+          parentBlockOfNewDailyNote: {
+            label: "每日筆記的存放位置",
+            desc: "創建的新每日筆記將會放到這個區塊下（作為子區塊）",
+          },
+        },
+        backlinks: {
+          showCounter: {
+            label: "區塊右側顯示反向連結個數",
+            desc: "如果開啟，則如果一個區塊有反向連結，則會在區塊右側以懸浮膠囊的形式顯示反向連結個數。點擊即可打開一個懸浮窗口，用於瀏覽這個區塊的所有反向連結。",
+          },
+          putNewBlockAt: {
+            label: "新區塊插入位置",
+            desc: "在引用補全選單中，選擇創建新區塊時新區塊插入的位置。如果不指定，預設會插入根區塊末尾。",
+          },
+        },
       },
     },
     adminDashboard: {
@@ -1808,6 +1970,14 @@ export const messages = {
           createdTime: "创建时间",
           closeBtn: "关闭",
         },
+        selectFileToPreview: "选择文件以预览",
+        fileNotPreviewable: "暂不支持预览此类型的文件",
+        tooltip: {
+          showPreview: "显示预览面板",
+          hidePreview: "隐藏预览面板",
+          filter: "筛选文件",
+          sort: "排序文件",
+        },
       },
       imageContent: {
         fetchingImage: "圖片載入中...",
@@ -1878,6 +2048,8 @@ export const messages = {
           swapDown: "下移",
           expand: "展開",
           collapse: "摺疊",
+          collapseAll: "摺疊所有",
+          expandAll: "展開所有",
           indent: "增加縮排",
           outdent: "減少縮排",
           insertInlineMath: "插入行內數學公式",
@@ -1914,6 +2086,50 @@ export const messages = {
         allowEdit: "允許編輯",
         save: "保存",
         loading: "正在加載...",
+        audioNotSupported: "音頻格式不受支持",
+        videoNotSupported: "視頻格式不受支持",
+      },
+      settingGroups: {
+        basic: "基本設定",
+        timeMachine: "時光機",
+        dailynote: "每日筆記",
+        backlinks: "區塊引用 & 反向連結",
+      },
+      settingItems: {
+        basic: {
+          textFontFamily: {
+            label: "正文字體",
+            desc: "指定筆記正文的字體。",
+          },
+          uiFontFamily: {
+            label: "界面字體",
+            desc: "指定軟體界面字體。在不指定其他字體的情況下，該字體將成為軟體的基礎字體。",
+          },
+          monospaceFontFamily: {
+            label: "程式碼區塊字體",
+            desc: "指定行內程式碼、程式碼區塊等需要等寬字體的場景使用的字體。",
+          },
+        },
+        dailynote: {
+          defaultDateFormat: {
+            label: "預設日期格式",
+            desc: "建立新的每日筆記時，預設使用的日期格式。",
+          },
+          parentBlockOfNewDailyNote: {
+            label: "每日筆記的存放位置",
+            desc: "建立的新每日筆記將會放到這個區塊下（作為子區塊）",
+          },
+        },
+        backlinks: {
+          showCounter: {
+            label: "區塊右側顯示反向連結個數",
+            desc: "如果開啟，則如果一個區塊有反向連結，則會在區塊右側以懸浮膠囊的形式顯示反向連結個數。點擊即可打開一個懸浮視窗，用於瀏覽這個區塊的所有反向連結。",
+          },
+          putNewBlockAt: {
+            label: "新區塊插入位置",
+            desc: "在引用補全選單中，選擇建立新區塊時新區塊插入的位置。如果不指定，預設會插入根區塊末尾。",
+          },
+        },
       },
     },
     adminDashboard: {
@@ -2301,6 +2517,14 @@ export const messages = {
           createdTime: "Created Time",
           closeBtn: "Close",
         },
+        selectFileToPreview: "Select File to Preview",
+        fileNotPreviewable: "Preview is not supported for this file type",
+        tooltip: {
+          showPreview: "Show preview panel",
+          hidePreview: "Hide preview panel",
+          filter: "Filter files",
+          sort: "Sort files",
+        },
       },
       imageContent: {
         fetchingImage: "Chargement de l'image...",
@@ -2372,6 +2596,8 @@ export const messages = {
           swapDown: "Déplacer vers le bas",
           expand: "Développer",
           collapse: "Réduire",
+          collapseAll: "Réduire tout",
+          expandAll: "Développer tout",
           indent: "Augmenter l'indentation",
           outdent: "Diminuer l'indentation",
           insertInlineMath: "Insérer des mathématiques en ligne",
@@ -2409,6 +2635,50 @@ export const messages = {
         allowEdit: "Allow Edit",
         save: "Save",
         loading: "Chargement...",
+        audioNotSupported: "Format audio non supporté",
+        videoNotSupported: "Format vidéo non supporté",
+      },
+      settingGroups: {
+        basic: "Paramètres de base",
+        timeMachine: "Machine à remonter le temps",
+        dailynote: "Notes quotidiennes",
+        backlinks: "Références de blocs & Rétroliens",
+      },
+      settingItems: {
+        basic: {
+          textFontFamily: {
+            label: "Police du texte",
+            desc: "Spécifie la police pour le contenu des notes.",
+          },
+          uiFontFamily: {
+            label: "Police de l'interface",
+            desc: "Spécifie la police de l'interface. Lorsqu'aucune autre police n'est spécifiée, cette police devient la police de base du logiciel.",
+          },
+          monospaceFontFamily: {
+            label: "Police des blocs de code",
+            desc: "Spécifie la police utilisée pour le code en ligne, les blocs de code et autres scénarios nécessitant une police à espacement fixe.",
+          },
+        },
+        dailynote: {
+          defaultDateFormat: {
+            label: "Format de date par défaut",
+            desc: "Le format de date par défaut utilisé lors de la création de nouvelles notes quotidiennes.",
+          },
+          parentBlockOfNewDailyNote: {
+            label: "Emplacement des notes quotidiennes",
+            desc: "Les nouvelles notes quotidiennes seront placées sous ce bloc (en tant que blocs enfants)",
+          },
+        },
+        backlinks: {
+          showCounter: {
+            label: "Afficher le nombre de rétroliens sur le bloc",
+            desc: "Si activé, lorsqu'un bloc a des rétroliens, le nombre de rétroliens sera affiché sous forme de pastille flottante sur le côté droit du bloc. Cliquez pour ouvrir une fenêtre flottante permettant de parcourir tous les rétroliens vers ce bloc.",
+          },
+          putNewBlockAt: {
+            label: "Position d'insertion du nouveau bloc",
+            desc: "Où insérer les nouveaux blocs lors de leur création à partir du menu de complétion des références. Si non spécifié, les nouveaux blocs seront insérés à la fin du bloc racine.",
+          },
+        },
       },
     },
     adminDashboard: {
@@ -2800,6 +3070,14 @@ export const messages = {
           createdTime: "Created Time",
           closeBtn: "Close",
         },
+        selectFileToPreview: "选择文件以预览",
+        fileNotPreviewable: "Preview is not supported for this file type",
+        tooltip: {
+          showPreview: "Show preview panel",
+          hidePreview: "Hide preview panel",
+          filter: "Filter files",
+          sort: "Sort files",
+        },
       },
       imageContent: {
         fetchingImage: "画像を読み込み中...",
@@ -2871,6 +3149,8 @@ export const messages = {
           swapDown: "下に移動",
           expand: "展開",
           collapse: "折りたたむ",
+          collapseAll: "すべて折りたたむ",
+          expandAll: "すべて展開",
           indent: "インデント増加",
           outdent: "インデント減少",
           insertInlineMath: "インライン数式を挿入",
@@ -2907,6 +3187,50 @@ export const messages = {
         allowEdit: "Allow Edit",
         save: "Save",
         loading: "読み込み中...",
+        audioNotSupported: "音声フォーマットはサポートされていません",
+        videoNotSupported: "動画フォーマットはサポートされていません",
+      },
+      settingGroups: {
+        basic: "基本設定",
+        timeMachine: "タイムマシン",
+        dailynote: "デイリーノート",
+        backlinks: "ブロック参照 & バックリンク",
+      },
+      settingItems: {
+        basic: {
+          textFontFamily: {
+            label: "本文フォント",
+            desc: "ノート本文のフォントを指定します。",
+          },
+          uiFontFamily: {
+            label: "インターフェースフォント",
+            desc: "ソフトウェアのインターフェースフォントを指定します。他のフォントが指定されていない場合、このフォントがソフトウェアの基本フォントとなります。",
+          },
+          monospaceFontFamily: {
+            label: "コードブロックフォント",
+            desc: "インラインコード、コードブロックなど、等幅フォントが必要な場面で使用するフォントを指定します。",
+          },
+        },
+        dailynote: {
+          defaultDateFormat: {
+            label: "デフォルトの日付形式",
+            desc: "新しいデイリーノートを作成する際のデフォルトの日付形式です。",
+          },
+          parentBlockOfNewDailyNote: {
+            label: "デイリーノートの保存場所",
+            desc: "新しいデイリーノートはこのブロックの下に配置されます（子ブロックとして）",
+          },
+        },
+        backlinks: {
+          showCounter: {
+            label: "ブロックの右側にバックリンク数を表示",
+            desc: "有効にすると、ブロックにバックリンクがある場合、ブロックの右側にフローティングピルとしてバックリンクの数が表示されます。クリックすると、そのブロックへのすべてのバックリンクを表示するフローティングウィンドウが開きます。",
+          },
+          putNewBlockAt: {
+            label: "新規ブロックの挿入位置",
+            desc: "参照補完メニューから新規ブロックを作成する際の挿入位置です。指定しない場合、ルートブロックの末尾に挿入されます。",
+          },
+        },
       },
     },
     adminDashboard: {

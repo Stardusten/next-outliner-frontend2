@@ -126,7 +126,7 @@ const {
   sidePaneBlockIds,
   addToSidePane,
 } = SidebarContext.useContext()!;
-const { openRefSuggestions } = RefSuggestionsContext.useContext()!;
+const { openRefSuggestions, close } = RefSuggestionsContext.useContext()!;
 
 const handleMouseMove = (e: MouseEvent) => {
   if (sidePaneDir.value === "right") {
@@ -154,16 +154,15 @@ const handleMouseDown = (e: MouseEvent) => {
 };
 
 const openSearchAndAdd = (e: MouseEvent) => {
-  openRefSuggestions(
-    {
-      x: e.clientX,
-      y: e.clientY,
-    },
-    (blockId, close) => {
-      if (!blockId) return;
+  openRefSuggestions({
+    showPos: { x: e.clientX, y: e.clientY },
+    onSelectBlock: (blockId) => {
       addToSidePane(blockId);
       close();
     },
-  );
+    onSelectNothing: close,
+    allowCreateNew: false,
+    allowFileRef: false,
+  });
 };
 </script>

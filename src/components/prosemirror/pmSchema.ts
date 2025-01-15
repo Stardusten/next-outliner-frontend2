@@ -15,6 +15,7 @@ type SchemaCtx = {
   pushHistoryItem?: () => void;
   getMainTree?: () => BlockTree;
   getBlockRef: (blockId: BlockId) => Ref<Block | null>;
+  handlePreview?: (path: string, name: string) => Promise<void>;
 };
 
 export const getPmSchema = (ctx: SchemaCtx) => {
@@ -46,6 +47,11 @@ export const getPmSchema = (ctx: SchemaCtx) => {
           span.dataset.path = node.attrs.path;
           const basename = getBasename(node.attrs.path);
           span.innerHTML = basename;
+          span.addEventListener("click", (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            ctx.handlePreview?.(node.attrs.path, basename);
+          });
           return span;
         },
         parseDOM: [

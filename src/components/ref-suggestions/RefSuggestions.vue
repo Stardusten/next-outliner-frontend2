@@ -23,10 +23,10 @@
             class="relative flex w-full cursor-default select-none items-center rounded-sm py-1.5 pl-2 text-sm outline-none [&.focus]:bg-accent [&.focus]:text-accent-foreground"
             :class="{ focus: focusItemIndex === index }"
             @mouseover="!suppressMouseOver && (focusItemIndex = index)"
-            @click="handleClick(item)"
+            @click="handleSelectItem(item as any)"
           >
             <BlockContent
-              :block="item.block"
+              :block="item.block as any"
               readonly
               class="*:cursor-default"
               :highlight-terms="queryTerms"
@@ -37,7 +37,7 @@
             class="flex w-full text-sm items-center cursor-default select-none text-muted-foreground rounded-sm py-1.5 pl-2 [&.focus]:bg-accent [&.focus]:text-accent-foreground"
             :class="{ focus: focusItemIndex === index }"
             @mouseover="!suppressMouseOver && (focusItemIndex = index)"
-            @click="handleClick(item)"
+            @click="handleSelectItem(item)"
           >
             <Plus class="size-4 mr-2" />
             {{ $t("kbView.refSuggestions.createNewUnder1") }}
@@ -48,6 +48,16 @@
             ></BlockContent
             >"
             {{ $t("kbView.refSuggestions.createNewUnder2") }}
+          </div>
+          <div
+            v-else-if="item.type === 'file'"
+            class="relative flex w-full cursor-default select-none items-center rounded-sm py-1.5 pl-2 text-sm outline-none [&.focus]:bg-accent [&.focus]:text-accent-foreground"
+            :class="{ focus: focusItemIndex === index }"
+            @mouseover="!suppressMouseOver && (focusItemIndex = index)"
+            @click="handleSelectItem(item)"
+          >
+            <FileIcon class="size-4 mr-2 flex-shrink-0" />
+            <span class="truncate">{{ item.file.name }}</span>
           </div>
         </template>
 
@@ -63,10 +73,10 @@
 
 <script setup lang="ts">
 import { generateKeydownHandlerSimple } from "@/context/keymap";
-import RefSuggestionsContext from "@/context/refSuggestions";
+import RefSuggestionsContext, { type SuggestionItem } from "@/context/refSuggestions";
 import { calcPopoverPos } from "@/utils/popover";
 import { hybridTokenize } from "@/utils/tokenize";
-import { Plus, Search } from "lucide-vue-next";
+import { Plus, Search, FileIcon } from "lucide-vue-next";
 import { computed, nextTick, watch } from "vue";
 import BlockContent from "../block-contents/BlockContent.vue";
 import { Input } from "../ui/input";
@@ -78,21 +88,22 @@ import { plainTextToTextContent } from "@/utils/pm";
 import { getPmSchema } from "../prosemirror/pmSchema";
 import LastFocusContext from "@/context/lastFocus";
 import { EditorView } from "prosemirror-view";
+import type { Block } from "@/context/blocks/view-layer/blocksManager";
 
 const {
   showPos,
   open,
   query,
-  cb,
   focusItemIndex,
   suggestions,
   suppressMouseOver,
+  handleSelectItem,
   updateSuggestions,
   withScrollSuppressed,
 } = RefSuggestionsContext.useContext()!;
 const { putNewBlockAt } = BacklinksContext.useContext()!;
 const { blocksManager, blockEditor } = BlocksContext.useContext()!;
-const { lastFocusedBlockTree, lastFocusedDiId } = LastFocusContext.useContext()!;
+
 const taskQueue = useTaskQueue();
 
 const putNewBlockAtBlock = computed(() => {
@@ -159,62 +170,19 @@ const ensureFocusedVisible = () => {
   });
 };
 
-const handleCreateNew = () => {
-  taskQueue.addTask(async () => {
-    const tree = lastFocusedBlockTree.value;
-    const diId = lastFocusedDiId.value;
-    if (!tree || !diId) return;
-    const view = tree.getEditorView(diId);
-    if (!(view instanceof EditorView)) return;
-    const schema = view.state.schema;
-    // 在指定位置创建新块
-    const parentId = putNewBlockAt.value === "" ? "root" : putNewBlockAt.value;
-    const { newNormalBlockId } =
-      blockEditor.insertNormalBlock({
-        content: plainTextToTextContent(query.value, schema),
-        pos: {
-          parentId,
-          childIndex: "last-space",
-        },
-      }) ?? {};
-    if (!newNormalBlockId) return;
-    // 当前光标位置插入到新块的块引用
-    const node = schema.nodes.blockRef_v2.create({ toBlockId: newNormalBlockId, tag: false });
-    const cursorPos = view.state.selection.anchor;
-    const tr = view.state.tr.replaceRangeWith(cursorPos - 1, cursorPos, node);
-    view.dispatch(tr);
-    // 关闭弹窗
-    open.value = false;
-    // 重新聚焦
-    setTimeout(() => view.focus(), 50);
-  });
-};
-
-const handleClick = (item: (typeof suggestions.value)[number]) => {
-  if (item.type === "block") {
-    cb.value?.(item.block.id, () => (open.value = false));
-  } else if (query.value.trim().length > 0) {
-    handleCreateNew();
-  }
-};
-
 const handleKeydown = generateKeydownHandlerSimple({
   Escape: {
     run: (e) => {
       if (e.isComposing || e.keyCode === 229) return false;
-      cb.value?.(null, () => (open.value = false));
+      handleSelectItem({ type: "nothing" });
       return true;
     },
   },
   Enter: {
     run: (e) => {
       if (e.isComposing || e.keyCode === 229) return false;
-      const focusItem = suggestions.value[focusItemIndex.value];
-      if (focusItem.type === "block") {
-        cb.value?.(focusItem.block.id, () => (open.value = false));
-      } else {
-        handleCreateNew();
-      }
+      const focusItem = suggestions.value[focusItemIndex.value] as SuggestionItem;
+      handleSelectItem(focusItem);
       return true;
     },
     preventDefault: true,
@@ -225,7 +193,7 @@ const handleKeydown = generateKeydownHandlerSimple({
       if (e.isComposing || e.keyCode === 229) return false;
       if (query.value.length == 0) {
         showPos.value = null;
-        cb.value?.(null, () => (open.value = false));
+        handleSelectItem({ type: "nothing" });
         return true;
       }
       return false;

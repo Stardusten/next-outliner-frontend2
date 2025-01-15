@@ -9,7 +9,12 @@ import FusionCommandContext from "../fusionCommand";
 import type { BlockPos, NonNormalizedBlockPosParentChild } from "../blocks/view-layer/blocksEditor";
 import { plainTextToTextContent } from "@/utils/pm";
 import { getPmSchema } from "@/components/prosemirror/pmSchema";
-import type { TextContent } from "@/common/type-and-schemas/block/block-content";
+import type {
+  AudioContent,
+  ImageContent,
+  TextContent,
+  VideoContent,
+} from "@/common/type-and-schemas/block/block-content";
 import SidebarContext from "../sidebar";
 import { Node } from "prosemirror-model";
 import { AllSelection, TextSelection } from "prosemirror-state";
@@ -969,6 +974,176 @@ const CommandsContext = createContext(() => {
     return false;
   };
 
+  const insertImage = (imageContent: ImageContent) => {
+    const tree = lastFocusedBlockTree.value;
+    const diId = lastFocusedDiId.value;
+    const di = diId ? tree?.getDi(diId) : null;
+    if (!tree || !diId || !di || !DI_FILTERS.isBlockDi(di)) return false;
+
+    const blockId = di.block.id;
+    const view = tree.getEditorView(diId);
+
+    let isEmpty = false;
+    if (view instanceof PmEditorView) {
+      isEmpty = view.state.doc.content.size == 0;
+    } else if (view instanceof CmEditorView) {
+      isEmpty = view.state.doc.length === 0;
+    }
+
+    const taskQueue = useTaskQueue();
+    let imageBlockId: BlockId | null = null;
+    if (isEmpty) {
+      // 当前块为空, 直接将当前块变成图片块
+      imageBlockId = blockId;
+      taskQueue.addTask(() => {
+        blockEditor.changeBlockContent({ blockId, content: imageContent });
+      });
+    } else {
+      // 当前块不为空, 在下方插入图片块
+      taskQueue.addTask(() => {
+        const { newNormalBlockId } =
+          blockEditor.insertNormalBlock({
+            pos: {
+              baseBlockId: blockId,
+              offset: 1,
+            },
+            content: imageContent,
+          }) ?? {};
+        imageBlockId = newNormalBlockId ?? null;
+      });
+    }
+  };
+
+  const insertAudio = (audioContent: AudioContent) => {
+    const tree = lastFocusedBlockTree.value;
+    const diId = lastFocusedDiId.value;
+    const di = diId ? tree?.getDi(diId) : null;
+    if (!tree || !diId || !di || !DI_FILTERS.isBlockDi(di)) return false;
+
+    const blockId = di.block.id;
+    const view = tree.getEditorView(diId);
+
+    let isEmpty = false;
+    if (view instanceof PmEditorView) {
+      isEmpty = view.state.doc.content.size == 0;
+    } else if (view instanceof CmEditorView) {
+      isEmpty = view.state.doc.length === 0;
+    }
+
+    const taskQueue = useTaskQueue();
+    let imageBlockId: BlockId | null = null;
+    if (isEmpty) {
+      // 当前块为空, 直接将当前块变成图片块
+      imageBlockId = blockId;
+      taskQueue.addTask(() => {
+        blockEditor.changeBlockContent({ blockId, content: audioContent });
+      });
+    } else {
+      // 当前块不为空, 在下方插入图片块
+      taskQueue.addTask(() => {
+        const { newNormalBlockId } =
+          blockEditor.insertNormalBlock({
+            pos: {
+              baseBlockId: blockId,
+              offset: 1,
+            },
+            content: audioContent,
+          }) ?? {};
+        imageBlockId = newNormalBlockId ?? null;
+      });
+    }
+  };
+
+  const insertVideo = (videoContent: VideoContent) => {
+    const tree = lastFocusedBlockTree.value;
+    const diId = lastFocusedDiId.value;
+    const di = diId ? tree?.getDi(diId) : null;
+    if (!tree || !diId || !di || !DI_FILTERS.isBlockDi(di)) return false;
+
+    const blockId = di.block.id;
+    const view = tree.getEditorView(diId);
+
+    let isEmpty = false;
+    if (view instanceof PmEditorView) {
+      isEmpty = view.state.doc.content.size == 0;
+    } else if (view instanceof CmEditorView) {
+      isEmpty = view.state.doc.length === 0;
+    }
+
+    const taskQueue = useTaskQueue();
+    let imageBlockId: BlockId | null = null;
+    if (isEmpty) {
+      // 当前块为空, 直接将当前块变成图片块
+      imageBlockId = blockId;
+      taskQueue.addTask(() => {
+        blockEditor.changeBlockContent({ blockId, content: videoContent });
+      });
+    } else {
+      // 当前块不为空, 在下方插入图片块
+      taskQueue.addTask(() => {
+        const { newNormalBlockId } =
+          blockEditor.insertNormalBlock({
+            pos: {
+              baseBlockId: blockId,
+              offset: 1,
+            },
+            content: videoContent,
+          }) ?? {};
+        imageBlockId = newNormalBlockId ?? null;
+      });
+    }
+  };
+
+  const foldAll = () => {
+    const tree = lastFocusedBlockTree.value;
+    const diId = lastFocusedDiId.value;
+    const di = diId ? tree?.getDi(diId) : null;
+    if (!tree || !diId || !di || !DI_FILTERS.isBlockDi(di)) return false;
+
+    const blockId = di.block.id;
+
+    const taskQueue = useTaskQueue();
+    taskQueue.addTask(() => {
+      const tr = blocksManager.createBlockTransaction({ type: "ui" });
+      blocksManager.forDescendants({
+        rootBlockId: blockId,
+        rootBlockLevel: 0,
+        nonFoldOnly: true,
+        includeSelf: true,
+        onEachBlock: (block) => {
+          !block.fold && tr.updateBlock({ ...block, fold: true });
+        },
+      });
+      tr.commit();
+    });
+    return true;
+  };
+
+  const expandAll = () => {
+    const tree = lastFocusedBlockTree.value;
+    const diId = lastFocusedDiId.value;
+    const di = diId ? tree?.getDi(diId) : null;
+    if (!tree || !diId || !di || !DI_FILTERS.isBlockDi(di)) return false;
+
+    const blockId = di.block.id;
+
+    const taskQueue = useTaskQueue();
+    taskQueue.addTask(() => {
+      const tr = blocksManager.createBlockTransaction({ type: "ui" });
+      blocksManager.forDescendants({
+        rootBlockId: blockId,
+        rootBlockLevel: 0,
+        nonFoldOnly: false,
+        includeSelf: true,
+        onEachBlock: (block) => {
+          block.fold && tr.updateBlock({ ...block, fold: false });
+        },
+      });
+      tr.commit();
+    });
+    return true;
+  };
+
   return {
     swapUpSelected,
     swapDownSelected,
@@ -998,6 +1173,11 @@ const CommandsContext = createContext(() => {
     addBlockAboveToSelection,
     addBlockBelowToSelection,
     blurAndSelectCurrentBlock,
+    insertImage,
+    insertAudio,
+    insertVideo,
+    foldAll,
+    expandAll,
   };
 });
 

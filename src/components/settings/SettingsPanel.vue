@@ -16,10 +16,10 @@
             :key="group.key"
             variant="ghost"
             :data-active="group.key === activeGroupKey"
-            class="w-full h-7 justify-start font-normal text-sidebar-fg data-[active=true]:bg-accent"
+            class="w-full h-7 justify-start font-normal truncate text-sidebar-fg data-[active=true]:bg-accent"
             @click="activeGroupKey = group.key"
           >
-            {{ getTrans(group.label, locale) }}
+            {{ $t(`kbView.settingGroups.${group.key}`) }}
           </Button>
         </div>
       </div>
@@ -30,12 +30,11 @@
             v-for="item in getAllSettingItemsInGroup(activeGroupKey)"
             :key="item.id"
           >
-            <Label class="mb-2"> {{ getTrans(item.label, locale) }} </Label>
-            <Label
-              v-if="item.desc"
-              class="text-[.8em] text-muted-foreground mb-2 whitespace-pre-wrap"
-            >
-              {{ getTrans(item.desc, locale) }}
+            <Label class="mb-2">
+              {{ $t(`kbView.settingItems.${item.id}.label`) }}
+            </Label>
+            <Label class="text-[.8em] text-muted-foreground mb-2 whitespace-pre-wrap">
+              {{ $t(`kbView.settingItems.${item.id}.desc`) }}
             </Label>
 
             <TextInputComp v-if="item.componentType.type === 'textInput'" :item="item as any" />
@@ -66,30 +65,21 @@
 </template>
 
 <script setup lang="ts">
-import SettingsContext, { type SettingItem } from "@/context/settings";
+import SettingsContext from "@/context/settings";
 import SettingsPanelContext from "@/context/settingsPanel";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "../ui/dialog";
-import { useI18n } from "vue-i18n";
-import getTrans from "@/utils/getTrans";
 import { Button } from "../ui/button";
-import { Input } from "../ui/input";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "../ui/dialog";
 import { Label } from "../ui/label";
 
-import KeybindingInput from "../keybinding-input/KeybindingInput.vue";
-import { RefreshCcw } from "lucide-vue-next";
-import { Tooltip, TooltipTrigger, TooltipContent } from "../ui/tooltip";
-import ResetButton from "./ResetButton.vue";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
-import TextInputComp from "./TextInputComp.vue";
+import BlockIdInputComp from "./BlockIdInputComp.vue";
+import FontSelector from "./FontSelector.vue";
 import IntegerInputComp from "./IntegerInputComp.vue";
 import JsonComp from "./JsonComp.vue";
 import KeybindingComp from "./KeybindingComp.vue";
 import SelectComp from "./SelectComp.vue";
 import SwitchComp from "./SwitchComp.vue";
-import FontSelector from "./FontSelector.vue";
-import BlockIdInputComp from "./BlockIdInputComp.vue";
+import TextInputComp from "./TextInputComp.vue";
 
-const { locale } = useI18n();
 const { open, activeGroupKey } = SettingsPanelContext.useContext()!;
 const { settingGroups, getAllSettingItemsInGroup } = SettingsContext.useContext()!;
 </script>

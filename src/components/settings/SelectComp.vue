@@ -10,7 +10,11 @@
           :key="option.value"
           :value="option.value"
         >
-          {{ getTrans(option.label, locale) }}
+          {{
+            $t(
+              `kbView.settingsPanel.settingGroups.${item.groupKey}.${item.id}.options.${option.value}.label`,
+            )
+          }}
         </SelectItem>
       </SelectContent>
     </Select>
@@ -22,7 +26,6 @@
 import type { SettingItem } from "@/context/settings";
 import ResetButton from "./ResetButton.vue";
 import { useI18n } from "vue-i18n";
-import getTrans from "@/utils/getTrans";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
 
 const { locale } = useI18n();

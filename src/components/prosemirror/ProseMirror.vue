@@ -23,6 +23,7 @@ import { mkHighlightMatchesPlugin } from "./plugins/highlightMatches";
 import { mkHighlightRefsPlugin } from "./plugins/highlightRefs";
 import { mkListenDocChangedPlugin } from "./plugins/listenDocChange";
 import type { PmPluginCtx } from "./plugins/pluginContext";
+import CommandsContext from "@/context/commands/commands";
 
 const props = withDefaults(
   defineProps<{
@@ -65,6 +66,7 @@ const pathsContext = PathsContext.useContext();
 const imagesContext = ImagesContext.useContext();
 const keymapContext = KeymapContext.useContext();
 const pasteDialogContext = PasteDialogContext.useContext();
+const commandsContext = CommandsContext.useContext();
 
 const pluginsCtx: PmPluginCtx = {
   getSchema: () => props.schema,
@@ -83,6 +85,7 @@ const pluginsCtx: PmPluginCtx = {
   pathsContext,
   keymapContext,
   pasteDialogContext,
+  commandsContext,
 };
 
 defineExpose({

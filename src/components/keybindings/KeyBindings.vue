@@ -60,6 +60,8 @@ const keyBindings = {
     { key: "Alt/Option + ↓", description: t("kbView.keybindings.commands.swapDown") },
     { key: "Command/Ctrl + ↓", description: t("kbView.keybindings.commands.expand") },
     { key: "Command/Ctrl + ↑", description: t("kbView.keybindings.commands.collapse") },
+    { key: "Command/Ctrl + Shift + ↑", description: t("kbView.keybindings.commands.collapseAll") },
+    { key: "Command/Ctrl + Shift + ↓", description: t("kbView.keybindings.commands.expandAll") },
     { key: "Tab", description: t("kbView.keybindings.commands.indent") },
     { key: "Shift + Tab", description: t("kbView.keybindings.commands.outdent") },
     { key: "@", description: t("kbView.keybindings.commands.insertBlockRef") },
