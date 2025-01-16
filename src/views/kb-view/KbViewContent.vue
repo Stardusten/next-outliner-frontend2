@@ -74,14 +74,18 @@
     <BlockContextMenu />
     <!-- 附件查看器 -->
     <AttachmentViewer />
+    <!-- 块引用上下文菜单 -->
+    <BlockRefContextMenu />
   </div>
 </template>
 
 <script setup lang="ts">
 import BlockMover from "@/block-mover/BlockMover.vue";
+import AttachmentViewer from "@/components/attachment-viewer/AttachmentViewer.vue";
 import AttachmentsManager from "@/components/attachments-mgr/AttachmentsManager2.vue";
 import BlockTree from "@/components/BlockTree.vue";
 import BlockContextMenu from "@/components/contextmenu/BlockContextMenu.vue";
+import BlockRefContextMenu from "@/components/contextmenu/BlockRefContextMenu.vue";
 import Exporter from "@/components/exporter/Exporter.vue";
 import FieldValueInspector from "@/components/field-values-inspector/FieldValueInspector.vue";
 import KeyBindings from "@/components/keybindings/KeyBindings.vue";
@@ -89,6 +93,7 @@ import PasteDialog from "@/components/paste-dialog/PasteDialog.vue";
 import RefSuggestions from "@/components/ref-suggestions/RefSuggestions.vue";
 import SettingsPanel from "@/components/settings/SettingsPanel.vue";
 import TimeMachine from "@/components/time-machine/TimeMachine.vue";
+import BasicSettingsContext from "@/context/basicSettings";
 import MainTreeContext from "@/context/mainTree";
 import { Loader2 } from "lucide-vue-next";
 import { watch } from "vue";
@@ -98,8 +103,6 @@ import HeaderBar from "../../components/header-bar/HeaderBar.vue";
 import SidePane from "../../components/side-pane/SidePane.vue";
 import BlocksContext from "../../context/blocks/blocks";
 import SidebarContext from "../../context/sidebar";
-import BasicSettingsContext from "@/context/basicSettings";
-import AttachmentViewer from "@/components/attachment-viewer/AttachmentViewer.vue";
 
 const { sidePaneOpen, sidePaneDir, sidePaneWidth, sidePaneHeight, enableSidePaneAnimation } =
   SidebarContext.useContext()!;

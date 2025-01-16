@@ -494,6 +494,21 @@ export const messages = {
           },
         },
       },
+      blockRefContextMenu: {
+        title: "块别名",
+        addAlias: "添加新别名...",
+        noAliases: "暂无别名",
+        deleteAlias: {
+          title: "删除别名",
+          description: "确定要删除这个别名吗？此操作不可撤销。",
+          cancel: "取消",
+          confirm: "删除",
+        },
+      },
+      common: {
+        cancel: "取消",
+        delete: "删除",
+      },
     },
     adminDashboard: {
       title: "管理员面板",
@@ -1042,6 +1057,21 @@ export const messages = {
           },
         },
       },
+      blockRefContextMenu: {
+        title: "Block Aliases",
+        addAlias: "Add new alias...",
+        noAliases: "No aliases yet",
+        deleteAlias: {
+          title: "Delete Alias",
+          description: "Are you sure you want to delete this alias? This action cannot be undone.",
+          cancel: "Cancel",
+          confirm: "Delete",
+        },
+      },
+      common: {
+        cancel: "Cancel",
+        delete: "Delete",
+      },
     },
     adminDashboard: {
       title: "Admin Dashboard",
@@ -1562,7 +1592,7 @@ export const messages = {
           },
           uiFontFamily: {
             label: "界面字體",
-            desc: "指定軟件界面字體。在不指定其他字體的情況下，該字體將成為軟件的基礎字體。",
+            desc: "指定軟體界面字體。在不指定其他字體的情況下，該字體將成為軟體的基礎字體。",
           },
           monospaceFontFamily: {
             label: "程式碼區塊字體",
@@ -1582,13 +1612,28 @@ export const messages = {
         backlinks: {
           showCounter: {
             label: "區塊右側顯示反向連結個數",
-            desc: "如果開啟，則如果一個區塊有反向連結，則會在區塊右側以懸浮膠囊的形式顯示反向連結個數。點擊即可打開一個懸浮窗口，用於瀏覽這個區塊的所有反向連結。",
+            desc: "如果開啟，則如果一個區塊有反向連結，則會在區塊右側以懸浮膠囊的形式顯示反向連結個數。點擊即可打開一個懸浮視窗，用於瀏覽這個區塊的所有反向連結。",
           },
           putNewBlockAt: {
             label: "新區塊插入位置",
             desc: "在引用補全選單中，選擇創建新區塊時新區塊插入的位置。如果不指定，預設會插入根區塊末尾。",
           },
         },
+      },
+      blockRefContextMenu: {
+        title: "區塊別名",
+        addAlias: "添加新別名...",
+        noAliases: "暫無別名",
+        deleteAlias: {
+          title: "刪除別名",
+          description: "你確定要刪除這個別名嗎？此操作不可復原。",
+          cancel: "取消",
+          confirm: "刪除",
+        },
+      },
+      common: {
+        cancel: "取消",
+        delete: "删除",
       },
     },
     adminDashboard: {
@@ -2117,11 +2162,11 @@ export const messages = {
         dailynote: {
           defaultDateFormat: {
             label: "預設日期格式",
-            desc: "建立新的每日筆記時，預設使用的日期格式。",
+            desc: "創建新的每日筆記時，預設使用的日期格式。",
           },
           parentBlockOfNewDailyNote: {
             label: "每日筆記的存放位置",
-            desc: "建立的新每日筆記將會放到這個區塊下（作為子區塊）",
+            desc: "創建的新每日筆記將會放到這個區塊下（作為子區塊）",
           },
         },
         backlinks: {
@@ -2131,9 +2176,24 @@ export const messages = {
           },
           putNewBlockAt: {
             label: "新區塊插入位置",
-            desc: "在引用補全選單中，選擇建立新區塊時新區塊插入的位置。如果不指定，預設會插入根區塊末尾。",
+            desc: "在引用補全選單中，選擇創建新區塊時新區塊插入的位置。如果不指定，預設會插入根區塊末尾。",
           },
         },
+      },
+      blockRefContextMenu: {
+        title: "區塊別名",
+        addAlias: "添加新別名...",
+        noAliases: "暫無別名",
+        deleteAlias: {
+          title: "刪除別名",
+          description: "你確定要刪除這個別名嗎？此操作不可復原。",
+          cancel: "取消",
+          confirm: "刪除",
+        },
+      },
+      common: {
+        cancel: "取消",
+        delete: "删除",
       },
     },
     adminDashboard: {
@@ -2684,6 +2744,22 @@ export const messages = {
             desc: "Où insérer les nouveaux blocs lors de leur création à partir du menu de complétion des références. Si non spécifié, les nouveaux blocs seront insérés à la fin du bloc racine.",
           },
         },
+      },
+      blockRefContextMenu: {
+        title: "Alias de bloc",
+        addAlias: "Ajouter un nouvel alias...",
+        noAliases: "Aucun alias pour le moment",
+        deleteAlias: {
+          title: "Supprimer l'alias",
+          description:
+            "Êtes-vous sûr de vouloir supprimer cet alias ? Cette action ne peut pas être annulée.",
+          cancel: "Annuler",
+          confirm: "Supprimer",
+        },
+      },
+      common: {
+        cancel: "Annuler",
+        delete: "Supprimer",
       },
     },
     adminDashboard: {
@@ -3237,6 +3313,21 @@ export const messages = {
             desc: "参照補完メニューから新規ブロックを作成する際の挿入位置です。指定しない場合、ルートブロックの末尾に挿入されます。",
           },
         },
+      },
+      blockRefContextMenu: {
+        title: "ブロックエイリアス",
+        addAlias: "新しいエイリアスを追加...",
+        noAliases: "エイリアスはまだありません",
+        deleteAlias: {
+          title: "エイリアスを削除",
+          description: "このエイリアスを削除してもよろしいですか？この操作は取り消せません。",
+          cancel: "キャンセル",
+          confirm: "削除",
+        },
+      },
+      common: {
+        cancel: "Cancel",
+        delete: "Delete",
       },
     },
     adminDashboard: {

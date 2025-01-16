@@ -16,6 +16,7 @@ type SchemaCtx = {
   getMainTree?: () => BlockTree;
   getBlockRef: (blockId: BlockId) => Ref<Block | null>;
   handlePreview?: (path: string, name: string) => Promise<void>;
+  openBlockRefContextMenu?: (pos: { x: number; y: number }, clickedBlockId_: BlockId) => void;
 };
 
 export const getPmSchema = (ctx: SchemaCtx) => {
@@ -87,12 +88,19 @@ export const getPmSchema = (ctx: SchemaCtx) => {
 
           // 点击块引用，跳转到对应块
           span.addEventListener("click", (e) => {
+            if (e.button !== 0) return; // 右键点击时，不跳转
             e.preventDefault();
             e.stopPropagation();
             ctx.pushHistoryItem?.(); // 记录历史
             const tree = ctx.getMainTree?.();
             if (!tree) return;
             tree.focusBlock(toBlockId, { highlight: true, expandIfFold: true });
+          });
+
+          span.addEventListener("contextmenu", (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            ctx.openBlockRefContextMenu?.({ x: e.clientX, y: e.clientY }, toBlockId);
           });
 
           // 鼠标悬浮时，尝试打开浮动编辑器

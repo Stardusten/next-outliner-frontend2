@@ -1,5 +1,6 @@
 <template>
   <Popover v-model:open="open">
+    <PopoverTrigger class="hidden" />
     <PopoverContent
       :class="`${contentClass} py-2 pb-0 px-1 max-h-[300px] max-w-[300px] overflow-hidden`"
       trap-focus

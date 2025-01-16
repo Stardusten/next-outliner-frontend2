@@ -63,7 +63,12 @@
               @mouseover="!suppressMouseOver && (focusIndex = index)"
               @click="gotoFocused()"
             >
-              <!-- as unknown is error? -->
+              <BlockPath
+                :block-id="block.id"
+                :include-self="false"
+                class="*:text-xs mb-1"
+                @click-path-segment="gotoFocused"
+              />
               <BlockContent
                 :key="block.id"
                 :readonly="true"
@@ -109,6 +114,7 @@ import Checkbox from "../ui/checkbox/Checkbox.vue";
 import { Input } from "../ui/input";
 import ScrollArea from "../ui/scroll-area/ScrollArea.vue";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "../ui/dialog";
+import BlockPath from "../BlockPath.vue";
 
 const blockTreeContext = BlockTreeContext.useContext()!;
 const {

@@ -1,5 +1,6 @@
 <template>
   <Dialog v-model:open="open">
+    <DialogTrigger class="hidden" />
     <DialogContent
       class="attachments-mgr flex flex-col max-w-[80vw] max-h-[80vh] w-[800px] h-[600px] gap-0 p-0 !outline-none"
     >
@@ -272,40 +273,42 @@
 
 <script setup lang="ts">
 import { fsEnsureAttachmentsDir } from "@/common/api-call/fs";
+import type { Dirents } from "@/common/type-and-schemas/dirents";
 import AttachmentsManagerContext from "@/context/attachmentsManager";
+import { isAnimateImage, isAudio, isStaticImage, isText, isVideo } from "@/utils/fileType";
+import { hybridTokenize } from "@/utils/tokenize";
 import {
-  ArrowDown,
-  ArrowUp,
   ArrowUpDown,
+  Eye,
   Filter,
   FolderOpen,
+  Loader2,
   RefreshCw,
   Search,
   Upload,
-  Loader2,
   X,
-  Eye,
   XCircle,
 } from "lucide-vue-next";
-import { onMounted, ref, computed } from "vue";
+import { computed, onMounted, ref } from "vue";
+import { useI18n } from "vue-i18n";
+import AnimateImageFileViewerStaticSizing from "../attachment-viewer/AnimateImageFileViewerStaticSizing.vue";
+import AudioFileViewer from "../attachment-viewer/AudioFileViewer.vue";
+import StaticImageFileViewer from "../attachment-viewer/StaticImageFileViewer.vue";
+import TextFileViewer from "../attachment-viewer/TextFileViewer.vue";
+import VideoFileViewer from "../attachment-viewer/VideoFileViewer.vue";
 import { Button } from "../ui/button";
-import { Checkbox } from "../ui/checkbox";
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "../ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "../ui/dialog";
 import { Input } from "../ui/input";
-import { Label } from "../ui/label";
-import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
+import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
 import DirectoryItem from "./DirectoryItem.vue";
 import FileItem from "./FileItem.vue";
-import { useI18n } from "vue-i18n";
-import TextFileViewer from "../attachment-viewer/TextFileViewer.vue";
-import StaticImageFileViewer from "../attachment-viewer/StaticImageFileViewer.vue";
-import AudioFileViewer from "../attachment-viewer/AudioFileViewer.vue";
-import VideoFileViewer from "../attachment-viewer/VideoFileViewer.vue";
-import type { Dirents } from "@/common/type-and-schemas/dirents";
-import AnimateImageFileViewerStaticSizing from "../attachment-viewer/AnimateImageFileViewerStaticSizing.vue";
-import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
-import { isAnimateImage, isAudio, isStaticImage, isText, isVideo } from "@/utils/fileType";
-import { hybridTokenize } from "@/utils/tokenize";
 
 const { t: $t } = useI18n();
 const queryTerms = computed(() => {

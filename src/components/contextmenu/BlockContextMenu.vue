@@ -1,5 +1,6 @@
 <template>
   <DropdownMenu v-model:open="open">
+    <DropdownMenuTrigger class="hidden" />
     <DropdownMenuContent
       class="block-contextmenu-content min-w-[200px] overflow-y-auto max-h-[var(--radix-dropdown-menu-content-available-height)]"
     >

@@ -42,6 +42,7 @@ import FloatingMathInputContext from "@/context/floatingMathInput";
 import HistoryContext from "@/context/history";
 import { turnToInlineCode } from "../prosemirror/input-rules/turnToInlineBlock";
 import AttachmentViewerContext from "@/context/attachmentViewer";
+import BlockRefContextmenuContext from "@/context/blockRefContextmenu";
 
 const props = defineProps<{
   blockTree?: BlockTree;
@@ -56,6 +57,8 @@ const { blocksManager, blockEditor } = BlocksContext.useContext()!;
 const fmic = FloatingMathInputContext.useContext();
 const historyContext = HistoryContext.useContext();
 const { handlePreview } = AttachmentViewerContext.useContext()!;
+const { openAt: openBlockRefContextMenu } = BlockRefContextmenuContext.useContext()!;
+
 const taskQueue = useTaskQueue();
 const docJson = shallowRef<any | null>(null);
 const pmWrapper = ref<InstanceType<typeof ProseMirror> | null>(null);
@@ -64,12 +67,14 @@ const nodeViews: EditorProps["nodeViews"] = {
     return new MathInlineKatex(node, view, getPos, fmic);
   },
 };
+
 const schema = computed(() =>
   getPmSchema({
     pushHistoryItem: historyContext ? historyContext.pushHistoryItem : undefined,
     getMainTree: props.blockTree ? () => props.blockTree! : undefined,
     getBlockRef: blocksManager.getBlockRef,
     handlePreview,
+    openBlockRefContextMenu,
   }),
 );
 
