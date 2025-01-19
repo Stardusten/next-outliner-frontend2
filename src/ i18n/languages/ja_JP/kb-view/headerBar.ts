@@ -1,0 +1,27 @@
+const headerBar = {
+  moreOptions: "その他のオプション",
+  dailynoteNavigator: "デイリーノート",
+  pomodoro: "ポモドーロ",
+  closeMenu: "メニューを閉じる",
+  openMenu: "メニューを開く",
+  back: "戻る",
+  forward: "進む",
+  search: "検索",
+  notifications: "通知",
+  switchLightTheme: "ライトテーマに切り替え",
+  switchDarkTheme: "ダークテーマに切り替え",
+  openSidepane: "サイドパネルを開く",
+  closeSidepane: "サイドパネルを閉じる",
+  export: "エクスポート",
+  import: "インポート",
+  enterFocusMode: "フォーカスモードを開始",
+  exitFocusMode: "フォーカスモードを終了",
+  attachmentsManager: "添付ファイル管理",
+  settings: "設定",
+  timeMachine: "タイムマシン",
+  help: "ヘルプ",
+  exit: "終了",
+  keybindings: "ショートカットキーの表示と編集",
+};
+
+export default headerBar;

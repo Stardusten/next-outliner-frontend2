@@ -186,7 +186,7 @@ const changeRef = eventBus.eventRefs.afterBlocksTrCommit;
 const editorViews = new Map<BlockId, PmEditorView | CmEditorView>();
 // 反链和潜在链接面板中所有被展开的 display item 的 itemId
 // 由于反链和潜在链接面板中默认都是折叠的，因此这里记录所有被展开的更合适
-const expandedBP = ref<Record<BlockId, boolean>>({});
+const expandedBP = ref<Record<DisplayItemId, boolean>>({});
 let fixedOffset: number | null = null;
 
 const updateDisplayItems = () => {
@@ -549,11 +549,10 @@ const handlePointerMove = useThrottleFn((e: PointerEvent) => {
   if (movingBlocks) {
     // 如果是在拖动块，并且目前没有选中任何块
     // 则将光标按下时的块加入选中
-    if (!dndCtx.selectedBlockIds.value) return clearDraggingDropPos();
-    if (dndCtx.selectedBlockIds.value.topLevelOnly.length === 0) {
+    if (!dndCtx.selectedBlockIds.value || dndCtx.selectedBlockIds.value.topLevelOnly.length === 0) {
       if (!pointerDownDi || !DI_FILTERS.isBlockDi(pointerDownDi)) return; // IMPOSSIBLE
       const newSelected = {
-        baseBlockId: dndCtx.selectedBlockIds.value.baseBlockId,
+        baseBlockId: pointerDownDi.block.id,
         topLevelOnly: [pointerDownDi.block.id],
         allNonFolded: [] as BlockId[],
       };
@@ -727,7 +726,9 @@ const handlePointerDown = (e: PointerEvent) => {
   if (!hoveredBlockItem) return;
   const diId = hoveredBlockItem.dataset["itemId"];
   const di = diId ? getDi(diId) : null;
-  if (!diId || !di || !DI_FILTERS.isBlockDi(di)) return;
+  // 仅处理普通块
+  // 反链和潜在链接面板中的块都不允许拖拽
+  if (!diId || !di || di.type !== "basic-block") return;
   pointerDownDi = di;
   pointerDownTime = Date.now().valueOf();
   dndCtx.dragging.value = false;

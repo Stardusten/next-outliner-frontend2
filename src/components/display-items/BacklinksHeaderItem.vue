@@ -35,27 +35,27 @@
               <DropdownMenuSubContent>
                 <DropdownMenuItem>
                   <ArrowUpAZ class="size-4 mr-2" />
-                  {{ $t("kbView.command.sortDictAsc") }}
+                  {{ $t("kbView.commands.sortDictAsc") }}
                 </DropdownMenuItem>
                 <DropdownMenuItem>
                   <ArrowDownAZ class="size-4 mr-2" />
-                  {{ $t("kbView.command.sortDictDesc") }}
+                  {{ $t("kbView.commands.sortDictDesc") }}
                 </DropdownMenuItem>
                 <DropdownMenuItem>
                   <CalendarArrowUp class="size-4 mr-2" />
-                  {{ $t("kbView.command.ctimeAsc") }}
+                  {{ $t("kbView.commands.ctimeAsc") }}
                 </DropdownMenuItem>
                 <DropdownMenuItem>
                   <CalendarArrowDown class="size-4 mr-2" />
-                  {{ $t("kbView.command.ctimeDesc") }}
+                  {{ $t("kbView.commands.ctimeDesc") }}
                 </DropdownMenuItem>
                 <DropdownMenuItem>
                   <CalendarArrowUp class="size-4 mr-2" />
-                  {{ $t("kbView.command.mtimeAsc") }}
+                  {{ $t("kbView.commands.mtimeAsc") }}
                 </DropdownMenuItem>
                 <DropdownMenuItem>
                   <CalendarArrowDown class="size-4 mr-2" />
-                  {{ $t("kbView.command.mtimeDesc") }}
+                  {{ $t("kbView.commands.mtimeDesc") }}
                 </DropdownMenuItem>
               </DropdownMenuSubContent>
             </DropdownMenuPortal>

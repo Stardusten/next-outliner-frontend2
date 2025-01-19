@@ -53,12 +53,6 @@ const DailyNoteContext = createContext(() => {
     { immediate: true },
   );
 
-  const blockIdValidator = (value: string) => {
-    if (!value) return "没有指定块 ID";
-    const block = blocksManager.getBlock(value);
-    return block ? undefined : "无效的块 ID";
-  };
-
   registerSettingGroup({
     key: "dailynote",
   });

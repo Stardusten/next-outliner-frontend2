@@ -13,10 +13,8 @@
       <div class="indent-line" v-for="i in level" :key="i" :data-level="i"></div>
     </div>
     <div class="relative block-content-container">
-      <div class="block-buttons">
-        <div class="fold-button" v-if="!hideFoldButton" @click.stop="handleClickFoldButton">
-          <Triangle></Triangle>
-        </div>
+      <div class="fold-button" v-if="!hideFoldButton" @click.stop="handleClickFoldButton">
+        <Triangle></Triangle>
       </div>
 
       <div
@@ -58,18 +56,17 @@ import type { BlockTree } from "@/context/blockTree";
 import LastFocusContext from "@/context/lastFocus";
 import MainTreeContext from "@/context/mainTree";
 import { useTaskQueue } from "@/plugins/taskQueue";
-import { Circle, Diamond, MoreHorizontal, Triangle } from "lucide-vue-next";
+import { Circle, Diamond, Triangle } from "lucide-vue-next";
 import { computed } from "vue";
 
-import type { Block } from "@/context/blocks/view-layer/blocksManager";
-import BlockContent from "../block-contents/BlockContent.vue";
-import BlockContextMenu from "../contextmenu/BlockContextMenu.vue";
 import IndexContext from "@/context";
-import BacklinksCounter from "../backlinks-counter/BacklinksCounter.vue";
-import type { DisplayItem, DisplayItemId } from "@/utils/display-item";
 import BlockContextMenuContext from "@/context/blockContextMenu";
+import type { Block } from "@/context/blocks/view-layer/blocksManager";
 import KeymapContext from "@/context/keymap";
 import SidebarContext from "@/context/sidebar";
+import type { DisplayItem, DisplayItemId } from "@/utils/display-item";
+import BacklinksCounter from "../backlinks-counter/BacklinksCounter.vue";
+import BlockContent from "../block-contents/BlockContent.vue";
 
 const props = withDefaults(
   defineProps<{
@@ -125,6 +122,7 @@ const selected = computed(() => selectedBlockIds.value?.allNonFolded.includes(pr
 const handleFocusIn = () => {
   lastFocusedDiId.value = props.itemId ?? null;
   lastFocusedBlockTree.value = props.blockTree ?? null;
+  console.log("set lastFocusedBlockTree", props.blockTree);
   // 一个块获得焦点时，清除块选择
   // 但是当拖拽时，不清除块选择
   if (!dragging.value) {
@@ -231,71 +229,41 @@ const handleContextmenu = (e: MouseEvent) => {
     flex-grow: 1;
     padding-left: 18px;
 
-    .block-buttons {
+    .fold-button {
       position: absolute;
-      left: -22px;
-      width: 36px;
-      display: flex;
-      justify-content: flex-end;
+      left: 0;
+      height: calc(var(--editor-line-height) + var(--content-padding));
+      width: 18px;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+      display: none; // 默认隐藏 fold button
 
-      // .more-button {
-      //   height: calc(var(--editor-line-height) + var(--content-padding));
-      //   width: 18px;
-      //   display: flex;
-      //   justify-content: center;
-      //   align-items: center;
-      //   cursor: pointer;
-      //   flex-shrink: 0;
-      //   margin-right: 4px;
-      //   display: none; // 默认隐藏 more button
+      // 如果：
+      // 1. 这个 block 有 children，且 hover
+      // 2. 这个 block 有 backlink，且 hover
+      // 3. 这个 block 有编号
+      // 4. 这个 block 有 metadata，且 hover
+      // 则显示 fold button
+      @at-root .block-item.hasChildren:hover > .block-content-container > .fold-button,
+        .block-item.hasBacklink:hover > .block-content-container > .fold-button,
+        .block-item.hasChildren.no > .block-content-container > .fold-button,
+        .block-item.hasMetadata:hover > .block-content-container > .fold-button {
+        display: flex;
+      }
 
-      //   svg {
-      //     stroke: var(--block-button-color);
-      //   }
+      svg {
+        height: var(--fold-button-size);
+        width: var(--fold-button-size);
+        stroke: none;
+        fill: var(--block-button-color);
+        transform: rotate(180deg);
+        padding: 4px;
+      }
 
-      //   // 如果 hover，则显示 more button
-      //   @at-root .block-item:hover > .block-content-container > .block-buttons .more-button {
-      //     display: flex;
-      //   }
-      // }
-
-      .fold-button {
-        height: calc(var(--editor-line-height) + var(--content-padding));
-        width: 18px;
-        justify-content: center;
-        align-items: center;
-        cursor: pointer;
-        display: none; // 默认隐藏 fold button
-
-        // 如果：
-        // 1. 这个 block 有 children，且 hover
-        // 2. 这个 block 有 backlink，且 hover
-        // 3. 这个 block 有编号
-        // 4. 这个 block 有 metadata，且 hover
-        // 则显示 fold button
-        @at-root .block-item.hasChildren:hover
-            > .block-content-container
-            > .block-buttons
-            > .fold-button,
-          .block-item.hasBacklink:hover > .block-content-container > .block-buttons > .fold-button,
-          .block-item.hasChildren.no > .block-content-container > .block-buttons > .fold-button,
-          .block-item.hasMetadata:hover > .block-content-container > .block-buttons > .fold-button {
-          display: flex;
-        }
-
-        svg {
-          height: var(--fold-button-size);
-          width: var(--fold-button-size);
-          stroke: none;
-          fill: var(--block-button-color);
-          transform: rotate(180deg);
-          padding: 4px;
-        }
-
-        // 如果这个 block 是 folded 的，则将 fold button 旋转 90 度
-        @at-root .block-item.fold > .block-content-container > .block-buttons > .fold-button svg {
-          transform: rotate(90deg);
-        }
+      // 如果这个 block 是 folded 的，则将 fold button 旋转 90 度
+      @at-root .block-item.fold > .block-content-container > .fold-button svg {
+        transform: rotate(90deg);
       }
     }
   }

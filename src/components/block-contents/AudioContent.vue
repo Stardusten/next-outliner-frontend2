@@ -19,7 +19,7 @@
 <script setup lang="ts">
 import { fsGetAttachmentSignedUrl } from "@/common/api-call/fs";
 import { BLOCK_CONTENT_TYPES } from "@/common/constants";
-import type { Block } from "@/context/blocks/view-layer/blocksManager";
+import type { AudioBlock } from "@/context/blocks/view-layer/blocksManager";
 import type { BlockTree } from "@/context/blockTree";
 import ServerInfoContext from "@/context/serverInfo";
 import type { DisplayItemId } from "@/utils/display-item";
@@ -27,7 +27,7 @@ import { ref, watch } from "vue";
 
 const props = defineProps<{
   blockTree?: BlockTree;
-  block: Block;
+  block: AudioBlock;
   itemId?: DisplayItemId;
 }>();
 

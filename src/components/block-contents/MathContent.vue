@@ -8,20 +8,19 @@
 </template>
 
 <script setup lang="ts">
-import { nextTick, ref, watch } from "vue";
-import katex, { type KatexOptions } from "katex";
 import { BLOCK_CONTENT_TYPES } from "@/common/constants";
-import { ScrollArea, ScrollBar } from "../ui/scroll-area";
-import type { BlockTree } from "@/context/blockTree";
-import { useTaskQueue } from "@/plugins/taskQueue";
 import BlocksContext from "@/context/blocks/blocks";
+import type { MathBlock } from "@/context/blocks/view-layer/blocksManager";
+import type { BlockTree } from "@/context/blockTree";
 import FloatingMathInputContext from "@/context/floatingMathInput";
-import type { Block } from "@/context/blocks/view-layer/blocksManager";
+import { useTaskQueue } from "@/plugins/taskQueue";
 import type { DisplayItemId } from "@/utils/display-item";
+import katex, { type KatexOptions } from "katex";
+import { nextTick, ref, watch } from "vue";
 
 const props = defineProps<{
   blockTree?: BlockTree;
-  block: Block;
+  block: MathBlock;
   readonly?: boolean;
   itemId?: DisplayItemId;
 }>();

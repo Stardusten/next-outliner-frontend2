@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div style="font-family: var(--ui-font)">
     <!-- 头部栏 -->
     <HeaderBar />
     <!-- mr-1 是为了让滚动条和屏幕边缘留出一点空隙 -->
@@ -76,6 +76,10 @@
     <AttachmentViewer />
     <!-- 块引用上下文菜单 -->
     <BlockRefContextMenu />
+    <!-- 字段设置对话框 -->
+    <FieldSettingsDialog />
+    <!-- 块引用标签设置对话框 -->
+    <BlockRefTagSettingsDialog />
   </div>
 </template>
 
@@ -103,6 +107,8 @@ import HeaderBar from "../../components/header-bar/HeaderBar.vue";
 import SidePane from "../../components/side-pane/SidePane.vue";
 import BlocksContext from "../../context/blocks/blocks";
 import SidebarContext from "../../context/sidebar";
+import FieldSettingsDialog from "@/components/field-settings-dialog/FieldSettingsDialog.vue";
+import BlockRefTagSettingsDialog from "@/components/block-ref-tag-settings-dialog/BlockRefTagSettingsDialog.vue";
 
 const { sidePaneOpen, sidePaneDir, sidePaneWidth, sidePaneHeight, enableSidePaneAnimation } =
   SidebarContext.useContext()!;

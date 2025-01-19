@@ -5,7 +5,7 @@
       ref="cmWrapper"
       v-model:src="src!"
       :readonly="readonly"
-      :lang="block.content[2]!"
+      :lang="block.content[2]"
       :extensions-builder="extensionsBuilder"
       :on-src-changed="handleSrcChange"
       :keymap="codemirrorKeymap"
@@ -54,7 +54,7 @@ import type { Extension } from "@codemirror/state";
 import { keymap } from "@codemirror/view";
 import { computed, onBeforeUnmount, onMounted, onUnmounted, ref, watch } from "vue";
 import CodeMirror from "../codemirror/CodeMirror.vue";
-import type { Block } from "@/context/blocks/view-layer/blocksManager";
+import type { Block, CodeBlock } from "@/context/blocks/view-layer/blocksManager";
 import type { DisplayItemId } from "@/utils/display-item";
 import { Copy } from "lucide-vue-next";
 import { Button } from "../ui/button";
@@ -66,7 +66,7 @@ import LastFocusContext from "@/context/lastFocus";
 const props = defineProps<{
   blockTree?: BlockTree;
   itemId?: DisplayItemId;
-  block: Block;
+  block: CodeBlock;
   readonly?: boolean;
 }>();
 

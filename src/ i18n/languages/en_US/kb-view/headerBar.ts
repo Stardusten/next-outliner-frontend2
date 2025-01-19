@@ -1,0 +1,27 @@
+const headerBar = {
+  moreOptions: "More Options",
+  dailynoteNavigator: "Daily Notes",
+  pomodoro: "Pomodoro",
+  closeMenu: "Close Menu",
+  openMenu: "Open Menu",
+  back: "Back",
+  forward: "Forward",
+  search: "Search",
+  notifications: "Notifications",
+  switchLightTheme: "Switch to Light Theme",
+  switchDarkTheme: "Switch to Dark Theme",
+  openSidepane: "Open Sidepane",
+  closeSidepane: "Close Sidepane",
+  export: "Export",
+  import: "Import",
+  enterFocusMode: "Enter Focus Mode",
+  exitFocusMode: "Exit Focus Mode",
+  attachmentsManager: "Attachments Manager",
+  settings: "Settings",
+  timeMachine: "Time Machine",
+  help: "Help Documentation",
+  exit: "Exit",
+  keybindings: "View & Edit Shortcuts",
+};
+
+export default headerBar;

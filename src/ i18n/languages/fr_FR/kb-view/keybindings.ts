@@ -1,0 +1,38 @@
+const keybindings = {
+  title: "Raccourcis clavier",
+  description: "Liste de tous les raccourcis clavier disponibles",
+  close: "Fermer",
+  groups: {
+    normal: "Opérations courantes",
+    inCodeBlock: "Spécifique aux blocs de code",
+  },
+  commands: {
+    swapUp: "Déplacer vers le haut",
+    swapDown: "Déplacer vers le bas",
+    expand: "Développer",
+    collapse: "Réduire",
+    collapseAll: "Tout réduire",
+    expandAll: "Tout développer",
+    indent: "Augmenter l'indentation",
+    outdent: "Diminuer l'indentation",
+    insertInlineMath: "Insérer une formule mathématique en ligne",
+    insertBlockMath: "Insérer une formule mathématique en bloc",
+    bold: "Gras",
+    italic: "Italique",
+    code: "Code",
+    highlight: "Surligner",
+    insertBlockRef: "Insérer une référence de bloc",
+    insertTag: "Insérer une balise",
+    toCodeblock: "Convertir en bloc de code",
+    undo: "Annuler",
+    redo: "Rétablir",
+    softBreak: "Saut de ligne",
+    openFusionCommand: "Ouvrir le panneau multifonction",
+    openAndFocusToSidePane: "Ouvrir et focus sur le panneau latéral / Fermer le panneau latéral",
+    moveSidePane: "Déplacer le panneau latéral (à droite / en bas)",
+    addToFavorite: "Ajouter aux favoris",
+    addToSidePane: "Ajouter au panneau latéral",
+  },
+};
+
+export default keybindings;

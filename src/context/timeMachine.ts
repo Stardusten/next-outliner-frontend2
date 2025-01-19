@@ -17,9 +17,6 @@ export const TimeMachineContext = createContext(() => {
 
   registerSettingGroup({
     key: "timeMachine",
-    label: {
-      zh: "时光机",
-    },
   });
 
   const timeMachineOpen = ref(false);

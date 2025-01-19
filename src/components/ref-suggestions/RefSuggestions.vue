@@ -1,5 +1,6 @@
 <template>
   <Popover v-model:open="open">
+    <PopoverTrigger class="hidden" />
     <PopoverContent
       class="ref-suggestions-content z-[999] py-2 pb-0 px-1 max-h-[300px] max-w-[300px] overflow-hidden"
       trap-focus
@@ -95,7 +96,7 @@ import { Plus, Search, FileIcon, File } from "lucide-vue-next";
 import { computed, nextTick, watch } from "vue";
 import BlockContent from "../block-contents/BlockContent.vue";
 import { Input } from "../ui/input";
-import { Popover, PopoverContent } from "../ui/popover";
+import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import BacklinksContext from "@/context/backlinks";
 import BlocksContext from "@/context/blocks/blocks";
 import { useTaskQueue } from "@/plugins/taskQueue";

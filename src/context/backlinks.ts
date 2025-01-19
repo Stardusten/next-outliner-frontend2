@@ -9,10 +9,18 @@ import BlocksContext from "./blocks/blocks";
 import FieldsManagerContext from "./fieldsManager";
 import ServerInfoContext from "./serverInfo";
 import SettingsContext from "./settings";
+import type { TextContent } from "@/common/type-and-schemas/block/block-content";
+import type { Block } from "./blocks/view-layer/blocksManager";
+import { BLOCK_CONTENT_TYPES } from "@/common/constants";
+import { Node } from "prosemirror-model";
+import { getPmSchema } from "@/components/prosemirror/pmSchema";
+import { useTaskQueue } from "@/plugins/taskQueue";
+import type { NonNormalizedBlockPosParentChild } from "./blocks/view-layer/blocksEditor";
+import { blockRefToTextContent } from "@/utils/pm";
 
 const BacklinksContext = createContext(() => {
   const { registerSettingGroup, registerSettingItem } = SettingsContext.useContext()!;
-  const { blocksManager } = BlocksContext.useContext()!;
+  const { blocksManager, blockEditor } = BlocksContext.useContext()!;
   const { getBacklinks } = IndexContext.useContext()!;
   const { getFieldValues } = FieldsManagerContext.useContext()!;
   const { kbPrefix } = ServerInfoContext.useContext()!;
@@ -102,10 +110,102 @@ const BacklinksContext = createContext(() => {
     return ret;
   };
 
-  const getBacklinksConsideringAliases = (
+  const isAliasBlock = (block: Block) => {
+    if (block.content[0] !== BLOCK_CONTENT_TYPES.TEXT) return false;
+    const schema = getPmSchema({ getBlockRef: blocksManager.getBlockRef });
+    const doc = Node.fromJSON(schema, block.content[1]);
+    if (doc.content.size === 1) {
+      const fst = doc.content.firstChild;
+      if (fst && fst.type.name === "blockRef_v2") {
+        if (fst.attrs.toBlockId === "Alias") return true;
+      }
+    }
+    return false;
+  };
+
+  const addAlias = (blockId: BlockId, aliasContent: TextContent) => {
+    const block = blocksManager.getBlock(blockId);
+    if (!block) return;
+    const taskQueue = useTaskQueue();
+    const parentBlock = block.parentRef.value;
+    if (!parentBlock) return;
+    const parentActualSrcBlock =
+      parentBlock.type === "normalBlock"
+        ? parentBlock
+        : blocksManager.getBlock(parentBlock.acturalSrc);
+    if (!parentActualSrcBlock) return;
+    // - original name
+    //   - [[Alias]]
+    //     - alias 1 <-- 当前这个 block
+    if (isAliasBlock(parentActualSrcBlock)) {
+      taskQueue.addTask(() => {
+        const pos: NonNormalizedBlockPosParentChild = {
+          parentId: parentBlock.id,
+          childIndex: "last-space",
+        };
+        blockEditor.insertNormalBlock({
+          pos,
+          content: aliasContent,
+        });
+      });
+    } else {
+      // 当前这个 block 不是 alias，则查找孩子中是否有 alias
+      let aliasBlock: Block | undefined;
+      for (const childRef of block.childrenRefs) {
+        const child = childRef.value;
+        if (!child) continue;
+        if (isAliasBlock(child)) {
+          aliasBlock = child;
+          break;
+        }
+      }
+
+      // 找到了 alias block，则在这个 alias block 最后面插入新的 alias
+      if (aliasBlock) {
+        taskQueue.addTask(() => {
+          const pos: NonNormalizedBlockPosParentChild = {
+            parentId: aliasBlock.id,
+            childIndex: "last-space",
+          };
+          blockEditor.insertNormalBlock({
+            pos,
+            content: aliasContent,
+          });
+        });
+      } else {
+        // 没有找到 alias block，则创建一个新的 alias block
+        taskQueue.addTask(() => {
+          const pos: NonNormalizedBlockPosParentChild = {
+            parentId: block.id,
+            childIndex: "last-space",
+          };
+          const tr = blocksManager.createBlockTransaction({ type: "ui" });
+          const { newNormalBlockId } =
+            blockEditor.insertNormalBlock({
+              pos,
+              content: blockRefToTextContent("Alias"),
+            }) ?? {};
+          if (!newNormalBlockId) return;
+          const pos2: NonNormalizedBlockPosParentChild = {
+            parentId: newNormalBlockId,
+            childIndex: "last-space",
+          };
+          blockEditor.insertNormalBlock({
+            pos: pos2,
+            content: aliasContent,
+          });
+          tr.commit();
+        });
+      }
+    }
+  };
+
+  const getBacklinks2 = (
     blockId: BlockId,
     type: "blockRef" | "tag" | "both" = "both",
+    considerAliases = true,
   ) => {
+    if (!considerAliases) return getBacklinks(blockId, type);
     const aliases = getAllAliases(blockId);
     const ret = new Set<BlockId>();
     for (const alias of aliases) {
@@ -120,8 +220,9 @@ const BacklinksContext = createContext(() => {
   const ctx = {
     showBacklinksCounter,
     putNewBlockAt,
+    addAlias,
     getAllAliases,
-    getBacklinksConsideringAliases,
+    getBacklinks: getBacklinks2,
   };
   return ctx;
 });

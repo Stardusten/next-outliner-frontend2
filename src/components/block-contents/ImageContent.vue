@@ -117,26 +117,31 @@
 </template>
 
 <script setup lang="ts">
+import { fsClearScannedImage } from "@/common/api-call/fs";
 import { BLOCK_CONTENT_TYPES } from "@/common/constants";
+import type { ImageContent } from "@/common/type-and-schemas/block/block-content";
 import { Button } from "@/components/ui/button";
+import BlocksContext from "@/context/blocks/blocks";
+import type { BlockPos } from "@/context/blocks/view-layer/blocksEditor";
+import type { ImageBlock } from "@/context/blocks/view-layer/blocksManager";
 import type { BlockTree } from "@/context/blockTree";
-import ImagesContext, { type ImageState } from "@/context/images";
+import ImagesContext from "@/context/images";
+import { generateKeydownHandlerSimple } from "@/context/keymap";
+import { useTaskQueue } from "@/plugins/taskQueue";
+import type { DisplayItemId } from "@/utils/display-item";
+import { plainTextToTextContent } from "@/utils/pm";
 import {
   Blend,
-  Crop,
   Download,
-  Expand,
   FileScan,
   Info,
   Loader2,
   MessageSquareMore,
-  Moon,
   MoreVertical,
-  Square,
-  Sun,
   Trash2,
 } from "lucide-vue-next";
-import { computed, ref } from "vue";
+import { ref } from "vue";
+import { getPmSchema } from "../prosemirror/pmSchema";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -147,22 +152,10 @@ import {
   DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
-import { useTaskQueue } from "@/plugins/taskQueue";
-import BlocksContext from "@/context/blocks/blocks";
-import type { ImageContent } from "@/common/type-and-schemas/block/block-content";
-import { watch } from "vue";
-import { syncRef } from "@vueuse/core";
-import { generateKeydownHandlerSimple } from "@/context/keymap";
-import type { BlockPos } from "@/context/blocks/view-layer/blocksEditor";
-import { plainTextToTextContent } from "@/utils/pm";
-import type { Block } from "@/context/blocks/view-layer/blocksManager";
-import { fsClearScannedImage } from "@/common/api-call/fs";
-import type { DisplayItemId } from "@/utils/display-item";
-import { getPmSchema } from "../prosemirror/pmSchema";
 
 const props = defineProps<{
   blockTree?: BlockTree;
-  block: Block;
+  block: ImageBlock;
   itemId?: DisplayItemId;
 }>();
 

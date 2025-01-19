@@ -14,13 +14,15 @@ import ToastAction from "@/components/ui/toast/ToastAction.vue";
 import { generateKeydownHandlerSimple } from "./keymap";
 import { blockRefToTextContent } from "@/utils/pm";
 import IndexContext from ".";
-import { DI_FILTERS } from "./blockTree";
+import BlockTreeContext, { DI_FILTERS } from "./blockTree";
 import LastFocusContext from "./lastFocus";
 
 const BlockMoverContext = createContext(() => {
   const { blocksManager, blockEditor } = BlocksContext.useContext()!;
   const { lastFocusedBlockTree, lastFocusedDiId } = LastFocusContext.useContext()!;
   const { search } = IndexContext.useContext()!;
+  const { getBlockTree } = BlockTreeContext.useContext()!;
+
   const showPos = ref<{ x: number; y: number } | null>(null);
   const open = computed({
     get: () => showPos.value !== null,
@@ -60,9 +62,9 @@ const BlockMoverContext = createContext(() => {
     return fn();
   };
 
-  const cb = (blockId: BlockId | null) => {
+  const handleSelectItem = (blockId: BlockId) => {
     if (blockId == null || movedBlockId == null) return;
-    const tree = lastFocusedBlockTree.value;
+    const tree = lastFocusedBlockTree.value ?? getBlockTree("main");
     if (!tree) return;
     const taskQueue = useTaskQueue();
     const targetPos: BlockPos = {
@@ -132,7 +134,6 @@ const BlockMoverContext = createContext(() => {
       run: (e) => {
         if (e.isComposing || e.keyCode === 229) return false;
         showPos.value = null;
-        cb(null);
         return true;
       },
       preventDefault: true,
@@ -143,7 +144,7 @@ const BlockMoverContext = createContext(() => {
         if (e.isComposing || e.keyCode === 229) return false;
         const focusBlockId = suggestions.value[focusItemIndex.value]?.value?.id;
         if (focusBlockId != null) {
-          cb(focusBlockId);
+          handleSelectItem(focusBlockId);
         }
         return true;
       },
@@ -154,7 +155,7 @@ const BlockMoverContext = createContext(() => {
       run: (e) => {
         if (e.isComposing || e.keyCode === 229) return false;
         if (query.value.length == 0) {
-          cb(null);
+          open.value = false;
           return true;
         }
         return false;
@@ -224,7 +225,7 @@ const BlockMoverContext = createContext(() => {
     showPos,
     open,
     query,
-    cb,
+    handleSelectItem,
     focusItemIndex,
     suggestions,
     suppressMouseOver,

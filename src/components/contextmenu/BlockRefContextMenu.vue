@@ -1,24 +1,48 @@
 <template>
   <Popover v-model:open="open">
     <PopoverTrigger class="hidden" />
-    <PopoverContent class="block-ref-contextmenu-content p-3 w-[350px]">
+    <PopoverContent class="block-ref-contextmenu-content p-3 w-[350px]" @open-auto-focus.prevent>
       <div class="text-sm font-medium mb-2">{{ $t("kbView.blockRefContextMenu.title") }}</div>
 
       <!-- 别名列表 -->
       <div class="space-y-0.5 mb-2">
-        <div v-if="aliasBlocks.length === 0" class="text-sm text-center text-muted-foreground pb-1">
+        <div v-if="aliases.length === 0" class="text-sm text-center text-muted-foreground pb-2">
           {{ $t("kbView.blockRefContextMenu.noAliases") }}
         </div>
-        <div v-else v-for="b in aliasBlocks" :key="b.id" class="flex items-center py-0.5 px-1">
+        <div
+          v-else
+          v-for="info in aliases"
+          :key="info.block.id"
+          class="flex items-center py-0.5 px-1"
+        >
           <GripVertical class="size-4 mr-1.5 text-muted-foreground" />
           <div class="flex-1">
-            <BlockContent :block="b as any" />
+            <BlockContent class="!text-sm" :block="info.block as any" />
           </div>
           <div class="flex items-center gap-2">
-            <!-- <Pencil class="size-4 text-blue-500 opacity-70 cursor-pointer hover:opacity-100" /> -->
+            <Tooltip>
+              <TooltipTrigger>
+                <div class="text-sm text-muted-foreground">{{ info.backlinks.size }}</div>
+              </TooltipTrigger>
+              <TooltipContent>
+                {{ $t("kbView.blockRefContextMenu.backlinkCount", { count: info.backlinks.size }) }}
+              </TooltipContent>
+            </Tooltip>
             <AlertDialog>
-              <AlertDialogTrigger>
-                <Trash2 class="size-4 text-red-500 opacity-70 cursor-pointer hover:opacity-100" />
+              <AlertDialogTrigger :disabled="info.backlinks.size > 0">
+                <Tooltip>
+                  <TooltipTrigger>
+                    <Trash2
+                      class="size-4 text-red-500 cursor-pointer"
+                      :class="
+                        info.backlinks.size > 0 ? 'opacity-30' : 'opacity-70 hover:opacity-100'
+                      "
+                    />
+                  </TooltipTrigger>
+                  <TooltipContent v-if="info.backlinks.size > 0">
+                    {{ $t("kbView.blockRefContextMenu.cannotDelete") }}
+                  </TooltipContent>
+                </Tooltip>
               </AlertDialogTrigger>
               <AlertDialogContent>
                 <AlertDialogHeader>
@@ -33,7 +57,7 @@
                   <AlertDialogCancel>
                     {{ $t("kbView.blockRefContextMenu.deleteAlias.cancel") }}
                   </AlertDialogCancel>
-                  <Button variant="destructive" @click="handleDeleteAlias(b.id)">
+                  <Button variant="destructive" @click="handleDeleteAlias(info.block.id)">
                     {{ $t("kbView.blockRefContextMenu.deleteAlias.confirm") }}
                   </Button>
                 </AlertDialogFooter>
@@ -50,7 +74,13 @@
           :placeholder="$t('kbView.blockRefContextMenu.addAlias')"
           class="flex-1 h-8 text-sm"
         />
-        <Button variant="ghost" size="icon" class="h-7 w-7">
+        <Button
+          variant="ghost"
+          size="icon"
+          class="h-7 w-7"
+          :disabled="newAlias.trim().length === 0"
+          @click="handleAddAlias"
+        >
           <Plus class="size-4" />
         </Button>
       </div>
@@ -64,7 +94,7 @@ import BlocksContext from "@/context/blocks/blocks";
 import type { Block } from "@/context/blocks/view-layer/blocksManager";
 import FieldsManagerContext from "@/context/fieldsManager";
 import { calcPopoverPos } from "@/utils/popover";
-import { GripVertical, Pencil, Plus, Trash2 } from "lucide-vue-next";
+import { GripVertical, Pencil, Plus, Trash2, Settings } from "lucide-vue-next";
 import { nextTick, ref, watch } from "vue";
 import BlockContent from "../block-contents/BlockContent.vue";
 import { Button } from "../ui/button";
@@ -82,24 +112,28 @@ import {
   AlertDialogTrigger,
 } from "../ui/alert-dialog";
 import { useTaskQueue } from "@/plugins/taskQueue";
+import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
+import BacklinksContext from "@/context/backlinks";
+import { plainTextToTextContent } from "@/utils/pm";
+import { getPmSchema } from "../prosemirror/pmSchema";
+import type { BlockId } from "@/common/type-and-schemas/block/block-id";
 
 const { open, showPos, clickedBlockId } = BlockRefContextmenuContext.useContext()!;
 const { getFieldValues } = FieldsManagerContext.useContext()!;
 const { blocksManager, blockEditor } = BlocksContext.useContext()!;
+const { getAllAliases, addAlias, getBacklinks } = BacklinksContext.useContext()!;
 
-const aliasBlocks = ref<Block[]>([]);
+type AliasInfo = {
+  block: Block;
+  backlinks: Set<BlockId>;
+};
+
+const aliases = ref<AliasInfo[]>([]);
 const newAlias = ref("");
+
 watch([open, clickedBlockId], ([open, clickedBlockId]) => {
   if (!open || !clickedBlockId) return;
-  const fieldValues = getFieldValues(clickedBlockId);
-  const aliasIds = fieldValues?.["Alias"] ?? [];
-
-  const result: Block[] = [];
-  for (const id of aliasIds) {
-    const block = blocksManager.getBlock(id);
-    if (block) result.push(block);
-  }
-  aliasBlocks.value = result;
+  updateAliases(clickedBlockId);
 });
 
 watch(showPos, async () => {
@@ -120,7 +154,27 @@ watch(showPos, async () => {
   document.body.style.setProperty("--popover-y", `${popoverPos.rightDown.y}px`);
 });
 
-const handleAddAlias = () => {};
+const updateAliases = (blockId: BlockId) => {
+  const aliasIds = getAllAliases(blockId, true);
+
+  const result: AliasInfo[] = [];
+  for (const id of aliasIds) {
+    const block = blocksManager.getBlock(id);
+    if (!block) continue;
+    const backlinks = getBacklinks(id, "both", false);
+    result.push({ block, backlinks });
+  }
+  aliases.value = result;
+};
+
+const handleAddAlias = () => {
+  if (!clickedBlockId.value) return;
+  const schema = getPmSchema({ getBlockRef: blocksManager.getBlockRef });
+  const aliasContent = plainTextToTextContent(newAlias.value, schema);
+  addAlias(clickedBlockId.value, aliasContent);
+  updateAliases(clickedBlockId.value); // 添加别名后，手动更新别名列表
+  newAlias.value = "";
+};
 
 const handleDeleteAlias = (aliasId: string) => {
   const taskQueue = useTaskQueue();

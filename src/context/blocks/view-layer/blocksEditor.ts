@@ -49,12 +49,13 @@ export const createBlocksEditor = (
   mainRootBlockId: ShallowRef<BlockId | null>,
   getIndexContext: () => ReturnType<typeof IndexContext.useContext>,
 ) => {
-  const normalizePos = (pos: BlockPos): BlockPosParentChild | null => {
+  const normalizePos = (pos: BlockPos, tr?: BlockTransaction): BlockPosParentChild | null => {
+    const getBlock = tr ? tr.getLatestBlock : blocksManager.getBlock;
     if ("parentId" in pos) {
       // BlockPosParentChild or NonNormalizedBlockPosParentChild
       // handle 'first', 'last' and 'last-space'
       if (typeof pos.childIndex == "string") {
-        const parentBlock = blocksManager.getBlock(pos.parentId);
+        const parentBlock = getBlock(pos.parentId);
         if (!parentBlock) return null;
         return {
           parentId: pos.parentId,
@@ -70,9 +71,9 @@ export const createBlocksEditor = (
       }
     } else {
       // BlockPosSiblingOffset
-      const baseBlock = blocksManager.getBlock(pos.baseBlockId);
+      const baseBlock = getBlock(pos.baseBlockId);
       if (!baseBlock || baseBlock.id == "root") return null;
-      const parentBlock = baseBlock.parentRef.value;
+      const parentBlock = getBlock(baseBlock.parentId);
       if (!parentBlock) return null;
       const index = parentBlock.childrenIds.indexOf(pos.baseBlockId);
       return {
@@ -154,25 +155,27 @@ export const createBlocksEditor = (
 
   const insertNormalBlock = (params: {
     pos: BlockPos;
+    id?: BlockId;
     content: BlockContent;
     meta?: Record<string, any>;
     childrenIds?: BlockId[];
     tr?: BlockTransaction;
     commit?: boolean;
+    expandParentIfFolded?: boolean;
   }) => {
-    let { pos, content, meta, childrenIds, tr, commit } = params;
+    let { pos, id, content, meta, childrenIds, tr, commit, expandParentIfFolded } = params;
     childrenIds ??= [];
     tr ??= blocksManager.createBlockTransaction({ type: "ui" });
     commit ??= true;
     const indexContext = getIndexContext();
 
-    const { parentId, childIndex } = normalizePos(pos)!;
+    const { parentId, childIndex } = normalizePos(pos, tr)!;
     const parentBlock = tr.getLatestBlock(parentId)!;
     const parentActuralSrcBlock = getActuralSrcBlock(parentBlock, tr);
     if (!parentActuralSrcBlock) return;
 
     // 要插入的新块
-    const id = nanoid();
+    id = id ?? nanoid();
     tr.addBlock({
       id,
       type: "normalBlock",
@@ -209,7 +212,7 @@ export const createBlocksEditor = (
     }
 
     // 如果 parent block 是折叠的，则展开它，让我们能看到插入的块
-    if (parentBlock.fold) {
+    if (parentBlock.fold && expandParentIfFolded) {
       parentBlock.fold = false;
       tr.updateBlock(parentBlock);
     }
@@ -237,7 +240,7 @@ export const createBlocksEditor = (
     commit ??= true;
     const indexContext = getIndexContext();
 
-    const { parentId, childIndex } = normalizePos(pos)!;
+    const { parentId, childIndex } = normalizePos(pos, tr)!;
     const parentBlock = tr.getLatestBlock(parentId)!;
     const parentActuralSrcBlock = getActuralSrcBlock(parentBlock, tr);
 
@@ -315,7 +318,7 @@ export const createBlocksEditor = (
     commit ??= true;
     const indexContext = getIndexContext();
 
-    const { parentId, childIndex } = normalizePos(pos)!;
+    const { parentId, childIndex } = normalizePos(pos, tr)!;
     const parentBlock = tr.getLatestBlock(parentId)!;
     const parentActuralSrcBlock = getActuralSrcBlock(parentBlock, tr);
 
@@ -396,7 +399,7 @@ export const createBlocksEditor = (
     tr ??= blocksManager.createBlockTransaction({ type: "ui" });
     const indexContext = getIndexContext();
 
-    const { parentId: targetParentId, childIndex: targetChildIndex } = normalizePos(pos)!;
+    const { parentId: targetParentId, childIndex: targetChildIndex } = normalizePos(pos, tr)!;
 
     const block = tr.getLatestBlock(blockId)!;
     const acturalSrcBlock = getActuralSrcBlock(block, tr);
@@ -485,7 +488,7 @@ export const createBlocksEditor = (
     tr ??= blocksManager.createBlockTransaction({ type: "ui" });
     const indexContext = getIndexContext();
 
-    const { parentId: targetParentId, childIndex: targetChildIndex } = normalizePos(pos)!;
+    const { parentId: targetParentId, childIndex: targetChildIndex } = normalizePos(pos, tr)!;
 
     // 预检查，blockIds 中要移动的块应该是同一个父块的若干连续子块
     // 下面计算 fromIndex 和 toIndex

@@ -87,6 +87,15 @@ export type NormalBlock = Block & { type: "normalBlock" };
 export type MirrorBlock = Block & { type: "mirrorBlock" };
 export type VirtualBlock = Block & { type: "virtualBlock" };
 
+export type TextBlock = Block & { content: [0, ...any] };
+export type ImageBlock = Block & { content: [1, ...any] };
+export type CodeBlock = Block & { content: [2, ...any] };
+export type MathBlock = Block & { content: [3, ...any] };
+export type QueryBlock = Block & { content: [4, ...any] };
+export type CarouselBlock = Block & { content: [5, ...any] };
+export type AudioBlock = Block & { content: [6, ...any] };
+export type VideoBlock = Block & { content: [7, ...any] };
+
 // 记录事务开始或结束时的一些状态
 // 用于撤销 & 重做
 export type TransactionEnvInfo = {
@@ -548,7 +557,6 @@ export const createBlocksManager = (syncLayer: SyncLayer) => {
       if (node.content.size == 1) {
         const onlyNode = node.content.firstChild;
         if (onlyNode && onlyNode.type.name === "blockRef_v2") {
-          console.log("blockRef_v2, boosting = -1.0");
           return -1.0; // 如果只有一个 blockRef_v2，则 boosting 为 -1.0，表示我们不希望其出现在搜索结果中
         }
       }
@@ -864,20 +872,21 @@ export const createBlocksManager = (syncLayer: SyncLayer) => {
     eventBus.emit("blocksDestroy");
   };
 
-  const { createBlockTransaction, addBlock, updateBlock, deleteBlock } = useBlockTransaction({
-    blocks,
-    yjsLayer: syncLayer,
-    latestBlockInfos,
-    latestBlockDatas,
-    getBlockRef,
-    getCtext,
-    getMtext,
-    getBoosting,
-    getOlinks,
-    mainRootBlockId,
-    lastFocusedBlockTree,
-    lastFocusedDiId,
-  });
+  const { createBlockTransaction, addBlock, updateBlock, deleteBlock, enrichBlock, shrinkBlock } =
+    useBlockTransaction({
+      blocks,
+      yjsLayer: syncLayer,
+      latestBlockInfos,
+      latestBlockDatas,
+      getBlockRef,
+      getCtext,
+      getMtext,
+      getBoosting,
+      getOlinks,
+      mainRootBlockId,
+      lastFocusedBlockTree,
+      lastFocusedDiId,
+    });
 
   const { undo, redo, addUndoPoint, clearUndoRedoHistory } = createUndoManager({
     createBlockTransaction,
@@ -913,6 +922,8 @@ export const createBlocksManager = (syncLayer: SyncLayer) => {
     createNewTree,
     addUndoPoint,
     clearUndoRedoHistory,
+    enrichBlock,
+    shrinkBlock,
   };
 };
 

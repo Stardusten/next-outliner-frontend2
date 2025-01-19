@@ -10,132 +10,124 @@
         @click="deleteBlock(false, clickedBlockId!, $event)"
       >
         <Trash2 class="size-4 mr-2" />
-        {{ $t("kbView.command.deleteBlock") }}
+        {{ $t("kbView.commands.deleteBlock") }}
       </DropdownMenuItem>
+      <!-- <DropdownMenuItem
+        :disabled="!openFieldSettingsDialogCommand(true, clickedBlockId!, undefined)"
+        @click="openFieldSettingsDialogCommand(false, clickedBlockId!, $event)"
+      >
+        <Field class="size-4 mr-2" />
+        {{ $t("kbView.commands.fieldSettings") }}
+      </DropdownMenuItem> -->
       <DropdownMenuItem
+        :disabled="!openBlockRefTagSettingsDialogCommand(true, clickedBlockId!, undefined)"
+        @click="openBlockRefTagSettingsDialogCommand(false, clickedBlockId!, $event)"
+      >
+        <Link class="size-4 mr-2" />
+        {{ $t("kbView.commands.blockRefTagSettings") }}
+      </DropdownMenuItem>
+      <!-- <DropdownMenuItem
         :disabled="!openFieldValuesInspectorCommand(true, clickedBlockId!, undefined)"
         @click="openFieldValuesInspectorCommand(false, clickedBlockId!, $event)"
       >
         <Database class="size-4 mr-2" />
-        {{ $t("kbView.command.openFieldValuesInspector") }}
-      </DropdownMenuItem>
+        {{ $t("kbView.commands.openFieldValuesInspector") }}
+      </DropdownMenuItem> -->
       <DropdownMenuItem>
         <Copy class="size-4 mr-2" />
-        {{ $t("kbView.command.copyBlockReference") }}
+        {{ $t("kbView.commands.copyBlockReference") }}
       </DropdownMenuItem>
       <DropdownMenuItem>
         <FlipHorizontal class="size-4 mr-2" />
-        {{ $t("kbView.command.copyBlockMirror") }}
+        {{ $t("kbView.commands.copyBlockMirror") }}
       </DropdownMenuItem>
       <DropdownMenuItem
         :disabled="!insertMirrorBelow(true, clickedBlockId!, undefined)"
         @click="insertMirrorBelow(false, clickedBlockId!, $event)"
       >
         <FlipHorizontal class="size-4 mr-2" />
-        {{ $t("kbView.command.insertMirrorBelow") }}
+        {{ $t("kbView.commands.insertMirrorBelow") }}
       </DropdownMenuItem>
-      <DropdownMenuItem
+      <!-- <DropdownMenuItem
         :disabled="!addToFavorite(true, clickedBlockId!, undefined)"
         @click="addToFavorite(false, clickedBlockId!, $event)"
       >
         <Bookmark class="size-4 mr-2" />
-        {{ $t("kbView.command.addToFavorite") }}
-      </DropdownMenuItem>
+        {{ $t("kbView.commands.addToFavorite") }}
+      </DropdownMenuItem> -->
       <DropdownMenuItem
         :disabled="!addToSidePane(true, clickedBlockId!, undefined)"
         @click="addToSidePane(false, clickedBlockId!, $event)"
       >
         <Sidebar class="size-4 mr-2" />
-        {{ $t("kbView.command.addToSidepane") }}
+        {{ $t("kbView.commands.addToSidepane") }}
       </DropdownMenuItem>
       <!-- <DropdownMenuItem>
         <Archive class="size-4 mr-2" />
-        {{ $t("kbView.command.archiveDone") }}
+        {{ $t("kbView.commands.archiveDone") }}
       </DropdownMenuItem> -->
       <DropdownMenuItem
         :disabled="!moveBlock(true, clickedBlockId!, undefined)"
         @click="moveBlock(false, clickedBlockId!, $event)"
       >
         <ArrowRight class="size-4 mr-2" />
-        {{ $t("kbView.command.moveBlock") }}
+        {{ $t("kbView.commands.moveBlock") }}
       </DropdownMenuItem>
-      <DropdownMenuItem
+      <!-- <DropdownMenuItem
         :disabled="!moveBlockLeaveRef(true, clickedBlockId!, undefined)"
         @click="moveBlockLeaveRef(false, clickedBlockId!, $event)"
       >
         <ArrowRight class="size-4 mr-2" />
-        {{ $t("kbView.command.moveBlockLeaveRef") }}
+        {{ $t("kbView.commands.moveBlockLeaveRef") }}
       </DropdownMenuItem>
       <DropdownMenuItem
         :disabled="!moveBlock(true, clickedBlockId!, undefined)"
         @click="moveBlock(false, clickedBlockId!, $event)"
       >
         <ArrowRight class="size-4 mr-2" />
-        {{ $t("kbView.command.moveBlockLeaveMirror") }}
-      </DropdownMenuItem>
+        {{ $t("kbView.commands.moveBlockLeaveMirror") }}
+      </DropdownMenuItem> -->
 
       <!-- 排序 -->
-      <DropdownMenuSub>
+      <!-- <DropdownMenuSub>
         <DropdownMenuSubTrigger>
           <SortAsc class="size-4 mr-2" />
-          {{ $t("kbView.command.sortDirectChildren") }}
+          {{ $t("kbView.commands.sortDirectChildren") }}
         </DropdownMenuSubTrigger>
         <DropdownMenuSubContent>
           <DropdownMenuItem>
             <ArrowUpAZ class="size-4 mr-2" />
-            {{ $t("kbView.command.sortDictAsc") }}
+            {{ $t("kbView.commands.sortDictAsc") }}
           </DropdownMenuItem>
           <DropdownMenuItem>
             <ArrowDownAZ class="size-4 mr-2" />
-            {{ $t("kbView.command.sortDictDesc") }}
+            {{ $t("kbView.commands.sortDictDesc") }}
           </DropdownMenuItem>
           <DropdownMenuItem>
             <CalendarArrowUp class="size-4 mr-2" />
-            {{ $t("kbView.command.ctimeAsc") }}
+            {{ $t("kbView.commands.ctimeAsc") }}
           </DropdownMenuItem>
           <DropdownMenuItem>
             <CalendarArrowDown class="size-4 mr-2" />
-            {{ $t("kbView.command.ctimeDesc") }}
+            {{ $t("kbView.commands.ctimeDesc") }}
           </DropdownMenuItem>
           <DropdownMenuItem>
             <CalendarArrowUp class="size-4 mr-2" />
-            {{ $t("kbView.command.mtimeAsc") }}
+            {{ $t("kbView.commands.mtimeAsc") }}
           </DropdownMenuItem>
           <DropdownMenuItem>
             <CalendarArrowDown class="size-4 mr-2" />
-            {{ $t("kbView.command.mtimeDesc") }}
+            {{ $t("kbView.commands.mtimeDesc") }}
           </DropdownMenuItem>
         </DropdownMenuSubContent>
-      </DropdownMenuSub>
-
-      <!-- 设置块引用颜色 -->
-      <DropdownMenuSub>
-        <DropdownMenuSubTrigger>
-          <Paintbrush class="size-4 mr-2" />
-          {{ $t("kbView.command.setBlockRefColor") }}
-        </DropdownMenuSubTrigger>
-        <DropdownMenuSubContent>
-          <DropdownMenuItem
-            v-for="color in predefinedColors"
-            :key="color"
-            :disabled="!getBlockRefColorSetter(color)(true, clickedBlockId!, undefined)"
-            @click="getBlockRefColorSetter(color)(false, clickedBlockId!, $event)"
-          >
-            <div
-              class="size-4 mr-2 rounded-sm"
-              :style="{ backgroundColor: `var(--highlight-${color})` }"
-            ></div>
-            {{ $t(`kbView.command.${color}`) }}
-          </DropdownMenuItem>
-        </DropdownMenuSubContent>
-      </DropdownMenuSub>
+      </DropdownMenuSub> -->
 
       <DropdownMenuItem
         :disabled="!exportBlock(true, clickedBlockId!, undefined)"
         @click="exportBlock(false, clickedBlockId!, $event)"
       >
         <Download class="size-4 mr-2" />
-        {{ $t("kbView.command.export") }}
+        {{ $t("kbView.commands.export") }}
       </DropdownMenuItem>
     </DropdownMenuContent>
   </DropdownMenu>
@@ -159,6 +151,7 @@ import {
   ArrowRight,
   Database,
   Paintbrush,
+  Link,
 } from "lucide-vue-next";
 import {
   DropdownMenu,
@@ -184,6 +177,9 @@ import FieldValueInspectorContext from "@/context/fieldValueInspector";
 import BlockContextMenuContext from "@/context/blockContextMenu";
 import { nextTick, watch } from "vue";
 import { calcPopoverPos } from "@/utils/popover";
+import Field from "../icons/Field.vue";
+import { FieldSettingsDialogContext } from "@/context/fieldSettingsDialog";
+import BlockRefTagSettingsDialogContext from "@/context/blockRefTagSettingsDialog";
 
 type CommandExec = (
   test: boolean,
@@ -200,6 +196,9 @@ const { lastFocusedBlockTree } = LastFocusContext.useContext()!;
 const { openExporter } = ExporterContext.useContext()!;
 const { openFieldValuesInspector } = FieldValueInspectorContext.useContext()!;
 const { open, showPos, clickedBlockId } = BlockContextMenuContext.useContext()!;
+const { openDialog: openFieldSettingsDialog } = FieldSettingsDialogContext.useContext()!;
+const { openDialog: openBlockRefTagSettingsDialog } =
+  BlockRefTagSettingsDialogContext.useContext()!;
 
 watch(showPos, async () => {
   await nextTick();
@@ -218,7 +217,7 @@ watch(showPos, async () => {
   document.body.style.setProperty("--popover-y", `${popoverPos.rightDown.y}px`);
 });
 
-const predefinedColors = ["red", "green", "blue", "yellow", "gray", "orange", "purple"];
+const predefinedColors = ["red", "green", "blue", "yellow", "gray", "orange", "purple", undefined];
 
 const deleteBlock: CommandExec = (test, blockId) => {
   if (!test && blockId) {
@@ -296,7 +295,21 @@ const openFieldValuesInspectorCommand: CommandExec = (test, blockId) => {
   return !!blockId;
 };
 
-const getBlockRefColorSetter: (color: string) => CommandExec =
+const openFieldSettingsDialogCommand: CommandExec = (test, blockId) => {
+  if (!test && blockId) {
+    openFieldSettingsDialog(blockId);
+  }
+  return !!blockId;
+};
+
+const openBlockRefTagSettingsDialogCommand: CommandExec = (test, blockId) => {
+  if (!test && blockId) {
+    openBlockRefTagSettingsDialog(blockId);
+  }
+  return !!blockId;
+};
+
+const getBlockRefColorSetter: (color: string | undefined) => CommandExec =
   (color) => (test, blockId, event) => {
     if (!test && blockId && event) {
       taskQueue.addTask(async () => {

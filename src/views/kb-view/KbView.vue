@@ -36,7 +36,11 @@
                                                                       <KeymapContext.Provider>
                                                                         <BlockContextMenuContext.Provider>
                                                                           <BlockRefContextmenuContext.Provider>
-                                                                            <KbViewContent />
+                                                                            <FieldSettingsDialogContext.Provider>
+                                                                              <BlockRefTagSettingsDialog.Provider>
+                                                                                <KbViewContent />
+                                                                              </BlockRefTagSettingsDialog.Provider>
+                                                                            </FieldSettingsDialogContext.Provider>
                                                                           </BlockRefContextmenuContext.Provider>
                                                                         </BlockContextMenuContext.Provider>
                                                                       </KeymapContext.Provider>
@@ -115,4 +119,6 @@ import BlockContextMenuContext from "@/context/blockContextMenu";
 import CommandsContext from "@/context/commands/commands";
 import AttachmentViewerContext from "@/context/attachmentViewer";
 import BlockRefContextmenuContext from "@/context/blockRefContextmenu";
+import { FieldSettingsDialogContext } from "@/context/fieldSettingsDialog";
+import BlockRefTagSettingsDialog from "@/context/blockRefTagSettingsDialog";
 </script>

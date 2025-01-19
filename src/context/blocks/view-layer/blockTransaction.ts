@@ -83,7 +83,8 @@ function useBlockTransaction(context: BlockTransactionBuilderContext) {
       updateBlock: <T extends MinimalBlock>(block: T) => {
         const oldBlock = blocks.get(block.id)?.value;
         if (!oldBlock) {
-          throw new Error(`Cannot find old block ${block.id}, maybe you should add it first?`);
+          console.warn(`Cannot find old block ${block.id}, maybe you should add it first?`);
+          return tr;
         }
         tr.patches.push({ op: "update", block });
         tr.reversePatches.push({
@@ -95,7 +96,8 @@ function useBlockTransaction(context: BlockTransactionBuilderContext) {
       deleteBlock: (blockId: BlockId) => {
         const oldBlock = blocks.get(blockId)?.value;
         if (!oldBlock) {
-          throw new Error(`Cannot find old block ${blockId}, maybe you should add it first?`);
+          console.warn(`Cannot find old block ${blockId}, maybe you should add it first?`);
+          return tr;
         }
         tr.patches.push({ op: "delete", blockId });
         tr.reversePatches.push({ op: "add", block: shrinkBlock(oldBlock) });
@@ -376,7 +378,7 @@ function useBlockTransaction(context: BlockTransactionBuilderContext) {
     return createBlockTransaction(origin).deleteBlock(blockId).commit();
   };
 
-  return { createBlockTransaction, addBlock, updateBlock, deleteBlock };
+  return { createBlockTransaction, addBlock, updateBlock, deleteBlock, enrichBlock, shrinkBlock };
 }
 
 export default useBlockTransaction;

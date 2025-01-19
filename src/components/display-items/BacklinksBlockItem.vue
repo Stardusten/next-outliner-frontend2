@@ -22,7 +22,7 @@ const props = withDefaults(
   defineProps<{
     blockTree?: BlockTree;
     refBlockId: BlockId;
-    itemId?: DisplayItemId;
+    itemId: DisplayItemId;
     block: Block;
     readonly?: boolean;
     highlightTerms?: string[];
@@ -41,18 +41,17 @@ const fold = computed(() => {
   const tree = props.blockTree;
   if (!tree) return props.block.fold;
   const expandedBP = tree.expandedBP.value;
-  if (expandedBP[props.block.id]) return false;
+  if (expandedBP[props.itemId]) return false;
   return true; // 反链面板里根块默认是折叠的，不管 props.block.fold 的值是怎么样
 });
 
 const handleClickFoldButton = () => {
-  const tree = props.blockTree;
-  if (!tree) return;
-  const expandedBP = tree.expandedBP.value;
-  if (expandedBP[props.block.id]) {
-    delete expandedBP[props.block.id];
+  const expandedBP = props.blockTree?.expandedBP.value;
+  if (!expandedBP) return;
+  if (expandedBP[props.itemId]) {
+    delete expandedBP[props.itemId];
   } else {
-    expandedBP[props.block.id] = true;
+    expandedBP[props.itemId] = true;
   }
 };
 </script>

@@ -2,7 +2,7 @@ import { createApp } from "vue";
 import { createI18n } from "vue-i18n";
 import "./assets/main.css";
 import { eventbusPlugin } from "./plugins/eventbus";
-import { messages } from "./plugins/i18n";
+import { messages } from "./ i18n/i18n";
 import router from "./router";
 import App from "./views/App.vue";
 import { taskQueuePlugin } from "./plugins/taskQueue";

@@ -21,7 +21,7 @@ const props = withDefaults(
     blockTree?: BlockTree;
     block: Block;
     level: number;
-    itemId?: DisplayItemId;
+    itemId: DisplayItemId;
     readonly?: boolean;
     highlightTerms?: string[];
     highlightRefs?: BlockId[];
@@ -36,21 +36,18 @@ const props = withDefaults(
 );
 
 const fold = computed(() => {
-  const tree = props.blockTree;
-  if (!tree) return props.block.fold;
-  const expandedBP = tree.expandedBP.value;
-  if (expandedBP[props.block.id]) return false;
-  return props.block.fold;
+  const expandedBP = props.blockTree?.expandedBP.value;
+  if (!expandedBP) return props.block.fold;
+  return !expandedBP[props.itemId];
 });
 
 const handleClickFoldButton = () => {
-  const tree = props.blockTree;
-  if (!tree) return;
-  const expandedBP = tree.expandedBP.value;
-  if (expandedBP[props.block.id]) {
-    delete expandedBP[props.block.id];
+  const expandedBP = props.blockTree?.expandedBP.value;
+  if (!expandedBP) return;
+  if (expandedBP[props.itemId]) {
+    delete expandedBP[props.itemId];
   } else {
-    expandedBP[props.block.id] = true;
+    expandedBP[props.itemId] = true;
   }
 };
 </script>

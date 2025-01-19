@@ -53,9 +53,9 @@ const props = defineProps<{
 
 const { blocksManager } = BlocksContext.useContext()!;
 const { getBlockTree } = BlockTreeContext.useContext()!;
-const { getBacklinksConsideringAliases, getAllAliases } = BacklinksContext.useContext()!;
+const { getBacklinks, getAllAliases } = BacklinksContext.useContext()!;
 
-const backlinks = computed(() => getBacklinksConsideringAliases(props.blockId));
+const backlinks = computed(() => getBacklinks(props.blockId));
 const aliases = computed(() => getAllAliases(props.blockId));
 const backlinkBlocks = computed(() => {
   return [...backlinks.value]

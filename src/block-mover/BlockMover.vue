@@ -2,7 +2,7 @@
   <Popover v-model:open="open">
     <PopoverTrigger class="hidden" />
     <PopoverContent
-      :class="`${contentClass} py-2 pb-0 px-1 max-h-[300px] max-w-[300px] overflow-hidden`"
+      :class="`${contentClass} z-[999] py-2 pb-0 px-1 max-h-[300px] max-w-[300px] overflow-hidden`"
       trap-focus
       tabindex="-1"
       @keydown="handleKeydown"
@@ -25,10 +25,11 @@
           class="relative flex w-full cursor-default select-none items-center rounded-sm py-1.5 pl-2 text-sm outline-none [&.focus]:bg-accent [&.focus]:text-accent-foreground"
           :class="{ focus: focusItemIndex === index }"
           @mouseover="!suppressMouseOver && (focusItemIndex = index)"
+          @click="handleSelectItem(block.value.id)"
         >
           <TextContent
             v-if="block.value.content[0] === BLOCK_CONTENT_TYPES.TEXT"
-            :block="block.value"
+            :block="block.value as TextBlock"
             :readonly="true"
             class="*:cursor-default"
             :highlight-terms="queryTerms"
@@ -50,6 +51,7 @@ import TextContent from "@/components/block-contents/TextContent.vue";
 import { Input } from "@/components/ui/input";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import BlockMoverContext from "@/context/blockMover";
+import type { TextBlock } from "@/context/blocks/view-layer/blocksManager";
 import { calcPopoverPos } from "@/utils/popover";
 import { hybridTokenize } from "@/utils/tokenize";
 import { Search } from "lucide-vue-next";
@@ -63,6 +65,7 @@ const {
   suggestions,
   suppressMouseOver,
   updateSuggestions,
+  handleSelectItem,
   contentClass,
   handleKeydown,
 } = BlockMoverContext.useContext()!;

@@ -1,4 +1,4 @@
-<template>
+<!-- <template>
   <Popover v-model:open="open">
     <PopoverTrigger></PopoverTrigger>
     <PopoverContent class="floating-editor-content p-2 w-[400px] h-[400px] overflow-hidden">
@@ -62,4 +62,4 @@ watch(open, async () => {
 [data-radix-popper-content-wrapper]:has(> .floating-editor-content) {
   transform: translate(var(--popover-x), var(--popover-y)) !important;
 }
-</style>
+</style> -->

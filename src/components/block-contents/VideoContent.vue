@@ -34,19 +34,19 @@
 <script setup lang="ts">
 import { fsGetAttachmentSignedUrl } from "@/common/api-call/fs";
 import { BLOCK_CONTENT_TYPES } from "@/common/constants";
-import type { Block } from "@/context/blocks/view-layer/blocksManager";
+import type { VideoContent } from "@/common/type-and-schemas/block/block-content";
+import BlocksContext from "@/context/blocks/blocks";
+import type { VideoBlock } from "@/context/blocks/view-layer/blocksManager";
 import type { BlockTree } from "@/context/blockTree";
 import ServerInfoContext from "@/context/serverInfo";
+import { useTaskQueue } from "@/plugins/taskQueue";
 import type { DisplayItemId } from "@/utils/display-item";
 import { Loader2 } from "lucide-vue-next";
 import { ref, watch } from "vue";
-import { useTaskQueue } from "@/plugins/taskQueue";
-import BlocksContext from "@/context/blocks/blocks";
-import type { VideoContent } from "@/common/type-and-schemas/block/block-content";
 
 const props = defineProps<{
   blockTree?: BlockTree;
-  block: Block;
+  block: VideoBlock;
   itemId?: DisplayItemId;
 }>();
 

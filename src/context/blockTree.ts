@@ -59,7 +59,7 @@ export type BlockTree = {
     dir?: "forward" | "backward",
   ) => readonly [DisplayItem, number] | null;
 
-  expandedBP: Ref<Record<BlockId, boolean>>;
+  expandedBP: Ref<Record<DisplayItemId, boolean>>;
 
   localEventBus: ReturnType<typeof mitt<BlockTreeEventMap>>;
   nextUpdate: (cb?: () => void | Promise<void>) => Promise<void>;

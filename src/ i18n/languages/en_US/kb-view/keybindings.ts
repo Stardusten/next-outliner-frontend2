@@ -1,0 +1,38 @@
+const keybindings = {
+  title: "Keyboard Shortcuts",
+  description: "List of all available keyboard shortcuts",
+  close: "Close",
+  groups: {
+    normal: "Common Operations",
+    inCodeBlock: "Code Block Specific",
+  },
+  commands: {
+    swapUp: "Move Up",
+    swapDown: "Move Down",
+    expand: "Expand",
+    collapse: "Collapse",
+    collapseAll: "Collapse All",
+    expandAll: "Expand All",
+    indent: "Increase Indent",
+    outdent: "Decrease Indent",
+    insertInlineMath: "Insert Inline Math",
+    insertBlockMath: "Insert Block Math",
+    bold: "Bold",
+    italic: "Italic",
+    code: "Code",
+    highlight: "Highlight",
+    insertBlockRef: "Insert Block Reference",
+    insertTag: "Insert Tag",
+    toCodeblock: "Convert to Code Block",
+    undo: "Undo",
+    redo: "Redo",
+    softBreak: "Soft Line Break",
+    openFusionCommand: "Open Multi-function Panel",
+    openAndFocusToSidePane: "Open Sidepane and Focus / Close Sidepane",
+    moveSidePane: "Move Sidepane (to Right / Bottom)",
+    addToFavorite: "Add to Favorites",
+    addToSidePane: "Add to Sidepane",
+  },
+};
+
+export default keybindings;

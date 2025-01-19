@@ -160,6 +160,7 @@ const RefSuggestionsContext = createContext(() => {
             parentId,
             childIndex: "last-space",
           },
+          expandParentIfFolded: false,
         }) ?? {};
       if (!newNormalBlockId) return;
       // 当前光标位置插入到新块的块引用

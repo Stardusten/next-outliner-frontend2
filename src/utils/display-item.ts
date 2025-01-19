@@ -8,6 +8,7 @@ import type {
   ForDescendantsOptions,
 } from "@/context/blocks/view-layer/blocksManager";
 import { nanoid } from "nanoid";
+import { toRaw } from "vue";
 
 export type DisplayItemId = DisplayItem["itemId"];
 
@@ -51,7 +52,7 @@ export type DisplayGeneratorContext = {
   // 是否为每个 root block 添加一个 side pane header
   addSidePaneHeader?: boolean;
   blocksManager: BlocksManager;
-  expandedBP: Record<BlockId, boolean>;
+  expandedBP: Record<DisplayItemId, boolean>;
   // required context
   getBacklinksContext: () => ReturnType<typeof BacklinksContext.useContext>;
   getIndexContext: () => ReturnType<typeof IndexContext.useContext>;
@@ -242,10 +243,10 @@ const addBacklinkItems = (
   expandedBP: Record<BlockId, boolean>,
   getBacklinksContext: () => ReturnType<typeof BacklinksContext.useContext>,
 ) => {
-  const { getBacklinksConsideringAliases } = getBacklinksContext() ?? {};
-  if (!getBacklinksConsideringAliases) return;
+  const { getBacklinks } = getBacklinksContext() ?? {};
+  if (!getBacklinks) return;
 
-  const backlinks = getBacklinksConsideringAliases(rootBlockId);
+  const backlinks = getBacklinks(rootBlockId);
   if (backlinks.size <= 0) return;
 
   // 只保留顶层反链
@@ -305,25 +306,34 @@ const addBacklinkItems = (
       refBlockId: rootBlockId,
     });
 
-    blocksManager.forDescendants({
-      rootBlockId: backlink,
-      rootBlockLevel: 0,
-      nonFoldOnly: true,
-      includeSelf: false,
-      ignore: (b) => {
-        if (expandedBP[b.id]) return "keep-self-and-descendants";
-        return "ignore-descendants";
-      },
-      onEachBlock: (block, level) => {
-        // 对于反链根块下的一个后代块，其 itemId 格式为 `backlink-descendant-${backlink}-${block.id}`
+    const dfs = (block: Block, currLevel: number) => {
+      const itemId =
+        block.id === backlink
+          ? `backlink-block-${backlink}`
+          : `backlink-descendant-${backlink}-${block.id}`;
+      const fold = !expandedBP[itemId];
+
+      if (block.id !== backlink) {
         resultCollector.push({
           type: "backlink-descendant",
-          itemId: `backlink-descendant-${backlink}-${block.id}`,
+          itemId,
           block,
-          level,
+          level: currLevel,
         });
-      },
-    });
+      }
+
+      if (typeof block.childrenIds == "string") return;
+      if (fold) return;
+
+      for (const childRef of block.childrenRefs) {
+        if (childRef.value && !childRef.value.deleted) {
+          const rawBlock = toRaw(childRef.value);
+          dfs(rawBlock, currLevel + 1);
+        }
+      }
+    };
+
+    dfs(block, 0);
   }
 
   backlinksCollector[0] = backlinks;
@@ -338,11 +348,11 @@ const addPotentialLinksItems = (
   getBacklinksContext: () => ReturnType<typeof BacklinksContext.useContext>,
   getIndexContext: () => ReturnType<typeof IndexContext.useContext>,
 ) => {
-  const { getBacklinksConsideringAliases } = getBacklinksContext() ?? {};
+  const { getBacklinks } = getBacklinksContext() ?? {};
   const { search } = getIndexContext() ?? {};
-  if (!search || !getBacklinksConsideringAliases) return;
+  if (!search || !getBacklinks) return;
 
-  const backlinks = backlinksCollector[0] ?? getBacklinksConsideringAliases(rootBlockId);
+  const backlinks = backlinksCollector[0] ?? getBacklinks(rootBlockId);
   const rootBlock = blocksManager.getBlock(rootBlockId);
 
   if (rootBlock && rootBlock.content[0] === BLOCK_CONTENT_TYPES.TEXT) {
@@ -372,24 +382,34 @@ const addPotentialLinksItems = (
           refBlockId: rootBlockId,
         });
 
-        blocksManager.forDescendants({
-          rootBlockId: potentialLink.id,
-          rootBlockLevel: 0,
-          nonFoldOnly: true,
-          includeSelf: false,
-          ignore: (b) => {
-            if (expandedBP[b.id]) return "keep-self-and-descendants";
-            return "ignore-descendants";
-          },
-          onEachBlock: (block, level) => {
+        const dfs = (block: Block, currLevel: number) => {
+          const itemId =
+            block.id === potentialLink.id
+              ? `potential-links-block-${potentialLink.id}`
+              : `potential-links-descendant-${potentialLink.id}-${block.id}`;
+          const fold = !expandedBP[itemId];
+
+          if (block.id !== potentialLink.id) {
             resultCollector.push({
               type: "potential-links-descendant",
-              itemId: `potential-links-descendant-${block.id}`,
+              itemId,
               block,
-              level,
+              level: currLevel,
             });
-          },
-        });
+          }
+
+          if (typeof block.childrenIds == "string") return;
+          if (fold) return;
+
+          for (const childRef of block.childrenRefs) {
+            if (childRef.value && !childRef.value.deleted) {
+              const rawBlock = toRaw(childRef.value);
+              dfs(rawBlock, currLevel + 1);
+            }
+          }
+        };
+
+        dfs(potentialLink, 0);
       }
     }
   }

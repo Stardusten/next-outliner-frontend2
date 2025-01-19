@@ -1,0 +1,27 @@
+const headerBar = {
+  moreOptions: "Plus d'options",
+  dailynoteNavigator: "Notes quotidiennes",
+  pomodoro: "Pomodoro",
+  closeMenu: "Fermer le menu",
+  openMenu: "Ouvrir le menu",
+  back: "Retour",
+  forward: "Suivant",
+  search: "Rechercher",
+  notifications: "Notifications",
+  switchLightTheme: "Passer au thème clair",
+  switchDarkTheme: "Passer au thème sombre",
+  openSidepane: "Ouvrir le panneau latéral",
+  closeSidepane: "Fermer le panneau latéral",
+  export: "Exporter",
+  import: "Importer",
+  enterFocusMode: "Activer le mode focus",
+  exitFocusMode: "Désactiver le mode focus",
+  attachmentsManager: "Gestionnaire de pièces jointes",
+  settings: "Paramètres",
+  timeMachine: "Machine à remonter le temps",
+  help: "Documentation d'aide",
+  exit: "Quitter",
+  keybindings: "Voir & modifier les raccourcis",
+};
+
+export default headerBar;
