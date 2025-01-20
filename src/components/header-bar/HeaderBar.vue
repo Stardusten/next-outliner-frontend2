@@ -3,17 +3,21 @@
     class="header-bar fixed top-0 left-0 flex flex-row justify-between items-center w-[calc(100vw-16px)] z-10 bg-background bg-clip-content"
     :style="{ paddingRight, transition }"
   >
-    <div class="flex flex-row w-full justify-between items-center py-[10px] pl-[8px]">
-      <div class="left-part">
+    <div
+      class="flex flex-row w-full justify-between items-center py-[10px] pl-[8px] overflow-hidden"
+    >
+      <div class="left-part mr-2 flex-shrink-0">
         <!-- 左边的按钮 -->
         <div class="left-buttons">
           <LeftButtons />
         </div>
       </div>
 
-      <BlockPath :block-id="mainRootBlockId" @click-path-segment="handleClickPathSegment" />
+      <div class="w-0 flex-1 flex items-center justify-center">
+        <BlockPath :block-id="mainRootBlockId" @click-path-segment="handleClickPathSegment" />
+      </div>
 
-      <div class="right-part flex flex-row items-center">
+      <div class="right-part flex flex-row items-center flex-shrink-0">
         <!-- 同步状态 -->
         <Tooltip>
           <TooltipTrigger>

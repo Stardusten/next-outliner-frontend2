@@ -57,32 +57,89 @@
               }}
             </TooltipContent>
           </Tooltip>
-          <Tooltip>
-            <TooltipTrigger asChild>
+
+          <!-- 文件类型过滤按钮 -->
+          <Popover>
+            <PopoverTrigger asChild>
               <Button variant="outline" size="sm" class="size-9 p-0">
                 <Filter
                   class="size-4"
                   :class="{ 'text-primary': Object.values(fileTypeFilter).some((v) => !v) }"
                 />
               </Button>
-            </TooltipTrigger>
-            <TooltipContent>
-              {{ $t("kbView.attachmentsManager.tooltip.filter") }}
-            </TooltipContent>
-          </Tooltip>
-          <Tooltip>
-            <TooltipTrigger asChild>
+            </PopoverTrigger>
+            <PopoverContent class="w-64 p-3">
+              <div>
+                <h4 class="font-medium mb-3">
+                  {{ $t("kbView.attachmentsManager.filterByType") }}
+                </h4>
+                <div class="space-y-2">
+                  <div
+                    v-for="type in ['folders', 'images', 'documents', 'audio', 'video', 'others']"
+                    :key="type"
+                    class="flex items-center"
+                  >
+                    <Checkbox
+                      :id="type"
+                      v-model:checked="fileTypeFilter[type as keyof typeof fileTypeFilter]"
+                      @change="handleFilterChange(type)"
+                      class="opacity-70 mr-2"
+                    />
+                    <Label class="font-normal" :for="type">{{
+                      $t(`kbView.attachmentsManager.${type}`)
+                    }}</Label>
+                  </div>
+                </div>
+              </div>
+            </PopoverContent>
+          </Popover>
+
+          <!-- 文件排序按钮 -->
+          <Popover>
+            <PopoverTrigger asChild>
               <Button variant="outline" size="sm" class="size-9 p-0">
                 <ArrowUpDown
                   class="size-4"
                   :class="{ 'text-primary': Object.values(sortBy).some((v) => v !== 'none') }"
                 />
               </Button>
-            </TooltipTrigger>
-            <TooltipContent>
-              {{ $t("kbView.attachmentsManager.tooltip.sort") }}
-            </TooltipContent>
-          </Tooltip>
+            </PopoverTrigger>
+            <PopoverContent class="w-64 p-3">
+              <div>
+                <h4 class="font-medium mb-3">
+                  {{ $t("kbView.attachmentsManager.sortBy") }}
+                </h4>
+                <div>
+                  <div
+                    v-for="type in ['name', 'date', 'size']"
+                    :key="type"
+                    class="flex text-sm select-none items-center justify-between -mx-1 px-1 py-1 cursor-pointer hover:bg-muted rounded-sm"
+                    @click="handleSortChange(type as keyof typeof sortBy)"
+                  >
+                    <span>{{
+                      $t(
+                        `kbView.attachmentsManager.sortBy${type.charAt(0).toUpperCase() + type.slice(1)}`,
+                      )
+                    }}</span>
+                    <div class="flex items-center gap-1">
+                      <ArrowUpDown
+                        v-if="sortBy[type as keyof typeof sortBy] === 'none'"
+                        class="size-4 opacity-30"
+                      />
+                      <ArrowUp
+                        v-if="sortBy[type as keyof typeof sortBy] === 'asc'"
+                        class="size-4"
+                      />
+                      <ArrowDown
+                        v-if="sortBy[type as keyof typeof sortBy] === 'desc'"
+                        class="size-4"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </PopoverContent>
+          </Popover>
         </div>
       </div>
 
@@ -279,6 +336,8 @@ import { isAnimateImage, isAudio, isStaticImage, isText, isVideo } from "@/utils
 import { hybridTokenize } from "@/utils/tokenize";
 import {
   ArrowUpDown,
+  ArrowUp,
+  ArrowDown,
   Eye,
   Filter,
   FolderOpen,
@@ -309,6 +368,9 @@ import { Input } from "../ui/input";
 import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
 import DirectoryItem from "./DirectoryItem.vue";
 import FileItem from "./FileItem.vue";
+import { Checkbox } from "../ui/checkbox";
+import { Label } from "../ui/label";
+import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 
 const { t: $t } = useI18n();
 const queryTerms = computed(() => {
