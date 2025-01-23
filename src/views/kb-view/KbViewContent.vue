@@ -16,6 +16,7 @@
       :root-block-level="0"
       :padding-top="60"
       :enlarge-root-block="true"
+      :show-block-properties="true"
     ></BlockTree>
     <div
       v-else

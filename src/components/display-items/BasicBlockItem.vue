@@ -122,7 +122,6 @@ const selected = computed(() => selectedBlockIds.value?.allNonFolded.includes(pr
 const handleFocusIn = () => {
   lastFocusedDiId.value = props.itemId ?? null;
   lastFocusedBlockTree.value = props.blockTree ?? null;
-  console.log("set lastFocusedBlockTree", props.blockTree);
   // 一个块获得焦点时，清除块选择
   // 但是当拖拽时，不清除块选择
   if (!dragging.value) {

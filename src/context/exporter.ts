@@ -86,13 +86,15 @@ const ExporterContext = createContext(() => {
     rootBlockId: string,
     options: {
       nonFoldOnly?: boolean;
+      blockRefsToPlaintext?: boolean;
+      embedImagesAsBase64?: boolean;
     } = {},
   ) => {
     options.nonFoldOnly ??= false;
 
     const schema = getPmSchema({ getBlockRef: blocksManager.getBlockRef });
 
-    const nodeToMarkdown = (node: any): string => {
+    const nodeToMarkdown = (node: Node): string => {
       if (node.type.name === "text") {
         let text = node.text;
 
@@ -120,7 +122,7 @@ const ExporterContext = createContext(() => {
             }
           }
         }
-        return text;
+        return text!;
       }
 
       switch (node.type.name) {
@@ -131,7 +133,8 @@ const ExporterContext = createContext(() => {
         case "blockRef_v2":
           const refBlock = blocksManager.getBlock(node.attrs.toBlockId);
           if (!refBlock) return "";
-          return node.attrs.tag ? `#${refBlock.ctext}` : `[[${refBlock.ctext}]]`;
+          if (options.blockRefsToPlaintext) return node.textContent;
+          else return node.attrs.tag ? `#${refBlock.ctext}` : `[[${refBlock.ctext}]]`;
         case "pathRef":
           return `[${getBasename(node.attrs.path)}](${node.attrs.path})`;
         default:

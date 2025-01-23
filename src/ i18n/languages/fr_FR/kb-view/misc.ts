@@ -102,12 +102,15 @@ const misc = {
   },
   exporter: {
     title: "Exporter",
-    description: "Exporter la sélection en HTML, PDF, Markdown, texte brut et autres formats",
+    description:
+      "Exporter la sous-arborescence sélectionnée au format HTML, PDF, Markdown, texte brut et autres formats",
     preview: "Aperçu",
     copyToClipboard: "Copier dans le presse-papiers",
     exportToFile: "Exporter vers un fichier",
     cancel: "Annuler",
     exportFormat: "Format d'export",
+    blockRefsToPlaintext: "Convertir les références de bloc en texte brut",
+    embedImagesAsBase64: "Intégrer les images en Base64",
   },
   fontSelector: {
     notAvailable: "(Non installée)",

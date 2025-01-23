@@ -2,7 +2,7 @@
   <div
     class="block-tree select-none"
     ref="$blockTree"
-    :block-tree-id="id"
+    :data-block-tree-id="id"
     :style="{
       '--padding-bottom': `${paddingBottom}px`,
       '--padding-top': `${paddingTop}px`,
@@ -111,6 +111,14 @@
           :block-id="itemData.blockId"
           :item-id="itemData.itemId"
         ></SidePaneItemHeader>
+        <BlockPropertiesItem
+          v-if="itemData.type == 'block-properties'"
+          :key="itemData.itemId"
+          :item-id="itemData.itemId"
+          :block-tree="controller"
+          :block="itemData.block"
+          :level="itemData.level"
+        ></BlockPropertiesItem>
       </template>
       <template #footer> </template>
     </virt-list>
@@ -162,11 +170,13 @@ import RootBlockItem from "./display-items/RootBlockItem.vue";
 import BacklinksContext from "@/context/backlinks";
 import IndexContext from "@/context";
 import SidePaneItemHeader from "./display-items/SidePaneItemHeader.vue";
+import BlockPropertiesItem from "./display-items/BlockPropertiesItem.vue";
 
 const props = withDefaults(defineProps<BlockTreeProps>(), {
   virtual: true,
   showBacklinks: true,
   showPotentialLinks: true,
+  showBlockProperties: false,
   addSidePaneHeader: false,
   enlargeRootBlock: false,
   paddingBottom: 200,
@@ -200,6 +210,7 @@ const updateDisplayItems = () => {
     blocksManager,
     showBacklinks: props.showBacklinks ?? true,
     showPotentialLinks: props.showPotentialLinks ?? true,
+    showBlockProperties: props.showBlockProperties ?? true,
     expandedBP: expandedBP.value,
     getBacklinksContext: () => backlinksContext,
     getIndexContext: () => indexContext,

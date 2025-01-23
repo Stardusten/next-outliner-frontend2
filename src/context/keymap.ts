@@ -1,16 +1,7 @@
-import { createContext } from "@/utils/createContext";
-import { EditorView, EditorView as PmEditorView } from "prosemirror-view";
-import { base, keyName } from "w3c-keyname";
-import type { KeyBinding as CmKeyBinding } from "@codemirror/view";
-import { AllSelection, EditorState, NodeSelection, TextSelection } from "prosemirror-state";
-import { plainTextToTextContent } from "@/utils/pm";
 import { BLOCK_CONTENT_TYPES } from "@/common/constants";
-import { Node } from "prosemirror-model";
-import { getPmSchema } from "@/components/prosemirror/pmSchema";
-import { toggleMark } from "prosemirror-commands";
+import { getPlatform } from "@/common/helper-functions/platform";
 import { useTaskQueue } from "@/plugins/taskQueue";
-import LastFocusContext from "./lastFocus";
-import BlocksContext from "./blocks/blocks";
+import { createContext } from "@/utils/createContext";
 import {
   cursorCharLeft,
   cursorCharRight,
@@ -19,22 +10,24 @@ import {
   deleteCharBackward,
   deleteCharForward,
   indentLess,
-  insertTab,
-  insertNewlineAndIndent,
   indentMore,
+  insertNewlineAndIndent,
 } from "@codemirror/commands";
-import { watch, ref, onMounted, onUnmounted } from "vue";
-import SettingsContext from "./settings";
-import { DI_FILTERS } from "./blockTree";
+import type { KeyBinding as CmKeyBinding } from "@codemirror/view";
 import { EditorView as CmEditorView } from "@codemirror/view";
-import FusionCommandContext from "./fusionCommand";
-import SidebarContext from "./sidebar";
+import { toggleMark } from "prosemirror-commands";
+import { AllSelection, EditorState, NodeSelection, TextSelection } from "prosemirror-state";
+import { EditorView, EditorView as PmEditorView } from "prosemirror-view";
+import { onMounted, onUnmounted, ref, watch } from "vue";
+import { base, keyName } from "w3c-keyname";
+import BlocksContext from "./blocks/blocks";
 import BlockSelectDragContext from "./blockSelect";
-import type { BlockId } from "@/common/type-and-schemas/block/block-id";
-import type { BlocksManager } from "./blocks/view-layer/blocksManager";
-import { getPlatform } from "@/common/helper-functions/platform";
-import { execSeq, type EditorCommand } from "./commands/combinators";
+import { DI_FILTERS } from "./blockTree";
 import CommandsContext from "./commands/commands";
+import FusionCommandContext from "./fusionCommand";
+import LastFocusContext from "./lastFocus";
+import SettingsContext from "./settings";
+import SidebarContext from "./sidebar";
 
 export type KeyBinding<P extends Array<any> = any[]> = {
   run: (...params: P) => boolean;
@@ -161,9 +154,6 @@ const KeymapContext = createContext(() => {
 
   const { lastFocusedBlockTree, lastFocusedDiId } = LastFocusContext.useContext()!;
   const { blockEditor, blocksManager } = BlocksContext.useContext()!;
-  const { registerSettingGroup } = SettingsContext.useContext()!;
-  const { openFusionCommand } = FusionCommandContext.useContext()!;
-  const { addToSidePane } = SidebarContext.useContext()!;
   const { selectedBlockIds } = BlockSelectDragContext.useContext()!;
   const commands = CommandsContext.useContext()!;
 
@@ -781,6 +771,17 @@ const KeymapContext = createContext(() => {
       run: commands.addFocusedToSidePane,
       preventDefault: true,
       stopPropagation: true,
+    },
+    Enter: {
+      run: () => {
+        if (selectedBlockIds.value && selectedBlockIds.value.topLevelOnly.length > 1) {
+          commands.createEmptyTextBlockBelow();
+          return true;
+        }
+        return false;
+      },
+      stopPropagation: true,
+      preventDefault: true,
     },
     Delete: {
       run: commands.deleteSelected,

@@ -15,8 +15,6 @@ export type ImageState =
 const ImagesContext = createContext(() => {
   const { serverUrl } = ServerInfoContext.useContext()!;
   const images = reactive<Record<string, ImageState>>({});
-  const { tokenPayload } = ServerInfoContext.useContext()!;
-  const { attachmentsBasePath } = PathsContext.useContext()!;
 
   // const fixImagePath = (blockId: BlockId) => {
   //   const { blocksManager } = getBlocksContext()!;

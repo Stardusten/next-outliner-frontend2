@@ -100,12 +100,14 @@ const misc = {
 
   exporter: {
     title: "匯出",
-    description: "匯出選中子樹為 HTML, PDF, Markdown, Plain Text 等多種格式",
+    description: "將選中的子樹匯出為 HTML、PDF、Markdown、純文字等格式",
     preview: "預覽",
     copyToClipboard: "複製到剪貼簿",
     exportToFile: "匯出到檔案",
     cancel: "取消",
     exportFormat: "匯出格式",
+    blockRefsToPlaintext: "將區塊引用轉換為純文字",
+    embedImagesAsBase64: "以 Base64 編碼嵌入圖片",
   },
   fontSelector: {
     notAvailable: "(未安裝)",

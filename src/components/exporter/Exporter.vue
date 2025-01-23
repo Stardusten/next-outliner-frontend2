@@ -26,6 +26,24 @@
             </SelectContent>
           </Select>
         </div>
+        <div v-if="selectedFormat === 'markdown'" class="flex flex-col space-y-3">
+          <div class="flex items-center space-x-2">
+            <Checkbox
+              v-model:checked="markdownOptions.blockRefsToPlaintext"
+              id="blockRefsToPlaintext"
+            />
+            <Label for="blockRefsToPlaintext">{{
+              $t("kbView.exporter.blockRefsToPlaintext")
+            }}</Label>
+          </div>
+          <div class="flex items-center space-x-2">
+            <Checkbox
+              v-model:checked="markdownOptions.embedImagesAsBase64"
+              id="embedImagesAsBase64"
+            />
+            <Label for="embedImagesAsBase64">{{ $t("kbView.exporter.embedImagesAsBase64") }}</Label>
+          </div>
+        </div>
         <div class="flex flex-col space-y-3" v-if="selectedFormat !== 'pdf'">
           <Label>{{ $t("kbView.exporter.preview") }}</Label>
           <div class="border rounded-md">
@@ -57,7 +75,7 @@ import ExporterContext from "@/context/exporter";
 import { copyAsHtml, copyAsPlainText } from "@/utils/clipboard";
 import dayjs from "dayjs";
 import { Clipboard, Download, File } from "lucide-vue-next";
-import { computed, ref } from "vue";
+import { computed, ref, reactive } from "vue";
 import { Button } from "../ui/button";
 import {
   Dialog,
@@ -76,6 +94,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../ui/select";
+import { Checkbox } from "../ui/checkbox";
 
 const {
   open,
@@ -88,13 +107,18 @@ const {
 } = ExporterContext.useContext()!;
 
 const selectedFormat = ref("html");
+const markdownOptions = ref({
+  blockRefsToPlaintext: false,
+  embedImagesAsBase64: false,
+});
+
 const previewContent = computed(() => {
   if (!blockId.value) return "";
   switch (selectedFormat.value) {
     case "html":
       return exportSubtreeToHtml(blockId.value);
     case "markdown":
-      return exportSubtreeToMarkdown(blockId.value);
+      return exportSubtreeToMarkdown(blockId.value, markdownOptions.value);
     case "plainText":
       return exportSubtreeToPlainText(blockId.value);
     default:
@@ -103,10 +127,15 @@ const previewContent = computed(() => {
 });
 
 function copyToClipboard() {
+  const content =
+    selectedFormat.value === "markdown"
+      ? exportSubtreeToMarkdown(blockId.value!, markdownOptions.value)
+      : previewContent.value;
+
   if (selectedFormat.value === "html") {
-    copyAsHtml(previewContent.value);
+    copyAsHtml(content);
   } else if (selectedFormat.value === "markdown" || selectedFormat.value === "plainText") {
-    copyAsPlainText(previewContent.value);
+    copyAsPlainText(content);
   }
   closeExporter();
 }
@@ -114,7 +143,11 @@ function copyToClipboard() {
 function exportToFile() {
   if (selectedFormat.value === "pdf") {
   } else {
-    const blob = new Blob([previewContent.value], { type: "text/plain" });
+    const content =
+      selectedFormat.value === "markdown"
+        ? exportSubtreeToMarkdown(blockId.value!, markdownOptions.value)
+        : previewContent.value;
+    const blob = new Blob([content], { type: "text/plain" });
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;

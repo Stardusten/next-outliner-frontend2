@@ -22,6 +22,7 @@ export interface BlockTreeProps {
   enlargeRootBlock?: boolean;
   showBacklinks?: boolean;
   showPotentialLinks?: boolean;
+  showBlockProperties?: boolean;
   paddingBottom?: number;
   paddingTop?: number;
 }

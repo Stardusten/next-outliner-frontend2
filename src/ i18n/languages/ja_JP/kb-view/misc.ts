@@ -102,12 +102,14 @@ const misc = {
   exporter: {
     title: "エクスポート",
     description:
-      "選択したツリーをHTML、PDF、Markdown、プレーンテキストなど様々な形式でエクスポート",
+      "選択したサブツリーを HTML、PDF、Markdown、プレーンテキストなどの形式でエクスポート",
     preview: "プレビュー",
     copyToClipboard: "クリップボードにコピー",
     exportToFile: "ファイルにエクスポート",
     cancel: "キャンセル",
     exportFormat: "エクスポート形式",
+    blockRefsToPlaintext: "ブロック参照をプレーンテキストに変換",
+    embedImagesAsBase64: "画像を Base64 として埋め込む",
   },
   fontSelector: {
     notAvailable: "(未インストール)",

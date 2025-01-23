@@ -109,6 +109,8 @@ const misc = {
     exportToFile: "Export to file",
     cancel: "Cancel",
     exportFormat: "Export format",
+    blockRefsToPlaintext: "Convert block references to plain text",
+    embedImagesAsBase64: "Embed images as Base64",
   },
   fontSelector: {
     notAvailable: "(Not installed)",
