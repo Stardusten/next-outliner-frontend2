@@ -371,12 +371,8 @@ import FileItem from "./FileItem.vue";
 import { Checkbox } from "../ui/checkbox";
 import { Label } from "../ui/label";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
+import SearchSettingsContext from "@/context/searchSettings";
 
-const { t: $t } = useI18n();
-const queryTerms = computed(() => {
-  if (!searchQuery.value) return [];
-  return hybridTokenize(searchQuery.value, false, 1, false) ?? [];
-});
 const {
   open,
   refreshFiles,
@@ -401,6 +397,20 @@ const {
   previewError,
   previewFile,
 } = AttachmentsManagerContext.useContext()!;
+const { ignoreDiacritics } = SearchSettingsContext.useContext()!;
+
+const { t: $t } = useI18n();
+const queryTerms = computed(() => {
+  if (!searchQuery.value) return [];
+  return (
+    hybridTokenize(searchQuery.value, {
+      caseSensitive: false,
+      cjkNGram: 1,
+      includePrefix: false,
+      removeDiacritics: ignoreDiacritics.value,
+    }) ?? []
+  );
+});
 
 const uploadInput = ref<HTMLInputElement>();
 

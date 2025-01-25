@@ -156,10 +156,11 @@ const misc = {
     videoNotSupported: "视频格式不受支持",
   },
   settingGroups: {
-    basic: "基本设置",
+    basic: "基础设置",
     timeMachine: "时光机",
     dailynote: "每日笔记",
-    backlinks: "块引用 & 反向链接",
+    backlinks: "块引用与反向链接",
+    search: "搜索",
   },
 
   blockRefContextMenu: {

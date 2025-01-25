@@ -1,7 +1,7 @@
-
 import { EditorView } from "@codemirror/view";
 import { Decoration, type DecorationSet } from "@codemirror/view";
 import { StateEffect, StateField } from "@codemirror/state";
+import { removeDiacritics } from "@/utils/tokenize";
 
 const updateHighlightTermsEffect = StateEffect.define<{
   ranges: { from: number; to: number }[];
@@ -21,9 +21,7 @@ const highlighted = StateField.define<DecorationSet>({
         });
         // add new decorations
         value = value.update({
-          add: e.value.ranges.map(({ from, to }) =>
-            highlightMark.range(from, to),
-          ),
+          add: e.value.ranges.map(({ from, to }) => highlightMark.range(from, to)),
         });
         break;
       }
@@ -38,11 +36,14 @@ const highlighted = StateField.define<DecorationSet>({
 export const updateHighlightTerms = (
   highlightTerms: string[],
   view: EditorView,
+  ignoreDiacritics?: boolean,
 ) => {
   let ranges: { from: number; to: number }[] = [];
   for (const { from, to } of view.visibleRanges) {
     let index;
-    const str = view.state.doc.sliceString(from, to).toLowerCase();
+    const str = ignoreDiacritics
+      ? removeDiacritics(view.state.doc.sliceString(from, to).toLowerCase())
+      : view.state.doc.sliceString(from, to).toLowerCase();
     for (const term of highlightTerms) {
       index = -1;
       while ((index = str.indexOf(term, index + 1)) != -1) {

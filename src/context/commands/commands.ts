@@ -21,6 +21,7 @@ import { AllSelection, TextSelection } from "prosemirror-state";
 import { useTaskQueue } from "@/plugins/taskQueue";
 import type { BlockId } from "@/common/type-and-schemas/block/block-id";
 import { EditorView as CmEditorView } from "@codemirror/view";
+import type { DisplayItemId } from "@/utils/display-item";
 
 const CommandsContext = createContext(() => {
   const { selectedBlockIds } = BlockSelectDragContext.useContext()!;
@@ -28,6 +29,33 @@ const CommandsContext = createContext(() => {
   const { lastFocusedBlockTree, lastFocusedDiId } = LastFocusContext.useContext()!;
   const { openFusionCommand } = FusionCommandContext.useContext()!;
   const { addToSidePane } = SidebarContext.useContext()!;
+
+  // Predicates
+  const isCursorAtStart = (view: PmEditorView | CmEditorView) => {
+    if (view instanceof PmEditorView) {
+      const sel = view.state.selection;
+      return AllSelection.atStart(view.state.doc).eq(sel);
+    } else if (view instanceof CmEditorView) {
+      const sel = view.state.selection;
+      return sel.ranges.length === 1 && sel.ranges[0].empty && sel.ranges[0].from === 0;
+    }
+  };
+
+  const isCursorAtEnd = (view: PmEditorView | CmEditorView) => {
+    if (view instanceof PmEditorView) {
+      const sel = view.state.selection;
+      return AllSelection.atEnd(view.state.doc).eq(sel);
+    } else if (view instanceof CmEditorView) {
+      const sel = view.state.selection;
+      return (
+        sel.ranges.length === 1 &&
+        sel.ranges[0].empty &&
+        sel.ranges[0].from === view.state.doc.length
+      );
+    }
+  };
+
+  // Commands
 
   const swapUpSelected = () => {
     if (!selectedBlockIds.value) return false;
@@ -520,8 +548,7 @@ const CommandsContext = createContext(() => {
     if (!(view instanceof PmEditorView) || !di || di.type !== "basic-block") return false;
 
     // 仅当光标在当前块块首时，才允许合并
-    const docStart = AllSelection.atStart(view.state.doc);
-    if (!view.state.selection.eq(docStart)) return false;
+    if (!isCursorAtStart(view)) return false;
 
     const currBlock = di.block;
 
@@ -592,8 +619,7 @@ const CommandsContext = createContext(() => {
     if (!(view instanceof PmEditorView) || !di || di.type !== "basic-block") return false;
 
     // 仅当光标在当前块块末尾时，才允许合并
-    const docEnd = AllSelection.atEnd(view.state.doc);
-    if (!view.state.selection.eq(docEnd)) return false;
+    if (!isCursorAtEnd(view)) return false;
 
     const currBlock = di.block;
     // 如果当前块有孩子，则不允许合并
@@ -678,10 +704,17 @@ const CommandsContext = createContext(() => {
     return false;
   };
 
-  const deleteEmptyBlockAbove = () => {
+  /**
+   * 如果光标在当前块开头，且上一个块为空，则删除上一个块
+   */
+  const deleteEmptyBlockAboveIfAtStart = () => {
     const tree = lastFocusedBlockTree.value;
     const diId = lastFocusedDiId.value;
     if (!tree || !diId) return false;
+
+    const view = tree.getEditorView(diId);
+    if (!view || !isCursorAtStart(view)) return false;
+
     const diAbove = tree.getDiAbove(diId, DI_FILTERS.isBlockDi);
 
     if (!diAbove || !DI_FILTERS.isBlockDi(diAbove[0])) return false;
@@ -1163,7 +1196,7 @@ const CommandsContext = createContext(() => {
     mergeAboveIntoCurrent,
     mergeCurrentIntoBelow,
     deleteEmptyBlockBelow,
-    deleteEmptyBlockAbove,
+    deleteEmptyBlockAboveIfAtStart,
     promoteFocusedBlock,
     demoteFocusedBlock,
     deleteFocusedBlockIfEmpty,

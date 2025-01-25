@@ -15,6 +15,13 @@ const LastFocusContext = createContext(() => {
     return tree.getEditorView(diId);
   });
 
+  const lastFocusedDi = computed(() => {
+    const tree = lastFocusedBlockTree.value;
+    const diId = lastFocusedDiId.value;
+    if (!tree || !diId) return null;
+    return tree.getDi(diId);
+  });
+
   const focusedDiId = computed(() => {
     const activeEl = document.activeElement;
     if (activeEl instanceof HTMLElement) {
@@ -51,13 +58,22 @@ const LastFocusContext = createContext(() => {
     return tree.getEditorView(diId);
   });
 
+  const focusedDi = computed(() => {
+    const tree = focusedBlockTree.value;
+    const diId = focusedDiId.value;
+    if (!tree || !diId) return null;
+    return tree.getDi(diId);
+  });
+
   const ctx = {
     lastFocusedDiId,
     lastFocusedBlockTree,
     lastFocusedEditorView,
+    lastFocusedDi,
     focusedDiId,
     focusedBlockTree,
     focusedEditorView,
+    focusedDi,
   };
   return ctx;
 });

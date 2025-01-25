@@ -14,6 +14,7 @@ import { mkContentChangePlugin } from "./plugins/content-change";
 import { updateHighlightTerms } from "./plugins/highlight-matches";
 import { basicDark } from "./themes/basicDark";
 import { basicLight } from "./themes/basicLight";
+import SearchSettingsContext from "@/context/searchSettings";
 
 const props = defineProps<{
   theme?: string;
@@ -39,6 +40,7 @@ const themeCompartment = new Compartment();
 const keymapCompartment = new Compartment();
 const readonlyCompartment = new Compartment();
 const themeContext = ThemeContext.useContext();
+const searchSettingsContext = SearchSettingsContext.useContext();
 
 const registeredThemes = {
   light: basicLight,
@@ -59,7 +61,11 @@ watch(src, () => {
       selection: EditorSelection.fromJSON(sel),
     });
   }
-  updateHighlightTerms(props.highlightTerms ?? [], editorView);
+  updateHighlightTerms(
+    props.highlightTerms ?? [],
+    editorView,
+    searchSettingsContext?.ignoreDiacritics?.value ?? true,
+  );
 });
 
 // props.highlightTerms 更改时，更新高亮
@@ -67,7 +73,11 @@ watch(
   () => props.highlightTerms,
   () => {
     if (!editorView) return;
-    updateHighlightTerms(props.highlightTerms ?? [], editorView);
+    updateHighlightTerms(
+      props.highlightTerms ?? [],
+      editorView,
+      searchSettingsContext?.ignoreDiacritics?.value ?? true,
+    );
   },
 );
 

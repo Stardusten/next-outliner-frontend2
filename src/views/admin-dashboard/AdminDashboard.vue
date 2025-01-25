@@ -76,6 +76,12 @@
                     <Pencil class="size-4 mr-2" />
                     {{ $t("adminDashboard.kbManagement.kbActions.edit") }}
                   </Button>
+                  <ShrinkDialog :location="location" :name="info.name">
+                    <Button variant="outline" size="sm">
+                      <ChevronsRightLeft class="size-4 mr-2" />
+                      {{ $t("adminDashboard.kbManagement.kbActions.shrink") }}
+                    </Button>
+                  </ShrinkDialog>
                   <DeleteKbDialog :location="location" :name="info.name">
                     <Button variant="destructive" size="sm">
                       <Trash2 class="size-4 mr-2" />
@@ -99,10 +105,11 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { KbInfoContext } from "@/context/kbinfo";
 import ServerInfoContext from "@/context/serverInfo";
-import { LogOut, Pencil, Plus, RefreshCcw, Trash2 } from "lucide-vue-next";
+import { ChevronsRightLeft, LogOut, Pencil, Plus, RefreshCcw, Trash2 } from "lucide-vue-next";
 import { watch } from "vue";
 import DeleteKbDialog from "./DeleteKbDialog.vue";
 import NewKbDialog from "./NewKbDialog.vue";
+import ShrinkDialog from "./ShrinkDialog.vue";
 
 const { serverUrl, logout } = ServerInfoContext.useContext()!;
 const { kbs, refreshKbList } = KbInfoContext.useContext()!;

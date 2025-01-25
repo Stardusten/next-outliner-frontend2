@@ -13,12 +13,13 @@ const adminDashboard = {
     kbActions: {
       edit: "編輯",
       delete: "刪除",
-      addKb: "建立新知識庫",
-      refreshKbList: "重新整理知識庫列表",
+      addKb: "建立新KB",
+      refreshKbList: "重新整理KB列表",
+      shrink: "壓縮",
     },
     newKbDialog: {
-      title: "建立新知識庫",
-      description: "請填寫以下資訊來建立新的知識庫",
+      title: "建立新KB",
+      description: "請填寫以下資訊來建立新的KB",
       nameLabel: "名稱",
       namePlaceholder: "請輸入知識庫名稱",
       locationLabel: "位置",

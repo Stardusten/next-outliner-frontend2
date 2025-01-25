@@ -33,6 +33,12 @@ const settingItems = {
       desc: "在引用補全選單中，選擇建立新區塊時新區塊插入的位置。如果不指定，預設會插入根區塊末尾。",
     },
   },
+  search: {
+    ignoreDiacritics: {
+      label: "忽略變音符號",
+      desc: "啟用後，搜尋時將忽略變音符號（例如，搜尋'e'時會匹配'é'）",
+    },
+  },
 };
 
 export default settingItems;

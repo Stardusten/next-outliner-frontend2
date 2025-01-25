@@ -1,18 +1,20 @@
+import { BLOCK_CONTENT_TYPES } from "@/common/constants";
 import type { BlockId } from "@/common/type-and-schemas/block/block-id";
 import { useEventBus } from "@/plugins/eventbus";
 import { createContext } from "@/utils/createContext";
 import { ref, shallowReactive } from "vue";
 import BlocksContext from "./blocks/blocks";
-import { BLOCK_CONTENT_TYPES } from "@/common/constants";
 // @ts-ignore
 import Document from "@/../node_modules/flexsearch/dist/module/document";
-import { calcMatchScore, hybridTokenize, splitByCjk } from "@/utils/tokenize";
+import { calcMatchScore, hybridTokenize } from "@/utils/tokenize";
 import kbViewRegistry from "./kbViewRegistry";
+import SearchSettingsContext from "./searchSettings";
 
 const IndexContext = createContext(() => {
   const eventBus = useEventBus();
   const { blocksManager } = BlocksContext.useContext()!;
   const { register } = kbViewRegistry.useContext()!;
+  const { ignoreDiacritics } = SearchSettingsContext.useContext()!;
 
   //////// Mirrors, Virtuals, Occurs ////////
   const mirrors = shallowReactive(new Map<BlockId, Set<BlockId>>());
@@ -190,7 +192,7 @@ const IndexContext = createContext(() => {
       store: ["text"],
     },
     encode: (str: string) => {
-      const tokens = hybridTokenize(str);
+      const tokens = hybridTokenize(str, { removeDiacritics: ignoreDiacritics.value });
       return tokens;
     },
   });
@@ -232,7 +234,12 @@ const IndexContext = createContext(() => {
 
     const results = fulltextIndex.search(query, { limit, enrich: true })?.[0]?.result;
     if (!results) return [];
-    const queryTokens = hybridTokenize(query, false, 1, false);
+    const queryTokens = hybridTokenize(query, {
+      caseSensitive: false,
+      cjkNGram: 1,
+      includePrefix: false,
+      removeDiacritics: ignoreDiacritics.value,
+    });
     const idAndScores = results.map((result: any) => {
       const score = calcMatchScore(queryTokens, result.doc.text);
       return { id: result.id, score };
@@ -249,7 +256,12 @@ const IndexContext = createContext(() => {
 
     const results = fulltextIndex.search(query, { limit, enrich: true })?.[0]?.result;
     if (!results) return [];
-    const queryTokens = hybridTokenize(query, false, 1, false);
+    const queryTokens = hybridTokenize(query, {
+      caseSensitive: false,
+      cjkNGram: 1,
+      includePrefix: false,
+      removeDiacritics: ignoreDiacritics.value,
+    });
     const idAndScores = results.map((result: any) => {
       const score = calcMatchScore(queryTokens, result.doc.text);
       return { id: result.id, score };

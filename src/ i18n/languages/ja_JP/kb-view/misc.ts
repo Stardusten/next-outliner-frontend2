@@ -161,7 +161,8 @@ const misc = {
     basic: "基本設定",
     timeMachine: "タイムマシン",
     dailynote: "デイリーノート",
-    backlinks: "ブロック参照 & バックリンク",
+    backlinks: "ブロック参照とバックリンク",
+    search: "検索",
   },
   blockRefContextMenu: {
     title: "ブロックエイリアス",

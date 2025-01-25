@@ -33,6 +33,12 @@ const settingItems = {
       desc: "在引用补全菜单中，选择创建新块时新块插入的位置。如果不指定，默认会插入根块末尾。",
     },
   },
+  search: {
+    ignoreDiacritics: {
+      label: "忽略变音符号",
+      desc: "启用后，搜索时将忽略变音符号（例如，搜索'e'时会匹配'é'）",
+    },
+  },
 };
 
 export default settingItems;

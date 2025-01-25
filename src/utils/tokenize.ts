@@ -24,6 +24,11 @@ export const extractAllPrefixies = (word: string): string[] => {
   return prefixes;
 };
 
+// 添加去除变音符号的辅助函数
+export const removeDiacritics = (str: string): string => {
+  return str.normalize("NFKD").replace(/[\u0300-\u036f]/g, ""); // 移除所有变音符号
+};
+
 // 将字符串按 CJK 和非 CJK 分割
 // 例如："大家好！这里 here 是 china mainland 中国大陆"
 // 结果为：["大家好", "这里", "here", "是", "china", "mainland", "中国大陆"]
@@ -31,13 +36,14 @@ export const splitByCjk = (
   str: string,
   onCjkToken: (token: string) => void,
   onNonCjkToken: (token: string) => void,
-  opts: { caseSensitive?: boolean } = {},
+  opts: { caseSensitive?: boolean; removeDiacritics?: boolean } = {},
 ) => {
   let prevCjk = false;
   const temp = [];
 
   const processToken = (token: string, isCjk: boolean) => {
     if (!opts.caseSensitive) token = token.toLowerCase();
+    if (opts.removeDiacritics) token = removeDiacritics(token);
     if (isCjk) onCjkToken(token);
     else onNonCjkToken(token);
   };
@@ -72,12 +78,23 @@ export const splitByCjk = (
   }
 };
 
-export const hybridTokenize = (
-  str: string,
-  caseSensitive: boolean = false,
-  cjkNGram: number = 2,
-  includePrefix: boolean = true,
-) => {
+// 定义配置接口
+type TokenizeOptions = {
+  caseSensitive?: boolean;
+  cjkNGram?: number;
+  includePrefix?: boolean;
+  removeDiacritics?: boolean;
+};
+
+export const hybridTokenize = (str: string, options: TokenizeOptions = {}) => {
+  // 设置默认值
+  const {
+    caseSensitive = false,
+    cjkNGram = 2,
+    includePrefix = true,
+    removeDiacritics = true,
+  } = options;
+
   const tokens: string[] = [];
 
   splitByCjk(
@@ -89,7 +106,7 @@ export const hybridTokenize = (
         tokens.push(...extractAllPrefixies(token).slice(0, -1));
       }
     },
-    { caseSensitive },
+    { caseSensitive, removeDiacritics },
   );
 
   return tokens;

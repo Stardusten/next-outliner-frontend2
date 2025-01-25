@@ -15,6 +15,7 @@ import { EditorView as PmEditorView } from "prosemirror-view";
 import { plainTextToTextContent } from "@/utils/pm";
 import { isImage, isAudio, isVideo } from "@/utils/fileType";
 import { hybridTokenize } from "@/utils/tokenize";
+import SearchSettingsContext from "./searchSettings";
 
 export type SuggestionItem =
   | { type: "block"; block: Block }
@@ -32,6 +33,7 @@ const RefSuggestionsContext = createContext(() => {
   const { files } = AttachmentsManagerContext.useContext()!;
   const { putNewBlockAt } = BacklinksContext.useContext()!;
   const { lastFocusedBlockTree, lastFocusedDiId } = LastFocusContext.useContext()!;
+  const { ignoreDiacritics } = SearchSettingsContext.useContext()!;
 
   const showPos = ref<{ x: number; y: number } | null>(null);
   const open = computed({
@@ -59,7 +61,14 @@ const RefSuggestionsContext = createContext(() => {
     // 如果是文件引用或文件嵌入,去掉前缀字符
     const searchText = /^[!！/]/.test(query.value) ? query.value.slice(1) : query.value;
 
-    return hybridTokenize(searchText, false, 1, false) ?? [];
+    return (
+      hybridTokenize(searchText, {
+        caseSensitive: false,
+        cjkNGram: 1,
+        includePrefix: false,
+        removeDiacritics: ignoreDiacritics.value,
+      }) ?? []
+    );
   });
 
   const updateSuggestions = useDebounceFn(() => {

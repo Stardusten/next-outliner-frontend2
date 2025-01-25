@@ -15,13 +15,13 @@ const adminDashboard = {
     kbActions: {
       edit: "Modifier",
       delete: "Supprimer",
-      addKb: "Créer une nouvelle base",
-      refreshKbList: "Actualiser la liste",
+      addKb: "Créer nouvelle KB",
+      refreshKbList: "Actualiser KB",
+      shrink: "Compresser",
     },
     newKbDialog: {
-      title: "Créer une nouvelle base de connaissances",
-      description:
-        "Veuillez remplir les informations suivantes pour créer une nouvelle base de connaissances",
+      title: "Créer nouvelle KB",
+      description: "Veuillez remplir les informations suivantes pour créer une nouvelle KB",
       nameLabel: "Nom",
       namePlaceholder: "Entrez le nom de la base",
       locationLabel: "Emplacement",
@@ -46,6 +46,19 @@ const adminDashboard = {
         deleting: "Suppression en cours...",
         deleteSuccess: "Suppression réussie",
         deleteFailed: "Échec de la suppression",
+      },
+    },
+    shrinkKbDialog: {
+      title: "Compresser la base de connaissances",
+      description: 'Êtes-vous sûr de vouloir compresser la base "{name}" ?',
+      beforeSize: "Taille avant compression : {size}",
+      afterSize: "Taille après compression : {size}",
+      cancelBtn: "Annuler",
+      status: {
+        idle: "Compresser",
+        shrinking: "Compression en cours...",
+        shrinkSuccess: "Compression réussie",
+        shrinkFailed: "Échec de la compression",
       },
     },
   },

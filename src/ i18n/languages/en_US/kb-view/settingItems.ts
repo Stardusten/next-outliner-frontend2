@@ -33,6 +33,12 @@ const settingItems = {
       desc: "When creating a new block from the reference completion menu, specify where to insert the new block. If not specified, it will be inserted at the end of the root block by default.",
     },
   },
+  search: {
+    ignoreDiacritics: {
+      label: "Ignore Diacritics",
+      desc: "When enabled, search will ignore diacritical marks (e.g., 'é' will match 'e')",
+    },
+  },
 };
 
 export default settingItems;

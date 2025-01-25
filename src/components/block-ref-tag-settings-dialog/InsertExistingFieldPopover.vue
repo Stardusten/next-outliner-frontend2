@@ -63,6 +63,7 @@ import { useDebounceFn } from "@vueuse/core";
 import BlockContent from "../block-contents/BlockContent.vue";
 import type { Block, MinimalBlock } from "@/context/blocks/view-layer/blocksManager";
 import BlocksContext from "@/context/blocks/blocks";
+import SearchSettingsContext from "@/context/searchSettings";
 
 const emit = defineEmits<{
   (e: "select", field: MinimalBlock): void;
@@ -70,6 +71,7 @@ const emit = defineEmits<{
 
 const { allFields } = FieldsManagerContext.useContext()!;
 const { blocksManager } = BlocksContext.useContext()!;
+const { ignoreDiacritics } = SearchSettingsContext.useContext()!;
 
 const open = ref(false);
 const query = ref("");
@@ -79,7 +81,14 @@ const suggestions = ref<Block[]>([]);
 
 const queryTerms = computed(() => {
   if (query.value.length === 0) return [];
-  return hybridTokenize(query.value, false, 1, false) ?? [];
+  return (
+    hybridTokenize(query.value, {
+      caseSensitive: false,
+      cjkNGram: 1,
+      includePrefix: false,
+      removeDiacritics: ignoreDiacritics.value,
+    }) ?? []
+  );
 });
 
 const updateSuggestions = useDebounceFn(() => {
@@ -97,7 +106,13 @@ const updateSuggestions = useDebounceFn(() => {
     return;
   }
 
-  const queryTokens = hybridTokenize(query.value, false, 1, false) ?? [];
+  const queryTokens =
+    hybridTokenize(query.value, {
+      caseSensitive: false,
+      cjkNGram: 1,
+      includePrefix: false,
+      removeDiacritics: ignoreDiacritics.value,
+    }) ?? [];
   if (queryTokens.length === 0) {
     suggestions.value = fields;
     return;

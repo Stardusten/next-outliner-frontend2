@@ -5,73 +5,75 @@
         <ImageEditorContext.Provider>
           <SettingsContext.Provider>
             <BasicSettingsContext.Provider>
-              <PathsContext.Provider>
-                <TimeMachineContext.Provider>
-                  <BlockTreeContext.Provider>
-                    <PasteDialogContext.Provider>
-                      <FocusModeContext.Provider>
-                        <TimeMachineContext.Provider>
-                          <FloatingMathInputContext.Provider>
-                            <LastFocusContext.Provider>
-                              <BlocksContext.Provider>
-                                <ExporterContext.Provider>
-                                  <CreateNewTreeDialogContext.Provider>
-                                    <IndexContext.Provider>
-                                      <AttachmentViewerContext.Provider>
-                                        <AttachmentsManagerContext.Provider>
-                                          <ImagesContext.Provider>
-                                            <SidebarContext.Provider>
-                                              <BlockMoverContext.Provider>
-                                                <HistoryContext.Provider>
-                                                  <BlockSelectDragContext.Provider>
-                                                    <SettingsPanelContext.Provider>
-                                                      <FavoriteContext.Provider>
-                                                        <FieldsManagerContext.Provider>
-                                                          <BacklinksContext.Provider>
-                                                            <RefSuggestionsContext.Provider>
-                                                              <FieldValueInspectorContext.Provider>
-                                                                <DailyNoteContext.Provider>
-                                                                  <FusionCommandContext.Provider>
-                                                                    <CommandsContext.Provider>
-                                                                      <KeymapContext.Provider>
-                                                                        <BlockContextMenuContext.Provider>
-                                                                          <BlockRefContextmenuContext.Provider>
-                                                                            <FieldSettingsDialogContext.Provider>
-                                                                              <BlockRefTagSettingsDialog.Provider>
-                                                                                <KbViewContent />
-                                                                              </BlockRefTagSettingsDialog.Provider>
-                                                                            </FieldSettingsDialogContext.Provider>
-                                                                          </BlockRefContextmenuContext.Provider>
-                                                                        </BlockContextMenuContext.Provider>
-                                                                      </KeymapContext.Provider>
-                                                                    </CommandsContext.Provider>
-                                                                  </FusionCommandContext.Provider>
-                                                                </DailyNoteContext.Provider>
-                                                              </FieldValueInspectorContext.Provider>
-                                                            </RefSuggestionsContext.Provider>
-                                                          </BacklinksContext.Provider>
-                                                        </FieldsManagerContext.Provider>
-                                                      </FavoriteContext.Provider>
-                                                    </SettingsPanelContext.Provider>
-                                                  </BlockSelectDragContext.Provider>
-                                                </HistoryContext.Provider>
-                                              </BlockMoverContext.Provider>
-                                            </SidebarContext.Provider>
-                                          </ImagesContext.Provider>
-                                        </AttachmentsManagerContext.Provider>
-                                      </AttachmentViewerContext.Provider>
-                                    </IndexContext.Provider>
-                                  </CreateNewTreeDialogContext.Provider>
-                                </ExporterContext.Provider>
-                              </BlocksContext.Provider>
-                            </LastFocusContext.Provider>
-                          </FloatingMathInputContext.Provider>
-                        </TimeMachineContext.Provider>
-                      </FocusModeContext.Provider>
-                    </PasteDialogContext.Provider>
-                  </BlockTreeContext.Provider>
-                </TimeMachineContext.Provider>
-              </PathsContext.Provider>
+              <SearchSettingsContext.Provider>
+                <PathsContext.Provider>
+                  <TimeMachineContext.Provider>
+                    <BlockTreeContext.Provider>
+                      <PasteDialogContext.Provider>
+                        <FocusModeContext.Provider>
+                          <TimeMachineContext.Provider>
+                            <FloatingMathInputContext.Provider>
+                              <LastFocusContext.Provider>
+                                <BlocksContext.Provider>
+                                  <ExporterContext.Provider>
+                                    <CreateNewTreeDialogContext.Provider>
+                                      <IndexContext.Provider>
+                                        <AttachmentViewerContext.Provider>
+                                          <AttachmentsManagerContext.Provider>
+                                            <ImagesContext.Provider>
+                                              <SidebarContext.Provider>
+                                                <BlockMoverContext.Provider>
+                                                  <HistoryContext.Provider>
+                                                    <BlockSelectDragContext.Provider>
+                                                      <SettingsPanelContext.Provider>
+                                                        <FavoriteContext.Provider>
+                                                          <FieldsManagerContext.Provider>
+                                                            <BacklinksContext.Provider>
+                                                              <RefSuggestionsContext.Provider>
+                                                                <FieldValueInspectorContext.Provider>
+                                                                  <DailyNoteContext.Provider>
+                                                                    <FusionCommandContext.Provider>
+                                                                      <CommandsContext.Provider>
+                                                                        <KeymapContext.Provider>
+                                                                          <BlockContextMenuContext.Provider>
+                                                                            <BlockRefContextmenuContext.Provider>
+                                                                              <FieldSettingsDialogContext.Provider>
+                                                                                <BlockRefTagSettingsDialog.Provider>
+                                                                                  <KbViewContent />
+                                                                                </BlockRefTagSettingsDialog.Provider>
+                                                                              </FieldSettingsDialogContext.Provider>
+                                                                            </BlockRefContextmenuContext.Provider>
+                                                                          </BlockContextMenuContext.Provider>
+                                                                        </KeymapContext.Provider>
+                                                                      </CommandsContext.Provider>
+                                                                    </FusionCommandContext.Provider>
+                                                                  </DailyNoteContext.Provider>
+                                                                </FieldValueInspectorContext.Provider>
+                                                              </RefSuggestionsContext.Provider>
+                                                            </BacklinksContext.Provider>
+                                                          </FieldsManagerContext.Provider>
+                                                        </FavoriteContext.Provider>
+                                                      </SettingsPanelContext.Provider>
+                                                    </BlockSelectDragContext.Provider>
+                                                  </HistoryContext.Provider>
+                                                </BlockMoverContext.Provider>
+                                              </SidebarContext.Provider>
+                                            </ImagesContext.Provider>
+                                          </AttachmentsManagerContext.Provider>
+                                        </AttachmentViewerContext.Provider>
+                                      </IndexContext.Provider>
+                                    </CreateNewTreeDialogContext.Provider>
+                                  </ExporterContext.Provider>
+                                </BlocksContext.Provider>
+                              </LastFocusContext.Provider>
+                            </FloatingMathInputContext.Provider>
+                          </TimeMachineContext.Provider>
+                        </FocusModeContext.Provider>
+                      </PasteDialogContext.Provider>
+                    </BlockTreeContext.Provider>
+                  </TimeMachineContext.Provider>
+                </PathsContext.Provider>
+              </SearchSettingsContext.Provider>
             </BasicSettingsContext.Provider>
           </SettingsContext.Provider>
         </ImageEditorContext.Provider>
@@ -121,4 +123,5 @@ import AttachmentViewerContext from "@/context/attachmentViewer";
 import BlockRefContextmenuContext from "@/context/blockRefContextmenu";
 import { FieldSettingsDialogContext } from "@/context/fieldSettingsDialog";
 import BlockRefTagSettingsDialog from "@/context/blockRefTagSettingsDialog";
+import SearchSettingsContext from "@/context/searchSettings";
 </script>

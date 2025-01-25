@@ -162,7 +162,8 @@ const misc = {
     basic: "Paramètres de base",
     timeMachine: "Machine à remonter le temps",
     dailynote: "Notes quotidiennes",
-    backlinks: "Références de blocs & rétroliens",
+    backlinks: "Références de bloc & Rétroliens",
+    search: "Recherche",
   },
   blockRefContextMenu: {
     title: "Alias de bloc",

@@ -1,10 +1,12 @@
 import { Plugin } from "prosemirror-state";
 import { Decoration, DecorationSet } from "prosemirror-view";
 import type { PmPluginCtx } from "./pluginContext";
+import { removeDiacritics } from "@/utils/tokenize";
 
 export const mkHighlightMatchesPlugin = (
   ctx: PmPluginCtx,
   highlightClass: string = "highlight-keep",
+  ignoreDiacritics?: boolean,
 ) =>
   new Plugin({
     props: {
@@ -15,7 +17,9 @@ export const mkHighlightMatchesPlugin = (
         const decorations: Decoration[] = [];
         state.doc.content.descendants((node, pos) => {
           if (!node.isText) return false;
-          const str = node.textContent.toLowerCase();
+          const str = ignoreDiacritics
+            ? removeDiacritics(node.textContent.toLocaleLowerCase())
+            : node.textContent.toLowerCase();
           for (const term of terms) {
             index = -1;
             while ((index = str.indexOf(term, index + 1)) != -1) {

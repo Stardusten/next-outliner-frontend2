@@ -33,6 +33,12 @@ const settingItems = {
       desc: "Dans le menu de complétion des références, spécifie où insérer les nouveaux blocs. Par défaut, ils seront insérés à la fin du bloc racine si non spécifié.",
     },
   },
+  search: {
+    ignoreDiacritics: {
+      label: "Ignorer les accents",
+      desc: "Lorsque cette option est activée, la recherche ignore les accents (par exemple, 'e' correspondra à 'é')",
+    },
+  },
 };
 
 export default settingItems;

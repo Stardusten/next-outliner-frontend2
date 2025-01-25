@@ -236,7 +236,7 @@ const KeymapContext = createContext(() => {
         deleteUfeffBeforeCursor(state, dispatch!);
         if (commands.deleteSelected()) return true;
         if (commands.deleteFocusedBlockIfEmpty()) return true;
-        if (commands.deleteEmptyBlockAbove()) return true;
+        if (commands.deleteEmptyBlockAboveIfAtStart()) return true;
         if (commands.mergeAboveIntoCurrent()) return true;
         return false;
       },

@@ -24,6 +24,7 @@ import { mkHighlightRefsPlugin } from "./plugins/highlightRefs";
 import { mkListenDocChangedPlugin } from "./plugins/listenDocChange";
 import type { PmPluginCtx } from "./plugins/pluginContext";
 import CommandsContext from "@/context/commands/commands";
+import SearchSettingsContext from "@/context/searchSettings";
 
 const props = withDefaults(
   defineProps<{
@@ -67,6 +68,7 @@ const imagesContext = ImagesContext.useContext();
 const keymapContext = KeymapContext.useContext();
 const pasteDialogContext = PasteDialogContext.useContext();
 const commandsContext = CommandsContext.useContext();
+const searchSettingsContext = SearchSettingsContext.useContext();
 
 const pluginsCtx: PmPluginCtx = {
   getSchema: () => props.schema,
@@ -99,7 +101,11 @@ const mkPlugins = () => {
 
   if (props.readonly) {
     return [
-      mkHighlightMatchesPlugin(pluginsCtx),
+      mkHighlightMatchesPlugin(
+        pluginsCtx,
+        undefined,
+        searchSettingsContext?.ignoreDiacritics?.value ?? true,
+      ),
       mkHighlightRefsPlugin(pluginsCtx),
       ...customPlugins,
     ];
@@ -107,7 +113,11 @@ const mkPlugins = () => {
     return [
       mkEventBusPlugin(),
       mkListenDocChangedPlugin(),
-      mkHighlightMatchesPlugin(pluginsCtx),
+      mkHighlightMatchesPlugin(
+        pluginsCtx,
+        undefined,
+        searchSettingsContext?.ignoreDiacritics?.value ?? true,
+      ),
       mkHighlightRefsPlugin(pluginsCtx),
       ...customPlugins,
     ];

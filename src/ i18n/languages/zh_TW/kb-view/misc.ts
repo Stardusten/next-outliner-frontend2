@@ -160,7 +160,8 @@ const misc = {
     basic: "基本設定",
     timeMachine: "時光機",
     dailynote: "每日筆記",
-    backlinks: "區塊引用 & 反向連結",
+    backlinks: "區塊引用與反向連結",
+    search: "搜尋",
   },
 
   blockRefContextMenu: {

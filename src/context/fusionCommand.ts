@@ -5,10 +5,12 @@ import { hybridTokenize } from "@/utils/tokenize";
 import IndexContext from ".";
 import BlocksContext from "./blocks/blocks";
 import { nextTick } from "vue";
+import SearchSettingsContext from "./searchSettings";
 
 export const FusionCommandContext = createContext(() => {
   const { blocksManager } = BlocksContext.useContext()!;
   const { search } = IndexContext.useContext()!;
+  const { ignoreDiacritics } = SearchSettingsContext.useContext()!;
 
   const inputText = ref("");
   const mode = computed(() => (inputText.value.startsWith("/") ? "searchCommand" : "searchBlock"));
@@ -21,7 +23,14 @@ export const FusionCommandContext = createContext(() => {
 
   const queryTerms = computed(() => {
     if (inputText.value.length == 0) return [];
-    return hybridTokenize(inputText.value, false, 1, false) ?? [];
+    const result =
+      hybridTokenize(inputText.value, {
+        caseSensitive: false,
+        cjkNGram: 1,
+        includePrefix: false,
+        removeDiacritics: ignoreDiacritics.value,
+      }) ?? [];
+    return result;
   });
 
   const updateBlockSearchResult = () => {

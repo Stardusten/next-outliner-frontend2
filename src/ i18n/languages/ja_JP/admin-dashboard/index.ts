@@ -15,12 +15,13 @@ const adminDashboard = {
     kbActions: {
       edit: "編集",
       delete: "削除",
-      addKb: "新規ナレッジベースの作成",
-      refreshKbList: "ナレッジベース一覧を更新",
+      addKb: "新規KB作成",
+      refreshKbList: "KB一覧更新",
+      shrink: "圧縮",
     },
     newKbDialog: {
-      title: "新規ナレッジベースの作成",
-      description: "以下の情報を入力して新しいナレッジベースを作成してください",
+      title: "新規KB作成",
+      description: "以下の情報を入力して新しいKBを作成してください",
       nameLabel: "名前",
       namePlaceholder: "ナレッジベース名を入力してください",
       locationLabel: "場所",

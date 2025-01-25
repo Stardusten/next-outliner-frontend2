@@ -19,6 +19,7 @@ import { isText, isStaticImage, isAnimateImage, isAudio, isVideo } from "@/utils
 import { getSeperator } from "@/common/helper-functions/path";
 import { type ViewingState, type AttachmentInfo, createViewingState } from "./attachmentViewer";
 import AttachmentViewerContext from "./attachmentViewer";
+import SearchSettingsContext from "./searchSettings";
 
 const AttachmentsManagerContext = createContext(() => {
   const { dbBasePath, attachmentsBasePath, attachmentsFolderName } = PathsContext.useContext()!;
@@ -33,8 +34,9 @@ const AttachmentsManagerContext = createContext(() => {
     previewVideoFile,
     getPreviewInfo,
   } = AttachmentViewerContext.useContext()!;
-  const { t } = useI18n();
+  const { ignoreDiacritics } = SearchSettingsContext.useContext()!;
 
+  const { t } = useI18n();
   const open = ref(false);
   const files = ref<Dirents>({});
   const fetchFilesStatus = ref<"idle" | "fetching" | "success" | "failed">("idle");
@@ -146,6 +148,7 @@ const AttachmentsManagerContext = createContext(() => {
       // 转换可以防止 vue 的响应性追踪超过最大递归深度
       const searchResult = searchFiles(rawFilesArray, rawQuery, {
         includeDirectories: true,
+        ignoreDiacritics: ignoreDiacritics.value,
       });
 
       // 先按文件夹在前排序

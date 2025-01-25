@@ -33,6 +33,12 @@ const settingItems = {
       desc: "参照補完メニューで新規ブロックを作成する際の挿入位置です。指定しない場合、デフォルトでルートブロックの末尾に挿入されます。",
     },
   },
+  search: {
+    ignoreDiacritics: {
+      label: "発音区別符号を無視",
+      desc: "有効にすると、検索時に発音区別符号を無視します（例：'e'で'é'にもマッチ）",
+    },
+  },
 };
 
 export default settingItems;

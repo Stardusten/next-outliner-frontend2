@@ -14,6 +14,7 @@ export function searchFiles(
   query: string,
   options: {
     includeDirectories?: boolean;
+    ignoreDiacritics?: boolean;
   } = {},
 ): SearchResult {
   if (!query || query.trim().length === 0) {
@@ -24,7 +25,13 @@ export function searchFiles(
     };
   }
 
-  const searchTerms = hybridTokenize(query, false, 1, false) ?? [];
+  const searchTerms =
+    hybridTokenize(query, {
+      caseSensitive: false,
+      cjkNGram: 1,
+      includePrefix: false,
+      removeDiacritics: options.ignoreDiacritics ?? true,
+    }) ?? [];
   if (searchTerms.length === 0) {
     return {
       files,

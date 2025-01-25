@@ -52,6 +52,7 @@ import { Input } from "@/components/ui/input";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import BlockMoverContext from "@/context/blockMover";
 import type { TextBlock } from "@/context/blocks/view-layer/blocksManager";
+import SearchSettingsContext from "@/context/searchSettings";
 import { calcPopoverPos } from "@/utils/popover";
 import { hybridTokenize } from "@/utils/tokenize";
 import { Search } from "lucide-vue-next";
@@ -69,10 +70,18 @@ const {
   contentClass,
   handleKeydown,
 } = BlockMoverContext.useContext()!;
+const { ignoreDiacritics } = SearchSettingsContext.useContext()!;
 
 const queryTerms = computed(() => {
   if (query.value.length == 0) return [];
-  return hybridTokenize(query.value, false, 1, false) ?? [];
+  return (
+    hybridTokenize(query.value, {
+      caseSensitive: false,
+      cjkNGram: 1,
+      includePrefix: false,
+      removeDiacritics: ignoreDiacritics.value,
+    }) ?? []
+  );
 });
 
 watch(showPos, async () => {
