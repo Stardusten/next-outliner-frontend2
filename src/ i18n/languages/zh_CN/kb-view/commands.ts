@@ -29,6 +29,7 @@ const commands = {
   undefined: "无颜色",
   blockRefTagSettings: "块引用 & 标签设置",
   fieldSettings: "字段设置",
+  addMetadata: "添加元数据",
 };
 
 export default commands;

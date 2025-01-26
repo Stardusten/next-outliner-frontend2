@@ -1,4 +1,5 @@
 import attachmentsManager from "./attachmentsManager";
+import blockProperties from "./blockProperties";
 import commands from "./commands";
 import fieldSettings from "./fieldSettings";
 import headerBar from "./headerBar";
@@ -9,6 +10,7 @@ import settingItems from "./settingItems";
 
 const kbView = {
   attachmentsManager,
+  blockProperties,
   commands,
   fieldSettings,
   headerBar,

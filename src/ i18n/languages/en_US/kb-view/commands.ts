@@ -29,6 +29,7 @@ const commands = {
   undefined: "No Color",
   blockRefTagSettings: "Block Reference & Tag Settings",
   fieldSettings: "Field Settings",
+  addMetadata: "Add Metadata",
 };
 
 export default commands;

@@ -20,6 +20,13 @@
         {{ $t("kbView.commands.fieldSettings") }}
       </DropdownMenuItem> -->
       <DropdownMenuItem
+        :disabled="!addMetadata(true, clickedBlockId!, undefined)"
+        @click="addMetadata(false, clickedBlockId!, $event)"
+      >
+        <Field class="size-4 mr-2" />
+        {{ $t("kbView.commands.addMetadata") }}
+      </DropdownMenuItem>
+      <DropdownMenuItem
         :disabled="!openBlockRefTagSettingsDialogCommand(true, clickedBlockId!, undefined)"
         @click="openBlockRefTagSettingsDialogCommand(false, clickedBlockId!, $event)"
       >
@@ -180,6 +187,9 @@ import { calcPopoverPos } from "@/utils/popover";
 import Field from "../icons/Field.vue";
 import { FieldSettingsDialogContext } from "@/context/fieldSettingsDialog";
 import BlockRefTagSettingsDialogContext from "@/context/blockRefTagSettingsDialog";
+import { getProperties } from "@/common/helper-functions/block";
+import { nanoid } from "nanoid";
+import type { BlockProperties } from "@/common/type-and-schemas/block/block-properties";
 
 type CommandExec = (
   test: boolean,
@@ -326,6 +336,25 @@ const getBlockRefColorSetter: (color: string | undefined) => CommandExec =
     }
     return !!blockId;
   };
+
+const addMetadata: CommandExec = (test, blockId) => {
+  if (!test && blockId) {
+    taskQueue.addTask(() => {
+      const block = blocksManager.getBlock(blockId);
+      if (!block) return;
+      const properties = getProperties(block);
+      const newProperties = {
+        ...properties,
+        ["Field " + nanoid()]: { type: "decimal", value: 0 },
+      } satisfies BlockProperties;
+      blockEditor.setBlockMetadata({
+        blockId,
+        metadata: { ...block.metadata, properties: newProperties },
+      });
+    });
+  }
+  return !!blockId;
+};
 </script>
 
 <style lang="scss">

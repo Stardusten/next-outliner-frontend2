@@ -1,4 +1,5 @@
 import { BLOCK_CONTENT_TYPES } from "@/common/constants";
+import { getProperties } from "@/common/helper-functions/block";
 import type { BlockId } from "@/common/type-and-schemas/block/block-id";
 import type IndexContext from "@/context";
 import type BacklinksContext from "@/context/backlinks";
@@ -123,6 +124,11 @@ const addContentItems = (ctx: DisplayGeneratorContext, rootBlock: Block) => {
     }
     if (!forceExpand && block.fold) return;
     if (typeof block.childrenIds == "string") return;
+
+    if (ctx.params.showBlockProperties) {
+      addBlockPropertiesItem(ctx, block, currLevel);
+    }
+
     for (let i = 0; i < block.childrenIds.length; i++) {
       const childId = block.childrenIds[i];
       const childRef = block.childrenRefs[i];
@@ -233,6 +239,18 @@ const addBacklinkItems = (ctx: DisplayGeneratorContext, rootBlock: Block) => {
   }
 
   ctx.backlinks = backlinks;
+};
+
+const addBlockPropertiesItem = (ctx: DisplayGeneratorContext, block: Block, level: number) => {
+  const { displayItems } = ctx;
+  const properties = getProperties(block);
+  if (Object.keys(properties).length <= 0) return;
+  displayItems.push({
+    type: "block-properties",
+    itemId: `block-properties-${block.id}`,
+    block,
+    level,
+  });
 };
 
 const addRootBlockItem = (ctx: DisplayGeneratorContext) => {

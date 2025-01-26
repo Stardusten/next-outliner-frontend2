@@ -29,6 +29,7 @@ const commands = {
   undefined: "Sans couleur",
   blockRefTagSettings: "Référence de bloc et paramètres de balise",
   fieldSettings: "Paramètres de champ",
+  addMetadata: "Ajouter des métadonnées",
 };
 
 export default commands;

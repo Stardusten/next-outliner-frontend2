@@ -774,8 +774,8 @@ const KeymapContext = createContext(() => {
     },
     Enter: {
       run: () => {
-        if (selectedBlockIds.value && selectedBlockIds.value.topLevelOnly.length > 1) {
-          commands.createEmptyTextBlockBelow();
+        if (selectedBlockIds.value && selectedBlockIds.value.topLevelOnly.length > 0) {
+          commands.createEmptyTextBlockBelow()();
           return true;
         }
         return false;

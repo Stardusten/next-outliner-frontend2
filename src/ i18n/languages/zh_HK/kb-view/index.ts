@@ -6,6 +6,7 @@ import imageContent from "./imageContent";
 import keybindings from "./keybindings";
 import misc from "./misc";
 import settingItems from "./settingItems";
+import blockProperties from "./blockProperties";
 
 const kbView = {
   attachmentsManager,
@@ -15,6 +16,7 @@ const kbView = {
   imageContent,
   keybindings,
   settingItems,
+  blockProperties,
   ...misc,
 };
 
