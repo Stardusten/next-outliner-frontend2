@@ -80,14 +80,14 @@
         <ArrowRight class="size-4 mr-2" />
         {{ $t("kbView.commands.moveBlock") }}
       </DropdownMenuItem>
-      <!-- <DropdownMenuItem
+      <DropdownMenuItem
         :disabled="!moveBlockLeaveRef(true, clickedBlockId!, undefined)"
         @click="moveBlockLeaveRef(false, clickedBlockId!, $event)"
       >
         <ArrowRight class="size-4 mr-2" />
         {{ $t("kbView.commands.moveBlockLeaveRef") }}
       </DropdownMenuItem>
-      <DropdownMenuItem
+      <!--DropdownMenuItem
         :disabled="!moveBlock(true, clickedBlockId!, undefined)"
         @click="moveBlock(false, clickedBlockId!, $event)"
       >

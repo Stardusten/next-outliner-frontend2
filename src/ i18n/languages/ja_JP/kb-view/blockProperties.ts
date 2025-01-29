@@ -23,6 +23,21 @@ const blockProperties = {
     save: "保存",
     cancel: "キャンセル",
   },
+  tooltips: {
+    editProperty: "プロパティを編集",
+    deleteProperty: "プロパティを削除",
+    propertyType: "プロパティタイプ：{type}",
+    configOptions: "オプションを設定",
+  },
+  optionsDialog: {
+    title: "オプション設定",
+    description: "このプロパティのオプションを追加または削除します。",
+    optionPlaceholder: "オプション値を入力",
+    addOption: "オプションを追加",
+    save: "保存",
+    cancel: "キャンセル",
+    duplicateOptions: "重複したオプションは許可されません",
+  },
 };
 
 export default blockProperties;

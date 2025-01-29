@@ -6,7 +6,7 @@
     :data-item-id="itemId"
     :data-block-level="level"
     :data-block-ref-color="block.metadata?.blockRefColor"
-    :class="{ hasChildren, fold, selected, [itemType]: true }"
+    :class="{ hasChildren, canExpand, fold, selected, [itemType]: true }"
     @focusin="handleFocusIn"
   >
     <div class="indent-lines">
@@ -81,7 +81,8 @@ const props = withDefaults(
     highlightRefs?: BlockId[];
     itemType?: DisplayItem["type"];
     itemId?: DisplayItemId;
-    fold?: boolean;
+    fold: boolean;
+    canExpand: boolean;
     handleClickFoldButton?: () => void;
   }>(),
   {
@@ -94,7 +95,6 @@ const props = withDefaults(
     highlightRefs: () => [],
     itemType: "basic-block",
     itemId: undefined,
-    fold: undefined,
     handleClickFoldButton: undefined,
   },
 );
@@ -210,14 +210,8 @@ const handleContextmenu = (e: MouseEvent) => {
       }
     }
 
-    // 如果一个折叠的块
-    // 1. 有孩子
-    // 2. 有反链
-    // 3. 有元数据
-    // 总之就是可以展开，则 bullet 外面加一圈浅色
-    @at-root .block-item.fold.hasChildren .bullet svg,
-      .block-item.fold.hasBacklink .bullet svg,
-      .block-item.fold.hasMetadata .bullet svg {
+    // 可以展开，则 bullet 外面加一圈浅色
+    @at-root .block-item.fold.canExpand .bullet svg {
       background-color: var(--bullet-background);
       border-radius: 8px;
     }
@@ -238,16 +232,8 @@ const handleContextmenu = (e: MouseEvent) => {
       cursor: pointer;
       display: none; // 默认隐藏 fold button
 
-      // 如果：
-      // 1. 这个 block 有 children，且 hover
-      // 2. 这个 block 有 backlink，且 hover
-      // 3. 这个 block 有编号
-      // 4. 这个 block 有 metadata，且 hover
-      // 则显示 fold button
-      @at-root .block-item.hasChildren:hover > .block-content-container > .fold-button,
-        .block-item.hasBacklink:hover > .block-content-container > .fold-button,
-        .block-item.hasChildren.no > .block-content-container > .fold-button,
-        .block-item.hasMetadata:hover > .block-content-container > .fold-button {
+      // 显示 fold button
+      @at-root .block-item.canExpand:hover > .block-content-container > .fold-button {
         display: flex;
       }
 

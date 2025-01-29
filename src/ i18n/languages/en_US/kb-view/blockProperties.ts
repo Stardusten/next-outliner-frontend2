@@ -17,6 +17,7 @@ const blockProperties = {
     editProperty: "Edit Property",
     deleteProperty: "Delete Property",
     propertyType: "Property Type: {type}",
+    configOptions: "Configure Options",
   },
   editDialog: {
     title: "Edit Property",
@@ -28,6 +29,24 @@ const blockProperties = {
     save: "Save",
     cancel: "Cancel",
     duplicateKey: "This key already exists",
+  },
+  common: {
+    selectPlaceholder: "Select...",
+    inputPlaceholder: "Enter value...",
+    selectDate: "Select date",
+  },
+  deleteProperty: {
+    confirmTitle: "Delete Property",
+    confirmMessage: "Are you sure you want to delete this property?",
+  },
+  optionsDialog: {
+    title: "Configure Options",
+    description: "Add or remove options for this property.",
+    optionPlaceholder: "Enter option value",
+    addOption: "Add Option",
+    save: "Save",
+    cancel: "Cancel",
+    duplicateOptions: "Duplicate options are not allowed",
   },
 };
 

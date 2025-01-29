@@ -1,15 +1,15 @@
 <template>
-  <div class="block-properties-item">
+  <div class="block-properties-item" v-if="Object.keys(editingProperties).length > 0">
     <div class="indent-lines">
       <div class="indent-line" v-for="i in level + 1" :key="i" :data-level="i"></div>
     </div>
-    <div class="bg-muted/70 w-full ml-[18px] px-2 py-1 my-1 rounded">
+    <div class="border w-full ml-[20px] mt-2 mb-1 px-2 py-1 rounded-md">
       <div
-        v-for="[key, property] in Object.entries(properties)"
-        class="flex items-center w-full gap-2"
+        v-for="(property, key) in editingProperties"
+        class="flex items-center w-full gap-2 group"
         :style="{ fontFamily: 'var(--text-font)' }"
       >
-        <div class="flex items-center gap-2 min-w-0 basis-[calc(50%-3rem)]">
+        <div class="flex items-center gap-2 basis-1/2">
           <Tooltip>
             <TooltipTrigger asChild>
               <PropertyIcon :type="property.type" class="size-4 shrink-0 text-muted-foreground" />
@@ -18,21 +18,74 @@
               {{ $t("kbView.blockProperties.tooltips.propertyType", { type: property.type }) }}
             </TooltipContent>
           </Tooltip>
-          <span class="truncate">{{ key }}</span>
+          <AutoResizeInput
+            class="border-none h-[unset] p-0 focus-visible:ring-transparent min-w-0"
+            :model-value="editingKeys[key] ?? key"
+            @update:model-value="(v) => handlePropertyKeyEdit(key, v as string)"
+            @blur="handlePropertyKeyBlur(key)"
+          />
         </div>
-        <div class="truncate min-w-0 basis-[calc(50%-3rem)]">{{ property.value }}</div>
-        <div class="flex items-center shrink-0 ml-auto">
+
+        <div class="basis-1/2 flex items-center">
+          <DecimalPropertyValue
+            v-if="property.type === 'decimal'"
+            :model-value="property.value"
+            @update:model-value="handlePropertyValueEdit(key, $event)"
+          />
+          <FloatPropertyValue
+            v-else-if="property.type === 'float'"
+            :model-value="property.value"
+            @update:model-value="handlePropertyValueEdit(key, $event)"
+          />
+          <PlainTextPropertyValue
+            v-else-if="['plaintext', 'email', 'phone'].includes(property.type)"
+            :model-value="property.value"
+            @update:model-value="handlePropertyValueEdit(key, $event)"
+          />
+          <SelectPropertyValue
+            v-else-if="property.type === 'select'"
+            :model-value="property.value"
+            :options="property.options"
+            @update:model-value="handlePropertyValueEdit(key, $event)"
+          />
+          <CheckboxPropertyValue
+            v-else-if="property.type === 'checkbox'"
+            :model-value="property.value"
+            @update:model-value="handlePropertyValueEdit(key, $event)"
+          />
+          <DatePropertyValue
+            v-else-if="property.type === 'date'"
+            :model-value="property.value"
+            @update:model-value="handlePropertyValueEdit(key, $event)"
+          />
+          <DateTimePropertyValue
+            v-else-if="property.type === 'datetime'"
+            :model-value="property.value"
+            @update:model-value="handlePropertyValueEdit(key, $event)"
+          />
+          <MultiSelectPropertyValue
+            v-else-if="property.type === 'multiselect'"
+            :model-value="property.value"
+            :options="property.options"
+            @update:model-value="handlePropertyValueEdit(key, $event)"
+          />
+        </div>
+
+        <div
+          class="flex items-center shrink-0 opacity-0 group-hover:opacity-100 transition-opacity"
+        >
           <Tooltip>
             <TooltipTrigger asChild>
               <button
-                class="p-1 rounded hover:bg-muted-foreground/20 text-muted-foreground hover:text-foreground transition-colors"
-                @click="openEditDialog(key, property)"
+                :data-show="property.type === 'select' || property.type === 'multiselect'"
+                class="p-1 data-[show=false]:opacity-0 rounded hover:bg-muted-foreground/20 text-muted-foreground hover:text-foreground transition-colors"
+                @click="handleConfigOptions(key)"
               >
-                <Pencil class="size-3.5" />
+                <Settings class="size-3.5" />
               </button>
             </TooltipTrigger>
             <TooltipContent>
-              {{ $t("kbView.blockProperties.tooltips.editProperty") }}
+              {{ $t("kbView.blockProperties.tooltips.configOptions") }}
             </TooltipContent>
           </Tooltip>
           <Tooltip>
@@ -52,34 +105,43 @@
       </div>
       <AddPropertyDropdown @add-property="handleAddProperty" />
     </div>
+    <OptionsConfigDialog
+      v-model:open="showOptionsDialog"
+      :options="editingOptions"
+      @update:options="handleOptionsDialogSave"
+    />
   </div>
-  <EditPropertyDialog
-    v-model:open="editDialogOpen"
-    :property-key="editingProperty?.key"
-    :property="editingProperty?.property"
-    :existing-keys="Object.keys(properties)"
-    @save="handlePropertyEdit"
-  />
 </template>
 
 <script setup lang="ts">
-import { getProperties } from "@/common/helper-functions/block";
-import type { Block } from "@/context/blocks/view-layer/blocksManager";
-import type { BlockTree } from "@/context/blockTree";
-import type { DisplayItem, DisplayItemId } from "@/utils/display-item";
-import { computed, ref } from "vue";
-import PropertyIcon from "../block-properties/PropertyIcon.vue";
-import AddPropertyDropdown from "../block-properties/AddPropertyDropdown.vue";
-import { Pencil, Trash } from "lucide-vue-next";
-import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
-import EditPropertyDialog from "../block-properties/EditPropertyDialog.vue";
 import {
-  BlockPropertyDefaultValues as blockPropertyDefaultValues,
+  blockPropertyDefaults,
   type BlockProperties,
 } from "@/common/type-and-schemas/block/block-properties";
-import { useTaskQueue } from "@/plugins/taskQueue";
-import { nanoid } from "nanoid";
 import BlocksContext from "@/context/blocks/blocks";
+import type { Block } from "@/context/blocks/view-layer/blocksManager";
+import type { BlockTree } from "@/context/blockTree";
+import { useTaskQueue } from "@/plugins/taskQueue";
+import type { DisplayItem, DisplayItemId } from "@/utils/display-item";
+import { useDebounceFn } from "@vueuse/core";
+import cloneDeep from "lodash.clonedeep";
+import isEqual from "lodash.isequal";
+import { Settings, Trash } from "lucide-vue-next";
+import { nanoid } from "nanoid";
+import { ref, watch } from "vue";
+import AutoResizeInput from "../auto-resize-input/AutoResizeInput.vue";
+import AddPropertyDropdown from "../block-properties/AddPropertyDropdown.vue";
+import PropertyIcon from "../block-properties/PropertyIcon.vue";
+import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
+import DecimalPropertyValue from "../block-properties/DecimalPropertyValue.vue";
+import FloatPropertyValue from "../block-properties/FloatPropertyValue.vue";
+import PlainTextPropertyValue from "../block-properties/PlainTextPropertyValue.vue";
+import SelectPropertyValue from "../block-properties/SelectPropertyValue.vue";
+import CheckboxPropertyValue from "../block-properties/CheckboxPropertyValue.vue";
+import DatePropertyValue from "../block-properties/DatePropertyValue.vue";
+import DateTimePropertyValue from "../block-properties/DateTimePropertyValue.vue";
+import MultiSelectPropertyValue from "../block-properties/MultiSelectPropertyValue.vue";
+import OptionsConfigDialog from "../block-properties/OptionsConfigDialog.vue";
 
 const props = defineProps<{
   blockTree?: BlockTree;
@@ -89,70 +151,92 @@ const props = defineProps<{
   itemId?: DisplayItemId;
 }>();
 const { blockEditor } = BlocksContext.useContext()!;
-const properties = computed(() => getProperties(props.block));
-const editDialogOpen = ref(false);
-const editingProperty = ref<{ key: string; property: BlockProperties[string] } | null>(null);
+const editingProperties = ref<BlockProperties>({});
+const editingKeys = ref<Record<string, string>>({});
+const showOptionsDialog = ref(false);
+const editingOptions = ref<string[]>([]);
+const editingPropertyKey = ref<string>("");
 
-function renameKey(obj: Record<string, any>, oldKey: string, newKey: string) {
+watch(
+  () => props.block.metadata.properties,
+  (newProperties) => {
+    if (!isEqual(newProperties, editingProperties.value)) {
+      editingProperties.value = newProperties;
+    }
+  },
+  { immediate: true, deep: true },
+);
+
+const updateBlockProperties = useDebounceFn((newProperties: BlockProperties) => {
+  const taskQueue = useTaskQueue();
+  taskQueue.addTask(async () => {
+    const newMetadata = cloneDeep({ ...props.block.metadata, properties: newProperties });
+    blockEditor.setBlockMetadata({
+      blockId: props.block.id,
+      metadata: newMetadata,
+    });
+  });
+}, 500);
+
+const renameKey = (obj: Record<string, any>, oldKey: string, newKey: string) => {
   return Object.fromEntries(
     Object.entries(obj).map(([key, value]) => (key === oldKey ? [newKey, value] : [key, value])),
   );
-}
-
-const openEditDialog = (key: string, property: BlockProperties[string]) => {
-  editingProperty.value = { key, property };
-  editDialogOpen.value = true;
 };
 
-const handlePropertyEdit = (
-  oldKey: string,
-  newKey: string,
-  newValue: BlockProperties[string]["value"],
-) => {
-  const taskQueue = useTaskQueue();
-  taskQueue.addTask(async () => {
-    const newProperties = renameKey(properties.value, oldKey, newKey);
-    newProperties[newKey] = {
-      ...newProperties[newKey],
-      value: newValue,
-    };
-    const newMetadata = { ...props.block.metadata, properties: newProperties };
-    blockEditor.setBlockMetadata({
-      blockId: props.block.id,
-      metadata: newMetadata,
-    });
-  });
+const handlePropertyKeyEdit = (oldKey: string, newKey: string) => {
+  editingKeys.value[oldKey] = newKey;
+};
+
+const handlePropertyKeyBlur = (oldKey: string) => {
+  const newKey = editingKeys.value[oldKey];
+  if (!newKey || newKey === oldKey) {
+    delete editingKeys.value[oldKey];
+    return;
+  }
+
+  // 检查新键是否已存在
+  if (editingProperties.value[newKey]) {
+    delete editingKeys.value[oldKey];
+    return;
+  }
+
+  // 重命名属性
+  editingProperties.value = renameKey(editingProperties.value, oldKey, newKey);
+  delete editingKeys.value[oldKey];
+  updateBlockProperties(editingProperties.value);
+};
+
+const handlePropertyValueEdit = (key: string, value: BlockProperties[string]["value"]) => {
+  editingProperties.value[key] = { ...editingProperties.value[key], value };
+  updateBlockProperties(editingProperties.value);
 };
 
 const handleAddProperty = (type: BlockProperties[string]["type"]) => {
-  const taskQueue = useTaskQueue();
-  taskQueue.addTask(async () => {
-    const newProperties = {
-      ...properties.value,
-      ["Field " + nanoid()]: {
-        type,
-        value: blockPropertyDefaultValues[type],
-      },
-    };
-    const newMetadata = { ...props.block.metadata, properties: newProperties };
-    blockEditor.setBlockMetadata({
-      blockId: props.block.id,
-      metadata: newMetadata,
-    });
-  });
+  editingProperties.value["Field " + nanoid()] = blockPropertyDefaults[type];
+  updateBlockProperties(editingProperties.value);
 };
 
 const handleDeleteProperty = (key: string) => {
-  const taskQueue = useTaskQueue();
-  taskQueue.addTask(async () => {
-    const newProperties = { ...properties.value };
-    delete newProperties[key];
-    const newMetadata = { ...props.block.metadata, properties: newProperties };
-    blockEditor.setBlockMetadata({
-      blockId: props.block.id,
-      metadata: newMetadata,
-    });
-  });
+  delete editingProperties.value[key];
+  updateBlockProperties(editingProperties.value);
+};
+
+const handleConfigOptions = (key: string) => {
+  editingPropertyKey.value = key;
+  editingOptions.value = (editingProperties.value[key] as any).options || [];
+  showOptionsDialog.value = true;
+};
+
+const handleOptionsDialogSave = (options: string[]) => {
+  const key = editingPropertyKey.value;
+  if (!key) return;
+
+  editingProperties.value[key] = {
+    ...editingProperties.value[key],
+    options,
+  } as any;
+  updateBlockProperties(editingProperties.value);
 };
 </script>
 

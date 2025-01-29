@@ -180,7 +180,16 @@ const loadDataDoc = (docId: number) => {
       if (e.diff.type !== "map") continue;
       for (const [key, value] of Object.entries(e.diff.updated)) {
         if (value == null) changes.push({ op: "delete", key });
-        else changes.push({ op: "upsert", key, value });
+        else {
+          // ！！迁移！！
+          // 如果 value 是 string，则认为是 JSON 字符串，需要解析为对象
+          if (typeof value === "string") {
+            const parsedValue = JSON.parse(value);
+            changes.push({ op: "upsert", key, value: parsedValue });
+          } else {
+            changes.push({ op: "upsert", key, value });
+          }
+        }
       }
     }
 
@@ -242,7 +251,8 @@ const postSyncLayerTransaction = (tr: SyncLayerTransaction) => {
     const blockDataMap = dataDoc.getMap(DATA_MAP_NAME);
     for (const p of patches) {
       if (p.op === "upsertBlockData") {
-        blockDataMap.set(p.blockId, p.blockData);
+        const jsonData = JSON.stringify(p.blockData);
+        blockDataMap.set(p.blockId, jsonData);
       } else if (p.op === "deleteBlockData") {
         blockDataMap.delete(p.blockId);
       }

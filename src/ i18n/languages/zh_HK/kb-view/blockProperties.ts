@@ -23,6 +23,21 @@ const blockProperties = {
     save: "保存",
     cancel: "取消",
   },
+  tooltips: {
+    editProperty: "編輯屬性",
+    deleteProperty: "刪除屬性",
+    propertyType: "屬性類型：{type}",
+    configOptions: "配置選項",
+  },
+  optionsDialog: {
+    title: "配置選項",
+    description: "添加或刪除該屬性的選項。",
+    optionPlaceholder: "輸入選項值",
+    addOption: "添加選項",
+    save: "保存",
+    cancel: "取消",
+    duplicateOptions: "不允許重複的選項",
+  },
 };
 
 export default blockProperties;

@@ -16,11 +16,13 @@ import { blockRefToTextContent } from "@/utils/pm";
 import IndexContext from ".";
 import BlockTreeContext, { DI_FILTERS } from "./blockTree";
 import LastFocusContext from "./lastFocus";
+import BlockSelectDragContext from "./blockSelect";
 
 const BlockMoverContext = createContext(() => {
   const { blocksManager, blockEditor } = BlocksContext.useContext()!;
   const { lastFocusedBlockTree, lastFocusedDiId } = LastFocusContext.useContext()!;
   const { search } = IndexContext.useContext()!;
+  const { selectedBlockIds } = BlockSelectDragContext.useContext()!;
   const { getBlockTree } = BlockTreeContext.useContext()!;
 
   const showPos = ref<{ x: number; y: number } | null>(null);
@@ -67,22 +69,35 @@ const BlockMoverContext = createContext(() => {
     const tree = lastFocusedBlockTree.value ?? getBlockTree("main");
     if (!tree) return;
     const taskQueue = useTaskQueue();
-    const targetPos: BlockPos = {
-      parentId: blockId,
-      childIndex: "last-space",
-    };
+
     taskQueue.addTask(async () => {
+      const selected = selectedBlockIds.value?.topLevelOnly;
+      const movedBlockIds = selected ?? [movedBlockId!];
+      const tr = blocksManager.createBlockTransaction({ type: "ui" });
       if (leaveRef) {
-        blockEditor.insertNormalBlock({
+        blockEditor.insertNormalBlocks({
           pos: {
-            baseBlockId: movedBlockId!,
-            offset: 0,
+            baseBlockId: movedBlockIds[movedBlockIds.length - 1],
+            offset: 1,
           },
-          content: blockRefToTextContent(movedBlockId!),
+          blocks: movedBlockIds.map((id) => ({
+            content: blockRefToTextContent(id),
+          })),
+          tr,
+          commit: false,
         });
       }
       // leave mirror TODO
-      blockEditor.moveBlock({ blockId: movedBlockId!, pos: targetPos });
+      blockEditor.moveBlocks({
+        blockIds: movedBlockIds,
+        pos: {
+          parentId: blockId,
+          childIndex: "last-space",
+        },
+        tr,
+        commit: false,
+      });
+      tr.commit();
       toast({
         title: t("kbView.blockMover.moveSuccess", { count: 1 }),
         action: h(

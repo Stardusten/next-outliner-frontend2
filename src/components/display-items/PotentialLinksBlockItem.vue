@@ -5,6 +5,7 @@
     :level="0"
     :highlight-refs="[...(highlightRefs ?? []), refBlockId]"
     :fold="fold"
+    :can-expand="canExpand"
     :item-id="itemId"
     :handle-click-fold-button="handleClickFoldButton"
   />
@@ -27,6 +28,8 @@ const props = withDefaults(
     itemId: DisplayItemId;
     highlightTerms?: string[];
     highlightRefs?: BlockId[];
+    fold: boolean;
+    canExpand: boolean;
   }>(),
   {
     blockTree: undefined,
@@ -36,14 +39,6 @@ const props = withDefaults(
     highlightRefs: () => [],
   },
 );
-
-const fold = computed(() => {
-  const tree = props.blockTree;
-  if (!tree) return props.block.fold;
-  const expandedBP = tree.expandedBP.value;
-  if (expandedBP[props.itemId]) return false;
-  return true; // 潜在链接面板里根块默认是折叠的，不管 props.block.fold 的值是怎么样
-});
 
 const handleClickFoldButton = () => {
   const tree = props.blockTree;

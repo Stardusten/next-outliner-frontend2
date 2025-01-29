@@ -13,6 +13,12 @@ const blockProperties = {
     email: "Email",
     phone: "Téléphone",
   },
+  tooltips: {
+    editProperty: "Modifier la propriété",
+    deleteProperty: "Supprimer la propriété",
+    propertyType: "Type de propriété : {type}",
+    configOptions: "Configurer les options",
+  },
   editDialog: {
     title: "Modifier la propriété",
     description: "Modifiez la propriété ici. Cliquez sur enregistrer une fois terminé.",
@@ -22,6 +28,25 @@ const blockProperties = {
     unsavedChanges: "Vous avez des modifications non enregistrées",
     save: "Enregistrer",
     cancel: "Annuler",
+    duplicateKey: "Cette clé existe déjà",
+  },
+  common: {
+    selectPlaceholder: "Sélectionner...",
+    inputPlaceholder: "Saisir une valeur...",
+    selectDate: "Sélectionner une date",
+  },
+  deleteProperty: {
+    confirmTitle: "Supprimer la propriété",
+    confirmMessage: "Êtes-vous sûr de vouloir supprimer cette propriété ?",
+  },
+  optionsDialog: {
+    title: "Configurer les options",
+    description: "Ajouter ou supprimer des options pour cette propriété.",
+    optionPlaceholder: "Entrer la valeur de l'option",
+    addOption: "Ajouter une option",
+    save: "Enregistrer",
+    cancel: "Annuler",
+    duplicateOptions: "Les options en double ne sont pas autorisées",
   },
 };
 

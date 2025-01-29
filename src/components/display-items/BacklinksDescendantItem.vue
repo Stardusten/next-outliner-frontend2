@@ -3,6 +3,7 @@
     v-bind="$props"
     item-type="backlink-descendant"
     :fold="fold"
+    :can-expand="canExpand"
     :item-id="itemId"
     :handle-click-fold-button="handleClickFoldButton"
   />
@@ -25,6 +26,8 @@ const props = withDefaults(
     readonly?: boolean;
     highlightTerms?: string[];
     highlightRefs?: BlockId[];
+    fold: boolean;
+    canExpand: boolean;
   }>(),
   {
     blockTree: undefined,
@@ -34,12 +37,6 @@ const props = withDefaults(
     highlightRefs: () => [],
   },
 );
-
-const fold = computed(() => {
-  const expandedBP = props.blockTree?.expandedBP.value;
-  if (!expandedBP) return props.block.fold;
-  return !expandedBP[props.itemId];
-});
 
 const handleClickFoldButton = () => {
   const expandedBP = props.blockTree?.expandedBP.value;

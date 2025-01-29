@@ -22,9 +22,9 @@
                                           <AttachmentsManagerContext.Provider>
                                             <ImagesContext.Provider>
                                               <SidebarContext.Provider>
-                                                <BlockMoverContext.Provider>
-                                                  <HistoryContext.Provider>
-                                                    <BlockSelectDragContext.Provider>
+                                                <HistoryContext.Provider>
+                                                  <BlockSelectDragContext.Provider>
+                                                    <BlockMoverContext.Provider>
                                                       <SettingsPanelContext.Provider>
                                                         <FavoriteContext.Provider>
                                                           <FieldsManagerContext.Provider>
@@ -54,9 +54,9 @@
                                                           </FieldsManagerContext.Provider>
                                                         </FavoriteContext.Provider>
                                                       </SettingsPanelContext.Provider>
-                                                    </BlockSelectDragContext.Provider>
-                                                  </HistoryContext.Provider>
-                                                </BlockMoverContext.Provider>
+                                                    </BlockMoverContext.Provider>
+                                                  </BlockSelectDragContext.Provider>
+                                                </HistoryContext.Provider>
                                               </SidebarContext.Provider>
                                             </ImagesContext.Provider>
                                           </AttachmentsManagerContext.Provider>
