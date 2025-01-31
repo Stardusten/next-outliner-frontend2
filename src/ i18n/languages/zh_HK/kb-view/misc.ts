@@ -157,10 +157,11 @@ const misc = {
     videoNotSupported: "視訊格式不受支援",
   },
   settingGroups: {
-    basic: "基本設定",
+    basic: "基礎設定",
     timeMachine: "時光機",
     dailynote: "每日筆記",
     backlinks: "區塊引用與反向連結",
+    quickAdd: "快速添加",
     search: "搜尋",
   },
 

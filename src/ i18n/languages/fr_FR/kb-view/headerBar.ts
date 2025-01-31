@@ -22,6 +22,7 @@ const headerBar = {
   help: "Documentation d'aide",
   exit: "Quitter",
   keybindings: "Voir & modifier les raccourcis",
+  quickadd: "Ajout rapide",
 };
 
 export default headerBar;

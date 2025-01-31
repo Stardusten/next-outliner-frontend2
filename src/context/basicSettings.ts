@@ -94,6 +94,29 @@ const BasicSettingsContext = createContext(() => {
     { immediate: true },
   );
 
+  const customCssId = "basic.customCss";
+  const customCssKey = computed(() => `${kbPrefix.value}${customCssId}`);
+  const customCssDefaultValue = "";
+  const customCss = useLocalStorage2(customCssKey, customCssDefaultValue);
+  registerSettingItem({
+    id: customCssId,
+    groupKey: "basic",
+    defaultValue: customCssDefaultValue,
+    value: useWritableComputedRef(customCss),
+    componentType: { type: "textArea", lang: "css" },
+  });
+
+  // 监听 customCss 的变化，更新全局样式
+  watch(customCss, (newVal) => {
+    let customCssEl = document.head.querySelector("style#custom-css");
+    if (!customCssEl) {
+      customCssEl = document.createElement("style");
+      customCssEl.id = "custom-css";
+      document.head.appendChild(customCssEl);
+    }
+    customCssEl.textContent = newVal;
+  });
+
   const ctx = {
     textFontFamily,
     uiFontFamily,

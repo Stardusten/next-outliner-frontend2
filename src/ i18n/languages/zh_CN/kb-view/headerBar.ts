@@ -22,6 +22,7 @@ const headerBar = {
   help: "帮助文档",
   exit: "退出",
   keybindings: "查看 & 编辑快捷键",
+  quickadd: "快速添加",
 };
 
 export default headerBar;

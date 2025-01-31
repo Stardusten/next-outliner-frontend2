@@ -12,6 +12,10 @@ const settingItems = {
       label: "Code Block Font",
       desc: "Specify the font used for inline code, code blocks, and other monospace text scenarios.",
     },
+    customCss: {
+      label: "Custom CSS",
+      desc: "Add custom CSS styles to customize the appearance of your knowledge base.",
+    },
   },
   dailynote: {
     defaultDateFormat: {
@@ -31,6 +35,12 @@ const settingItems = {
     putNewBlockAt: {
       label: "New Block Location",
       desc: "When creating a new block from the reference completion menu, specify where to insert the new block. If not specified, it will be inserted at the end of the root block by default.",
+    },
+  },
+  quickAdd: {
+    putNewBlockAt: {
+      label: "Quick Add Location",
+      desc: "When creating a new block via Quick Add, specify where to insert the new block. If not specified, it will be inserted at the end of the root block by default.",
     },
   },
   search: {

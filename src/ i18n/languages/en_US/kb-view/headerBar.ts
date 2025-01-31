@@ -22,6 +22,7 @@ const headerBar = {
   help: "Help Documentation",
   exit: "Exit",
   keybindings: "View & Edit Shortcuts",
+  quickadd: "Quick Add",
 };
 
 export default headerBar;

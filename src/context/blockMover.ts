@@ -99,7 +99,7 @@ const BlockMoverContext = createContext(() => {
       });
       tr.commit();
       toast({
-        title: t("kbView.blockMover.moveSuccess", { count: 1 }),
+        title: t("kbView.blockMover.moveSuccess", { count: movedBlockIds.length }),
         action: h(
           ToastAction,
           {

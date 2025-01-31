@@ -160,6 +160,7 @@ const misc = {
     timeMachine: "时光机",
     dailynote: "每日笔记",
     backlinks: "块引用与反向链接",
+    quickAdd: "快速添加",
     search: "搜索",
   },
 

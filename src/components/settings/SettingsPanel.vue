@@ -57,6 +57,7 @@
               v-else-if="item.componentType.type === 'blockIdInput'"
               :item="item as any"
             />
+            <TextAreaComp v-else-if="item.componentType.type === 'textArea'" :item="item as any" />
           </div>
         </div>
       </div>
@@ -79,6 +80,7 @@ import KeybindingComp from "./KeybindingComp.vue";
 import SelectComp from "./SelectComp.vue";
 import SwitchComp from "./SwitchComp.vue";
 import TextInputComp from "./TextInputComp.vue";
+import TextAreaComp from "./TextAreaComp.vue";
 
 const { open, activeGroupKey } = SettingsPanelContext.useContext()!;
 const { settingGroups, getAllSettingItemsInGroup } = SettingsContext.useContext()!;

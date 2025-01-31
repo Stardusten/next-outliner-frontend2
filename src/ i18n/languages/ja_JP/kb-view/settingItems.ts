@@ -12,6 +12,10 @@ const settingItems = {
       label: "コードブロックフォント",
       desc: "インラインコード、コードブロックなど、等幅フォントが必要な場面で使用するフォントを指定します。",
     },
+    customCss: {
+      label: "カスタム CSS",
+      desc: "ナレッジベースの外観をカスタマイズするためのCSSスタイルを追加します。",
+    },
   },
   dailynote: {
     defaultDateFormat: {
@@ -31,6 +35,12 @@ const settingItems = {
     putNewBlockAt: {
       label: "新規ブロックの挿入位置",
       desc: "参照補完メニューで新規ブロックを作成する際の挿入位置です。指定しない場合、デフォルトでルートブロックの末尾に挿入されます。",
+    },
+  },
+  quickAdd: {
+    putNewBlockAt: {
+      label: "クイック追加の位置",
+      desc: "クイック追加で新しいブロックを作成する際の挿入位置を指定します。指定がない場合、デフォルトでルートブロックの末尾に挿入されます。",
     },
   },
   search: {

@@ -12,6 +12,10 @@ const settingItems = {
       label: "程式碼區塊字型",
       desc: "指定行內程式碼、程式碼區塊等需要等寬字型的場景使用的字型。",
     },
+    customCss: {
+      label: "自定義 CSS",
+      desc: "添加自定義 CSS 樣式以定制知識庫的外觀。",
+    },
   },
   dailynote: {
     defaultDateFormat: {
@@ -31,6 +35,12 @@ const settingItems = {
     putNewBlockAt: {
       label: "新區塊插入位置",
       desc: "在引用補全選單中，選擇建立新區塊時新區塊插入的位置。如果不指定，預設會插入根區塊末尾。",
+    },
+  },
+  quickAdd: {
+    putNewBlockAt: {
+      label: "快速添加位置",
+      desc: "透過快速添加創建新塊時，指定新塊插入的位置。如果未指定，預設將插入到根塊的末尾。",
     },
   },
   search: {

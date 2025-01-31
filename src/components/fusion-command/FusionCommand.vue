@@ -2,6 +2,7 @@
   <Dialog class="fusion-command" v-model:open="open">
     <DialogContent
       class="fusion-command-content fixed left-1/2 top-1/2 z-50 w-full max-w-lg -translate-x-1/2 -translate-y-1/2 bg-background border p-0 [&>button]:hidden overflow-hidden gap-y-0"
+      @keydown.stop
     >
       <DialogHeader class="hidden">
         <DialogTitle></DialogTitle>

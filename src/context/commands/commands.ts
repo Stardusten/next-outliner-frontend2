@@ -2,7 +2,7 @@ import { createContext } from "@/utils/createContext";
 import BlockSelectDragContext from "../blockSelect";
 import BlocksContext from "../blocks/blocks";
 import LastFocusContext from "../lastFocus";
-import { DI_FILTERS } from "../blockTree";
+import { DI_FILTERS, type BlockTree } from "../blockTree";
 import { EditorView as PmEditorView } from "prosemirror-view";
 import { BLOCK_CONTENT_TYPES } from "@/common/constants";
 import FusionCommandContext from "../fusionCommand";
@@ -21,7 +21,14 @@ import { AllSelection, TextSelection } from "prosemirror-state";
 import { useTaskQueue } from "@/plugins/taskQueue";
 import type { BlockId } from "@/common/type-and-schemas/block/block-id";
 import { EditorView as CmEditorView } from "@codemirror/view";
-import type { DisplayItemId } from "@/utils/display-item";
+import type { DisplayItem, DisplayItemId } from "@/utils/display-item";
+
+const isRootBlock = (di: DisplayItem | undefined | null, tree: BlockTree) => {
+  return (
+    di?.type === "root-block" ||
+    (!tree.getProps().enlargeRootBlock && di && "level" in di && di.level === 0)
+  );
+};
 
 const CommandsContext = createContext(() => {
   const { selectedBlockIds } = BlockSelectDragContext.useContext()!;
@@ -440,7 +447,7 @@ const CommandsContext = createContext(() => {
       di.type === "potential-links-block" ||
       // 不处理根块的情况
       // 因为根块显然没办法往下创建空块
-      di.type === "root-block" ||
+      isRootBlock(di, tree) ||
       !("block" in di)
     )
       return false;

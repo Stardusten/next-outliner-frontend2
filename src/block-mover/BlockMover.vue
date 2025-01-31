@@ -5,7 +5,7 @@
       :class="`${contentClass} z-[999] py-2 pb-0 px-1 max-h-[300px] max-w-[300px] overflow-hidden`"
       trap-focus
       tabindex="-1"
-      @keydown="handleKeydown"
+      @keydown.stop="handleKeydown"
     >
       <div class="relative px-1">
         <Search class="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />

@@ -81,6 +81,8 @@
     <FieldSettingsDialog />
     <!-- 块引用标签设置对话框 -->
     <BlockRefTagSettingsDialog />
+    <!-- 快速添加面板 -->
+    <QuickAdd />
   </div>
 </template>
 
@@ -110,6 +112,7 @@ import BlocksContext from "../../context/blocks/blocks";
 import SidebarContext from "../../context/sidebar";
 import FieldSettingsDialog from "@/components/field-settings-dialog/FieldSettingsDialog.vue";
 import BlockRefTagSettingsDialog from "@/components/block-ref-tag-settings-dialog/BlockRefTagSettingsDialog.vue";
+import QuickAdd from "@/components/quick-add/QuickAdd.vue";
 
 const { sidePaneOpen, sidePaneDir, sidePaneWidth, sidePaneHeight, enableSidePaneAnimation } =
   SidebarContext.useContext()!;

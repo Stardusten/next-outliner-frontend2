@@ -164,6 +164,7 @@ const misc = {
     timeMachine: "Time Machine",
     dailynote: "Daily Notes",
     backlinks: "Block References & Backlinks",
+    quickAdd: "Quick Add",
     search: "Search",
   },
 

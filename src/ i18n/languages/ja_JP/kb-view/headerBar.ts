@@ -19,9 +19,10 @@ const headerBar = {
   attachmentsManager: "添付ファイル管理",
   settings: "設定",
   timeMachine: "タイムマシン",
-  help: "ヘルプ",
+  help: "ヘルプドキュメント",
   exit: "終了",
-  keybindings: "ショートカットキーの表示と編集",
+  keybindings: "ショートカットの表示と編集",
+  quickadd: "クイック追加",
 };
 
 export default headerBar;

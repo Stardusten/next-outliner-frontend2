@@ -162,6 +162,7 @@ const misc = {
     timeMachine: "タイムマシン",
     dailynote: "デイリーノート",
     backlinks: "ブロック参照とバックリンク",
+    quickAdd: "クイック追加",
     search: "検索",
   },
   blockRefContextMenu: {

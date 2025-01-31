@@ -5,7 +5,8 @@
         <Tooltip>
           <TooltipTrigger as-child>
             <Button variant="ghost" size="icon" @click="sidePaneOpen = false">
-              <ChevronsRight class="size-5 stroke-[1.8]" />
+              <ChevronsRight v-if="sidePaneDir === 'right'" class="size-5 stroke-[1.8]" />
+              <ChevronsDown v-else class="size-5 stroke-[1.8]" />
             </Button>
           </TooltipTrigger>
           <TooltipContent>
@@ -114,7 +115,15 @@ import { Button } from "@/components/ui/button";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import RefSuggestionsContext from "@/context/refSuggestions";
 import SidebarContext from "@/context/sidebar";
-import { ChevronsRight, Filter, PanelBottom, PanelRight, Plus, SortDesc } from "lucide-vue-next";
+import {
+  ChevronsDown,
+  ChevronsRight,
+  Filter,
+  PanelBottom,
+  PanelRight,
+  Plus,
+  SortDesc,
+} from "lucide-vue-next";
 import BlockTree from "../BlockTree.vue";
 
 const {

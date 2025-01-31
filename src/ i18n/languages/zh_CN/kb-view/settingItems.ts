@@ -12,6 +12,10 @@ const settingItems = {
       label: "代码块字体",
       desc: "指定行内代码、代码块等需要等宽字体的场景使用的字体。",
     },
+    customCss: {
+      label: "自定义 CSS",
+      desc: "添加自定义 CSS 样式以定制知识库的外观。",
+    },
   },
   dailynote: {
     defaultDateFormat: {
@@ -31,6 +35,12 @@ const settingItems = {
     putNewBlockAt: {
       label: "新块插入位置",
       desc: "在引用补全菜单中，选择创建新块时新块插入的位置。如果不指定，默认会插入根块末尾。",
+    },
+  },
+  quickAdd: {
+    putNewBlockAt: {
+      label: "快速添加位置",
+      desc: "通过快速添加创建新块时，指定新块插入的位置。如果未指定，默认将插入到根块的末尾。",
     },
   },
   search: {

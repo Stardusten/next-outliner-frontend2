@@ -29,27 +29,29 @@
                                                         <FavoriteContext.Provider>
                                                           <FieldsManagerContext.Provider>
                                                             <BacklinksContext.Provider>
-                                                              <RefSuggestionsContext.Provider>
-                                                                <FieldValueInspectorContext.Provider>
-                                                                  <DailyNoteContext.Provider>
-                                                                    <FusionCommandContext.Provider>
-                                                                      <CommandsContext.Provider>
-                                                                        <KeymapContext.Provider>
-                                                                          <BlockContextMenuContext.Provider>
-                                                                            <BlockRefContextmenuContext.Provider>
-                                                                              <FieldSettingsDialogContext.Provider>
-                                                                                <BlockRefTagSettingsDialog.Provider>
-                                                                                  <KbViewContent />
-                                                                                </BlockRefTagSettingsDialog.Provider>
-                                                                              </FieldSettingsDialogContext.Provider>
-                                                                            </BlockRefContextmenuContext.Provider>
-                                                                          </BlockContextMenuContext.Provider>
-                                                                        </KeymapContext.Provider>
-                                                                      </CommandsContext.Provider>
-                                                                    </FusionCommandContext.Provider>
-                                                                  </DailyNoteContext.Provider>
-                                                                </FieldValueInspectorContext.Provider>
-                                                              </RefSuggestionsContext.Provider>
+                                                              <QuickAddContext.Provider>
+                                                                <RefSuggestionsContext.Provider>
+                                                                  <FieldValueInspectorContext.Provider>
+                                                                    <DailyNoteContext.Provider>
+                                                                      <FusionCommandContext.Provider>
+                                                                        <CommandsContext.Provider>
+                                                                          <KeymapContext.Provider>
+                                                                            <BlockContextMenuContext.Provider>
+                                                                              <BlockRefContextmenuContext.Provider>
+                                                                                <FieldSettingsDialogContext.Provider>
+                                                                                  <BlockRefTagSettingsDialog.Provider>
+                                                                                    <KbViewContent />
+                                                                                  </BlockRefTagSettingsDialog.Provider>
+                                                                                </FieldSettingsDialogContext.Provider>
+                                                                              </BlockRefContextmenuContext.Provider>
+                                                                            </BlockContextMenuContext.Provider>
+                                                                          </KeymapContext.Provider>
+                                                                        </CommandsContext.Provider>
+                                                                      </FusionCommandContext.Provider>
+                                                                    </DailyNoteContext.Provider>
+                                                                  </FieldValueInspectorContext.Provider>
+                                                                </RefSuggestionsContext.Provider>
+                                                              </QuickAddContext.Provider>
                                                             </BacklinksContext.Provider>
                                                           </FieldsManagerContext.Provider>
                                                         </FavoriteContext.Provider>
@@ -124,4 +126,5 @@ import BlockRefContextmenuContext from "@/context/blockRefContextmenu";
 import { FieldSettingsDialogContext } from "@/context/fieldSettingsDialog";
 import BlockRefTagSettingsDialog from "@/context/blockRefTagSettingsDialog";
 import SearchSettingsContext from "@/context/searchSettings";
+import QuickAddContext from "@/context/quick-add";
 </script>
