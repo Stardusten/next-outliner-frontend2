@@ -1,6 +1,6 @@
 const headerBar = {
   moreOptions: "Plus d'options",
-  dailynoteNavigator: "Notes quotidiennes",
+  dailynoteNavigator: "Notes journalières",
   pomodoro: "Pomodoro",
   closeMenu: "Fermer le menu",
   openMenu: "Ouvrir le menu",
@@ -8,8 +8,8 @@ const headerBar = {
   forward: "Suivant",
   search: "Rechercher",
   notifications: "Notifications",
-  switchLightTheme: "Passer au thème clair",
-  switchDarkTheme: "Passer au thème sombre",
+  switchLightTheme: "Activer le thème clair",
+  switchDarkTheme: "Activer le thème sombre",
   openSidepane: "Ouvrir le panneau latéral",
   closeSidepane: "Fermer le panneau latéral",
   export: "Exporter",
@@ -18,10 +18,10 @@ const headerBar = {
   exitFocusMode: "Désactiver le mode focus",
   attachmentsManager: "Gestionnaire de pièces jointes",
   settings: "Paramètres",
-  timeMachine: "Machine à remonter le temps",
-  help: "Documentation d'aide",
+  timeMachine: "Sauvegardes",
+  help: "Manuel d'utilisation",
   exit: "Quitter",
-  keybindings: "Voir & modifier les raccourcis",
+  keybindings: "Voir & éditer les raccourcis",
   quickadd: "Ajout rapide",
 };
 

@@ -4,7 +4,7 @@ const imageContent = {
   deleteImage: "Supprimer l'image",
   blend: "Fusionner avec l'arrière-plan (par couleur)",
   blendLuminosity: "Fusionner avec l'arrière-plan (par luminosité)",
-  circle: "Rogner en cercle",
+  circle: "Rognage circulaire",
   invert: "Inverser les couleurs",
   invertW: "Inverser les couleurs (fond blanc)",
   outline: "Contour",

@@ -3,7 +3,7 @@ const fieldSettings = {
   description: "Configurer les paramètres de ce bloc en tant que champ",
   isField: "Utiliser comme champ",
   buildIndex: "Créer un index",
-  buildIndexDescription: "Créer un index pour ce champ afin d'accélérer la recherche",
+  buildIndexDescription: "Indexer ce champ afin d'accélérer les recherches",
   valueType: "Type de valeur",
   selectValueType: "Sélectionner le type de valeur",
   valueTypes: {

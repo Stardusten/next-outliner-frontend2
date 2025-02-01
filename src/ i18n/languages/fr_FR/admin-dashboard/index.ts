@@ -3,25 +3,25 @@ const adminDashboard = {
   logout: "Déconnexion",
   tabs: {
     kbManagement: "Gestion des bases de connaissances",
-    logsAndAnalytics: "Journaux et analyses",
+    logsAndAnalytics: "Journaux et statistiques",
   },
   kbManagement: {
     allKbs: "Toutes les bases de connaissances",
     allKbsDescription:
-      "Vous pouvez créer, supprimer ou modifier les informations des bases de connaissances ici",
+      "Créer une nouvelle base de connaissances, modifier ou supprimer une base existante",
     noKbs: "🤔 Aucune base de connaissances",
     noKbsDescription:
       'Cliquez sur le bouton "Créer une nouvelle base de connaissances" en haut à droite pour créer votre première base',
     kbActions: {
       edit: "Modifier",
       delete: "Supprimer",
-      addKb: "Créer nouvelle KB",
-      refreshKbList: "Actualiser KB",
+      addKb: "Créer nouvelle BC",
+      refreshKbList: "Actualiser BC",
       shrink: "Compresser",
     },
     newKbDialog: {
-      title: "Créer nouvelle KB",
-      description: "Veuillez remplir les informations suivantes pour créer une nouvelle KB",
+      title: "Créer nouvelle BC",
+      description: "Veuillez remplir les informations suivantes pour créer une nouvelle BC",
       nameLabel: "Nom",
       namePlaceholder: "Entrez le nom de la base",
       locationLabel: "Emplacement",

@@ -97,13 +97,13 @@ const misc = {
   },
   pasteDialog: {
     title: "Non non non",
-    description: "C'est trop gros ! Ça va casser ! Essayez de coller par morceaux ?",
+    description: "Trop de données à traiter ! Essayez de coller par morceaux ?",
     cancelBtn: "D'accord",
   },
   exporter: {
     title: "Exporter",
     description:
-      "Exporter la sous-arborescence sélectionnée au format HTML, PDF, Markdown, texte brut et autres formats",
+      "Exporter l'arborescence sélectionnée aux formats HTML, PDF, Markdown, texte brut et autres",
     preview: "Aperçu",
     copyToClipboard: "Copier dans le presse-papiers",
     exportToFile: "Exporter vers un fichier",
@@ -129,19 +129,19 @@ const misc = {
     description: "Voir toutes les propriétés de ce bloc",
   },
   dailynoteNavigator: {
-    noDailyNote: "Pas de note quotidienne pour ce jour, cliquez pour en créer une",
-    gotoDailyNote: "Cliquez pour aller à la note quotidienne de ce jour",
+    noDailyNote: "Pas de note journalière pour ce jour, cliquez pour en créer une",
+    gotoDailyNote: "Cliquez pour aller à la note journalière de ce jour",
     dontKnowWhereToCreate: {
-      title: "Ne sait pas où créer la note quotidienne",
-      desc: 'Vous devez définir l\'emplacement des nouvelles notes quotidiennes dans "Paramètres > Notes quotidiennes > Emplacement des notes quotidiennes"',
+      title: "Ne sait pas où créer la note journalière",
+      desc: "Vous devez définir l'emplacement des nouvelles notes journalières dans \"Paramètres > Notes Journalières > Emplacement des Notes Journalières",
     },
   },
   history: {
-    goToPrev: "Retour, clic droit pour voir l'historique complet",
-    goToNext: "Avant, clic droit pour voir l'historique complet",
+    goToPrev: "Précédent, clic droit pour voir l'historique complet",
+    goToNext: "Suivant, clic droit pour voir l'historique complet",
   },
   timeMachine: {
-    title: "Machine à remonter le temps",
+    title: "Sauvegardes",
     description: "Sauvegarder et restaurer vos notes",
     preview: "Aperçu de cette sauvegarde",
     restore: "Restaurer cette sauvegarde",
@@ -160,9 +160,9 @@ const misc = {
   },
   settingGroups: {
     basic: "Paramètres de base",
-    timeMachine: "Machine à remonter le temps",
-    dailynote: "Notes quotidiennes",
-    backlinks: "Références de bloc et rétroliens",
+    timeMachine: "Sauvegardes",
+    dailynote: "Notes Journalières",
+    backlinks: "Références et rétroliens",
     quickAdd: "Ajout rapide",
     search: "Recherche",
   },
@@ -191,8 +191,8 @@ const misc = {
   },
   blockRefTagSettings: {
     title: "Paramètres des références",
-    description: "Configurer les paramètres des références et des balises",
-    color: "Couleur de référence/balise",
+    description: "Configurer les paramètres des références et des tags",
+    color: "Couleur de référence/tag",
     relatedFields: "Champs associés",
     selectField: "Sélectionner un champ",
     unsavedChanges: "Modifications non enregistrées",

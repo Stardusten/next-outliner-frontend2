@@ -63,9 +63,9 @@ const attachmentsManager = {
   hiddenFiles: "{count} fichiers filtrés masqués",
   rename: {
     title: "Renommer",
-    description: "Veuillez saisir le nouveau nom du fichier",
+    description: "Veuillez saisir un nouveau nom de fichier",
     newNameLabel: "Nouveau nom",
-    newNamePlaceholder: "Saisissez le nouveau nom du fichier",
+    newNamePlaceholder: "Saisissez un nouveau nom de fichier",
     cancelBtn: "Annuler",
     submitBtn: "Appliquer",
     error: {
