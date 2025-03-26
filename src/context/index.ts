@@ -198,6 +198,11 @@ const IndexContext = createContext(() => {
   });
   const dirtySet = new Set<BlockId>();
 
+  // 手工标记为脏块
+  const markAsDirty = (blockId: BlockId) => {
+    dirtySet.add(blockId);
+  };
+
   eventBus.on("afterBlocksTrCommit", ([tr]) => {
     for (const patch of tr.patches) {
       if (patch.op === "delete") {
@@ -280,6 +285,7 @@ const IndexContext = createContext(() => {
     getVirtuals,
     getOccurs,
     getBacklinks,
+    markAsDirty,
   };
   register("index", ctx);
   return ctx;

@@ -14,7 +14,7 @@ import { plainTextToTextContent } from "@/utils/pm";
 import dayjs from "dayjs";
 import { nanoid } from "nanoid";
 import { Node } from "prosemirror-model";
-import { ref, type ShallowRef, shallowRef, toRaw } from "vue";
+import { ref, type ShallowRef, shallowRef, toRaw, triggerRef } from "vue";
 import { z } from "zod";
 import type { SyncLayer } from "../sync-layer/syncLayer";
 import useBlockTransaction from "./blockTransaction";
@@ -23,6 +23,7 @@ import type { DisplayItemId } from "@/utils/display-item";
 import LastFocusContext from "@/context/lastFocus";
 import MainTreeContext from "@/context/mainTree";
 import BlockTreeContext from "@/context/blockTree";
+import kbViewRegistry from "@/context/kbViewRegistry";
 
 ///////////////////////////////////////////////////////////////////
 // blocksManager 负责管理视图层的所有块，其职责有二：
@@ -286,6 +287,7 @@ export const cloneBlock = (block: Block | null | undefined): Block | null => {
 //    过时的状态。
 export const createBlocksManager = (syncLayer: SyncLayer) => {
   const eventBus = useEventBus();
+  const { get } = kbViewRegistry.useContext()!;
   const blocks = new Map<BlockId, ShallowRef<Block | null>>();
   // 记录 missing block 的 parentId
   // TODO: 目前这个记录只会新增，不会删除。并且只在 forDescendantsWithMissingBlock 时增加
@@ -298,6 +300,10 @@ export const createBlocksManager = (syncLayer: SyncLayer) => {
   const latestBlockInfos = new Map<BlockId, BlockInfo>();
   const latestBlockDatas = new Map<BlockId, BlockData>();
   const loadedDataDocs = new Set<number>(); // 记录已经加载的数据文档，防止重复加载
+
+  // 记录哪些块的 ctext 是未知的，需要重新计算
+  const blockIdsWithUncertainCtext = new Set<BlockId>();
+  let recalCtextHandler: number | null = null;
 
   const { lastFocusedBlockTree, lastFocusedDiId } = LastFocusContext.useContext()!;
   const { mainRootBlockId } = MainTreeContext.useContext()!;
@@ -339,6 +345,36 @@ export const createBlocksManager = (syncLayer: SyncLayer) => {
   const pendingTasks = {
     getBlockInfo: new Map<BlockId, PendingTask<BlockInfo>>(),
     getBlockData: new Map<BlockId, PendingTask<BlockData>>(),
+  };
+
+  const startRecalcCtextIfNotStarted = () => {
+    if (recalCtextHandler != null) return;
+    const handler = setInterval(() => {
+      const newKnownBlockIds = new Set<BlockId>();
+      for (const blockId of blockIdsWithUncertainCtext) {
+        const blockRef = getBlockRef(blockId);
+        if (!blockRef.value) continue;
+        const unknownFlag = [false] as [boolean];
+        const ctext = getCtext(blockRef.value.content, true, blockId, unknownFlag);
+        if (!unknownFlag[0]) {
+          // console.log("recal ctext of ", blockId, " to ", ctext);
+          newKnownBlockIds.add(blockId);
+          blockRef.value.ctext = ctext;
+          triggerRef(blockRef);
+          // ctext 更新了，索引里必须标记这个块为脏块，让索引重新计算
+          get<any>("index").markAsDirty(blockId);
+        }
+      }
+      for (const blockId of newKnownBlockIds) {
+        blockIdsWithUncertainCtext.delete(blockId);
+      }
+      if (blockIdsWithUncertainCtext.size == 0) {
+        clearInterval(handler);
+        recalCtextHandler = null;
+        return;
+      }
+    }, 1000);
+    recalCtextHandler = handler;
   };
 
   const getBlockRef = (blockId: BlockId) => {
@@ -481,17 +517,41 @@ export const createBlocksManager = (syncLayer: SyncLayer) => {
   };
 
   // 将块内容转换为字符串，用于显示和搜索
-  const getCtext = (content: BlockContent, includeTags?: boolean) => {
+  const getCtext = (
+    content: BlockContent,
+    includeTags?: boolean,
+    blockId?: BlockId,
+    unknownFlag?: [boolean],
+  ) => {
     if (content[0] === BLOCK_CONTENT_TYPES.TEXT) {
       const schemaCtx = { getBlockRef: getBlockRef };
       const pmSchema = getPmSchema(schemaCtx);
       const doc = Node.fromJSON(pmSchema, content[1]);
       const arr: string[] = [];
+      let unknown = false;
       doc.descendants((node) => {
-        // 跳过标签
-        if (!includeTags && node.type.name == "blockRef_v2" && node.attrs.tag) return;
-        arr.push(node.textContent);
+        if (node.type.name == "blockRef_v2") {
+          if (!includeTags && node.attrs.tag) return; // 跳过标签
+          const block = getBlock(node.attrs.toBlockId);
+          if (!block || blockIdsWithUncertainCtext.has(block.id)) {
+            unknown = true;
+          }
+          arr.push(block?.ctext ?? "");
+        } else {
+          arr.push(node.textContent);
+        }
       });
+
+      if (blockId) {
+        if (unknown) {
+          blockIdsWithUncertainCtext.add(blockId);
+          startRecalcCtextIfNotStarted();
+          unknownFlag && (unknownFlag[0] = true);
+        } else {
+          unknownFlag && (unknownFlag[0] = false);
+        }
+      }
+
       return arr.join("");
     } else if (content[0] == BLOCK_CONTENT_TYPES.CODE) {
       return `${content[1]} (${content[2]})`;

@@ -36,7 +36,12 @@ type BlockTransactionBuilderContext = {
   latestBlockDatas: Map<BlockId, BlockData>;
   yjsLayer: SyncLayer;
   getBlockRef: (blockId: BlockId) => ShallowRef<Block | null>;
-  getCtext: (content: BlockContent, includeTags?: boolean) => string;
+  getCtext: (
+    content: BlockContent,
+    includeTags?: boolean,
+    blockId?: BlockId,
+    unknownFlag?: [boolean],
+  ) => string;
   getMtext: (metadata: any) => string;
   getBoosting: (block: MinimalBlock) => number;
   getOlinks: (docContent: any) => string[];
@@ -231,7 +236,7 @@ function useBlockTransaction(context: BlockTransactionBuilderContext) {
         fold: blockParams.fold,
         deleted: false,
         content: blockParams.content,
-        ctext: getCtext(blockParams.content),
+        ctext: getCtext(blockParams.content, true, blockParams.id),
         metadata: blockParams.metadata,
         mtext: getMtext(blockParams.metadata),
         olinks:
@@ -260,7 +265,7 @@ function useBlockTransaction(context: BlockTransactionBuilderContext) {
         fold: blockParams.fold,
         deleted: false,
         content: blockParams.content ?? srcBlock.content,
-        ctext: getCtext(blockParams.content),
+        ctext: getCtext(blockParams.content, true, blockParams.id),
         metadata: blockParams.metadata ?? srcBlock.metadata,
         mtext: getMtext(blockParams.metadata),
         olinks:
@@ -289,7 +294,7 @@ function useBlockTransaction(context: BlockTransactionBuilderContext) {
         fold: blockParams.fold,
         deleted: false,
         content: blockParams.content ?? srcBlock.content,
-        ctext: getCtext(blockParams.content),
+        ctext: getCtext(blockParams.content, true, blockParams.id),
         metadata: blockParams.metadata ?? srcBlock.metadata,
         mtext: getMtext(blockParams.metadata),
         olinks:
